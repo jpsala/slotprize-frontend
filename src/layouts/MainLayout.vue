@@ -1,66 +1,145 @@
 <template>
-  <q-layout view="hHh LpR fFf">
+  <q-layout view="hHh lpR fFf">
+    <q-ajax-bar size="2px" />
 
     <q-header elevated class="bg-primary text-white">
       <q-toolbar>
-        <q-btn dense flat round icon="menu" @click="leftDrawerOpen = !leftDrawerOpen" />
-
+        <q-btn dense flat round icon="menu" @click.stop="left = !left" />
         <q-toolbar-title>
-          <q-avatar>
-            <img src="../statics/icons/favicon-32x32.png">
+          <q-avatar style="width: 70px; height: 45px">
+            <div class="text-subtitle1">Wopidom</div>
           </q-avatar>
-          Wopidom SlotPrizes
+          <div class="col" />
         </q-toolbar-title>
+
+        <q-btn
+          v-if="$route.path !== '/login' && !loggedIn"
+          flat
+          @click="$router.push('/login')"
+        >
+          <span>Ingreso/Registro</span>
+        </q-btn>
+        <!-- profile menu , ya ingresó-->
+        <q-btn-dropdown
+          v-if="loggedIn"
+          id="profile-btn"
+          ref="profileBtn"
+          v-remove-arrow
+          icon="person"
+          rounded
+          unelevated
+          :label="user.name"
+        >
+          <q-list style="width: 180px">
+            <q-item v-close-popup v-ripple clickable>
+              <q-item-section side>
+                <q-icon name="exit_to_app" />
+              </q-item-section>
+              <q-item-section @click="logout" >Cerrar Sesión</q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
       </q-toolbar>
     </q-header>
-
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" elevated>
-      <!-- drawer content -->
-      <q-list>
-        <q-item-label header class="text-grey-8"></q-item-label>
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
+    <q-drawer
+      ref="drawer"
+      v-model="left"
+      show-if-above
+      :breakpoint="800"
+      :width="260"
+      side="left"
+      bordered
+      no-swipe-close
+    >
+      <q-list class="rounded-borders">
+        <my-drawer-content v-if="loggedIn" :items="items" />
+        <!-- <q-item
+          v-if="loggedIn"
+          exact
+          style="cursor: pointer"
+          @click.native="logout()"
+        >
+          <q-item-section avatar>
+            <q-icon name="exit_to_app" />
+          </q-item-section>
+          <q-item-section>Cerrar Sesión</q-item-section>
+        </q-item> -->
       </q-list>
     </q-drawer>
-
-    <q-page-container>
+    <q-page-container id="venta-page-container">
       <router-view />
     </q-page-container>
-
   </q-layout>
 </template>
 
 <script>
-import EssentialLink from 'components/EssentialLink';
+console.log('mainLayout');
+import { ref, onBeforeMount } from '@vue/composition-api';
+import { RemoveArrow } from 'app/src/components/RemoveArrowDirective';
+import myDrawerContent from 'app/src/components/MyDrawerContent';
+import useSession from '../services/useSession';
+import useWindowResize from '../services/useWindowResize';
+import { router } from '../boot/router';
 
+function setItemsDefaults(items, level = 0) {
+  items.forEach((e) => {
+    if (e.protected === undefined) e.protected = false;
+    e.level = level;
+    // if (level === 0) e.group = 'uno';
+    e.group = String(level);
+    if (e.items) {
+      level += 0.3;
+      e.items = setItemsDefaults(e.items, level);
+      level -= 0.3;
+    }
+  });
+  return items;
+}
 export default {
-  name: 'MainLayout',
+  directives: { RemoveArrow },
+  components: { myDrawerContent },
 
-  components: {
-    EssentialLink,
-  },
-
-  data() {
-    return {
-      leftDrawerOpen: false,
-      essentialLinks: [
+  setup() {
+    const items = ref(
+      setItemsDefaults([
         {
-          title: 'Home',
-          caption: 'Go Gome',
+          label: 'Home',
           icon: 'home',
-          link: '/',
+          to: '/',
         },
         {
-          title: 'Config',
-          caption: 'quasar.dev',
+          label: 'Config',
           icon: 'build',
-          link: '/config',
+          open: true,
+          items: [
+            { label: 'Reels', to: '/config-reels' },
+            { label: 'Symbols', to: '/config-symbols' },
+          ],
         },
+      ]),
+    );
+    const Screen = useWindowResize();
 
-      ],
+    const left = ref(false);
+    const {
+      tryToLogin, loggedIn, user, logout: sessionLogout,
+    } = useSession();
+    const logout = () => {
+      console.log('detalle', new Date());
+      sessionLogout();
+    //   if (root.$route.path !== '/login') root.$router.push('/login');
+    };
+    onBeforeMount(async () => {
+      try {
+        const isLoggedIn = await tryToLogin();
+        console.log('is', isLoggedIn);
+        if (!isLoggedIn) router.push('/login');
+      } catch (error) {
+        console.log('error!!! trying to login in app.vue', error);
+      }
+    });
+    return {
+      logout, left, items, loggedIn, Screen, user,
     };
   },
 };
