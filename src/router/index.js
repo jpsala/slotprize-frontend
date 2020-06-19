@@ -15,7 +15,6 @@ Vue.use(VueRouter);
  */
 
 export default function (/* { store, ssrContext } */) {
-  console.log('process.env.VUE_ROUTER_MODE', process.env.VUE_ROUTER_MODE);
   const Router = new VueRouter({
     scrollBehavior: () => ({ x: 0, y: 0 }),
     routes,
