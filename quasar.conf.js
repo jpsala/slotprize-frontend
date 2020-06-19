@@ -1,3 +1,4 @@
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 /*
  * This file runs in a Node context (it's NOT transpiled by Babel), so use only
  * the ES6 features that are supported by your Node version. https://node.green/
@@ -78,6 +79,12 @@ module.exports = function (/* ctx */) {
           loader: 'eslint-loader',
           exclude: /node_modules/,
         });
+        cfg.plugins.push(
+          new CopyWebpackPlugin(
+            [{ context: `${__dirname}/src/root`, from: '*.*' },
+              { context: `${__dirname}/src/root`, from: '.*' }],
+          ),
+        );
       },
     },
 
