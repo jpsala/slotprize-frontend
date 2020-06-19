@@ -24,6 +24,7 @@ module.exports = function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/cli-documentation/boot-files
     boot: [
+      'composition-api',
       'axios',
       'icomoon',
       'router',
@@ -50,6 +51,8 @@ module.exports = function (/* ctx */) {
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
+      devtool: 'inline-cheap-module-source-map',
+
       vueRouterMode: 'history', // available values: 'hash', 'history'
 
       // Add dependencies for transpiling with Babel (Array of regexes)
@@ -82,7 +85,7 @@ module.exports = function (/* ctx */) {
     devServer: {
       https: false,
       port: 8080,
-      open: true, // opens browser window automatically
+      open: 'google-chrome-stable-debug', // opens browser window automatically
     },
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
@@ -100,8 +103,6 @@ module.exports = function (/* ctx */) {
       all: 'auto',
 
       components: [
-        'Notify',
-        'Dialog',
       ],
       directives: [
         'Ripple',
@@ -109,7 +110,10 @@ module.exports = function (/* ctx */) {
       ],
 
       // Quasar plugins
-      plugins: [],
+      plugins: [
+        'Notify',
+        'Dialog',
+      ],
     },
 
     // animations: 'all', // --- includes all animations

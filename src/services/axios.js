@@ -2,8 +2,9 @@
 /* eslint-disable no-underscore-dangle */
 import axios from 'axios';
 // import router from '../router';
-
-const local = document.location.hostname === 'localhost';
+console.log('document.location.hostname', document.location.hostname);
+const local = document.location.hostname === 'localhost'
+                    || document.location.hostname === 'front.wopidom.homelinux.com';
 const getAxios = () => {
   console.log('detalle');
   console.log('Axios, solo una vez!');
