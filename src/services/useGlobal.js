@@ -1,12 +1,12 @@
-import { reactive, toRefs, readonly } from 'vue';
+import { reactive, toRefs, readonly } from '@vue/composition-api';
 // import axios from 'axios';
 
 const state = reactive({
-    menuItem: undefined,
+  menuItem: undefined,
 });
 export default () => {
-    const setMenuItem = (value) => {
-        state.menuItem = value;
-    };
-    return { setMenuItem, ...toRefs(readonly(state)) };
+  const setMenuItem = (value) => {
+    state.menuItem = value;
+  };
+  return { setMenuItem, ...toRefs(readonly(state)) };
 };
