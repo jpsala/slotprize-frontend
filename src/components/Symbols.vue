@@ -1,10 +1,11 @@
 <template>
 <div class="items">
 
-    <q-card v-for="item in items" :key="item.id" class="item"
+    <q-card v-for="item in items" :key="item.id" class="item" draggable='true'
                     :class="{active: item === selectedItem}"
-                    @mouseenter="hover(item, $event)" @mouseleave="hover(item, $event)">
-        <div class="menu-item">
+                    @mouseenter="hover(item, $event)" @mouseleave="hover(item, $event)"
+                    @dragstart="startDrag($event, item)">
+        <div v-if="showMenu" class="menu-item">
             <q-btn round color="primary" icon="more_vert" flat
                          v-show="item === selectedItem">
         <q-menu>
@@ -20,9 +21,9 @@
       </q-btn>
         </div>
       <img :src="item.texture_url">
-      <q-card-section>
-        <div class="text-h6">{{item.payment_type}}</div>
-        <div class="texture_url">{{item.texture_url}}</div>
+      <q-card-section v-if="showPaymentType || showUrl">
+        <div v-if="showPaymentType" class="text-h6">{{item.payment_type}}</div>
+        <div v-if="showUrl" class="texture_url">{{item.texture_url}}</div>
       </q-card-section>
 
     </q-card>
@@ -30,7 +31,9 @@
 </template>
 
 <script>
-import { reactive, toRefs } from '@vue/composition-api';
+import {
+  reactive, toRefs, watch,
+} from '@vue/composition-api';
 import { delItem as slotDelItem } from '../services/slot';
 
 export default {
@@ -39,13 +42,17 @@ export default {
       type: Array,
       default: () => [],
     },
+    symbolSize: { default: () => '80px' },
+    showUrl: { default: () => false },
+    showMenu: { default: () => true },
+    wrap: { default: () => true },
+    showPaymentType: { default: () => false },
   },
   setup(props, { emit }) {
     const state = reactive({
       selectedItem: undefined,
       menuVisible: true,
     });
-    console.log('props', props);
     const hover = (item, e) => {
       const isEnter = e.type === 'mouseenter';
       // eslint-disable-next-line no-unused-vars
@@ -61,11 +68,30 @@ export default {
     const delItem = async (item, file = false) => {
       const resp = await slotDelItem(item.id, file);
       if (+resp.symbols > 0) {
-        console.log('del');
         emit('del', item);
       }
     };
-    return { ...toRefs(state), hover, delItem };
+    const setItemsStyle = (_items) => {
+      console.log('items', _items);
+      const itemsParent = document.querySelector('.items');
+      itemsParent.style.flexWrap = props.wrap ? 'wrap' : '';
+      const items = document.querySelectorAll('.items .item');
+      // eslint-disable-next-line no-unused-vars
+      items.forEach((_item) => {
+        // _item.style.width = props.symbolSize;
+        // _item.style.height = props.symbolSize;
+      });
+    };
+    const startDrag = (evt, item) => {
+      evt.dataTransfer.dropEffect = 'move';
+      evt.dataTransfer.effectAllowed = 'move';
+      evt.dataTransfer.setData('item', JSON.stringify(item));
+      console.log('startDrag', evt, item);
+    };
+    watch(() => props.items, setItemsStyle);
+    return {
+      ...toRefs(state), hover, delItem, startDrag,
+    };
   },
 };
 </script>
@@ -73,10 +99,12 @@ export default {
 <style lang="scss">
 .items{
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    // flex-wrap: wrap;
     .item{
         margin: 6px;
-        width: 200px;
+        width: 50px;
+        height: 50px;
         .texture_url{
             word-wrap: break-word;
         }
@@ -91,17 +119,6 @@ export default {
             border: 1px solid lightblue;
             background-color: rgb(237, 251, 255);
         }
-        // margin: 2px;
-        // border-radius: 5px;
-        // border: 2px solid rgb(169, 169, 207);
-        // padding: 5px;
-        // flex: 1 1 180px;
-        // width: 50px;
-        // overflow: hidden;
-        // max-height: 80px;
-        // &:hover{
-        //     overflow: auto;
-        // }
     }
 }
 </style>

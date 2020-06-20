@@ -6,12 +6,10 @@ console.log('document.location.hostname', document.location.hostname);
 const local = document.location.hostname === 'localhost'
                     || document.location.hostname === 'front.wopidom.homelinux.com';
 const getAxios = () => {
-  console.log('detalle');
   console.log('Axios, solo una vez!');
   axios.defaults.baseURL = local ? 'http://localhost:8888/api'
     : 'http://iae.dyndns.org:8888';
   axios.interceptors.response.use((response) => {
-    console.log('response', response);
     const endPoint = response.config.url.substring(response.config.url.lastIndexOf('/') + 1);
     console.log('endpoint %O %O response.data %O', endPoint, response, response.data);
     if (response.data && response.data.jwt) {

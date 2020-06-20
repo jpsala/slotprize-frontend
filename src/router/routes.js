@@ -6,6 +6,7 @@ const routes = [
       { path: '/', component: () => import('pages/Index.vue') },
       { path: 'config-symbols', component: () => import('pages/ConfigSymbols.vue') },
       { path: 'config-reels', component: () => import('pages/ConfigReels.vue') },
+      { path: 'config-play-table', component: () => import('pages/ConfigPlayTable.vue') },
       { path: 'login', component: () => import('pages/Login.vue') },
     ],
   },

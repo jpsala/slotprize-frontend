@@ -26,10 +26,18 @@ export default {
         _reel.symbols.splice(idxEnReel, 1);
       }
     };
+
     onMounted(async () => {
       state.reelsData = await getReels();
     });
-    return { ...toRefs(state), delItem };
+    return {
+      ...toRefs(state), delItem,
+    };
   },
 };
 </script>
+<style lang="scss">
+    .items{
+        height: calc(100vh - 40px);
+    }
+</style>

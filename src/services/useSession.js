@@ -11,17 +11,13 @@ const state = reactive({
 const useSocio = () => {
   const user = computed(() => state.user);
   const apiToken = computed(() => state.apiToken);
-  const loggedIn = computed(() => {
-    console.log('state.user', state.user);
-    return Boolean(state.user);
-  });
+  const loggedIn = computed(() => Boolean(state.user));
   //   const loggedIn = computed(() => Boolean(state.user));
   const setApiToken = (value) => {
     state.apiToken = value;
     window.localStorage.setItem(jwtSecret, value);
   };
   const setUser = (data) => {
-    console.log('data', data);
     state.user = data;
   };
   const logout = () => {
@@ -36,7 +32,6 @@ const useSocio = () => {
     if (!response) throw Error('Error de conexión');
     if (response.status !== 200) return response;
     setApiToken(response.headers.token);
-    console.log('res', response);
     setUser(response.data.user);
     return response;
   };

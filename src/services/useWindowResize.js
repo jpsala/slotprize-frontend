@@ -80,7 +80,6 @@ const setScreenValues = (data) => {
     Screen.value.gt.lg = true;
     Screen.value.gt.xl = false;
   }
-  console.log('sn', Screen.value.name);
 };
 const windowResize = (e) => setScreenValues(e.target);
 export default () => {

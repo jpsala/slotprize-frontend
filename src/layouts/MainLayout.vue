@@ -73,7 +73,6 @@
 </template>
 
 <script>
-console.log('mainLayout');
 import { ref, onBeforeMount } from '@vue/composition-api';
 import { RemoveArrow } from 'app/src/components/RemoveArrowDirective';
 import myDrawerContent from 'app/src/components/MyDrawerContent';
@@ -114,6 +113,7 @@ export default {
           items: [
             { label: 'Reels', to: '/config-reels' },
             { label: 'Symbols', to: '/config-symbols' },
+            { label: 'Play Table', to: '/config-play-table' },
           ],
         },
       ]),
@@ -125,14 +125,12 @@ export default {
       tryToLogin, loggedIn, user, logout: sessionLogout,
     } = useSession();
     const logout = () => {
-      console.log('detalle', new Date());
       sessionLogout();
     //   if (root.$route.path !== '/login') root.$router.push('/login');
     };
     onBeforeMount(async () => {
       try {
         const isLoggedIn = await tryToLogin();
-        console.log('is', isLoggedIn);
         if (!isLoggedIn) router.push('/login');
       } catch (error) {
         console.log('error!!! trying to login in app.vue', error);

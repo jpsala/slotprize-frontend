@@ -3,7 +3,7 @@
     <template v-for="(item, index) in items">
       <template>
         <!-- es un item -->
-        <q-item exact="" v-if="!item.items" :key="index"
+        <q-item exact v-if="!item.items" :key="index"
                 :inset-level="item.level" :to="item.to" style="cursor: pointer"
                 @click.native="exec(item)">
           <q-item-section avatar>
