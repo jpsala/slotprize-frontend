@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex pay-table">
       <div class="symbols">
-        <Symbols :items="reelsData.symbols" :wrap="true" :show-menu="false"
+        <Symbols :items="reelsData.symbols" :wrap="true" :show-menu="false" direction="row"
                             :show-url="false" :show-paymant-type="false" symbol-size="50px"/>
       </div>
       <q-card class="table" @drop='onDrop($event, 1)' @dragover.prevent @dragenter.prevent
@@ -10,30 +10,33 @@
         <div class="text-h6 text-center">Pay Table</div>
         </q-card-section>
         <q-separator class="q-mb-sm" />
-        <q-list  separator>
-            <q-item v-ripple clickable="" v-for="(item, index) of tableData" :key="index">
-                <q-item-section avatar @dragover="onDragover(1, item, $event.target)"
-                    @dragleave="onDragleave($event.target)"
-                    @click="onClick(1, item, $event.target)">
-                <q-img v-show="item.reel1" :src="item.url" />
-                </q-item-section>
-                <q-item-section avatar @dragover="onDragover(2, item, $event.target)"
-                    @dragleave="onDragleave($event.target)"
-                    @click="onClick(2, item, $event.target)">
-                <q-img v-show="item.reel2" :src="item.url" />
-                </q-item-section>
-                <q-item-section avatar @dragover="onDragover(3, item, $event.target)"
-                    @dragleave="onDragleave($event.target)"
-                    @click="onClick(3, item, $event.target)">
-                <q-img v-show="item.reel3" :src="item.url" />
-                </q-item-section>
-                <q-item-section style="font-weight: bolder" side v-if="item.jackpot"
-                    @dragleave="onDragleave($event.target)">
-                    <span style="font-size: 130%">{{item.jackpot}}€</span>
-                </q-item-section>
-                <q-item-section side v-else>{{item.points}} Pts </q-item-section>
-            </q-item>
-        </q-list>
+        <q-card-section class="items-section small-scrollbars">
+            <q-list  separator>
+                <q-item v-ripple clickable="" v-for="(item, index) of tableData" :key="index">
+                    <q-item-section avatar @dragover="onDragover(1, item, $event.target)"
+                        @dragleave="onDragleave($event.target)"
+                        @click="onClick(1, item, $event.target)">
+                    <q-img v-show="item.reel1" :src="item.url" />
+                    </q-item-section>
+                    <q-item-section avatar @dragover="onDragover(2, item, $event.target)"
+                        @dragleave="onDragleave($event.target)"
+                        @click="onClick(2, item, $event.target)">
+                    <q-img v-show="item.reel2" :src="item.url" />
+                    </q-item-section>
+                    <q-item-section avatar @dragover="onDragover(3, item, $event.target)"
+                        @dragleave="onDragleave($event.target)"
+                        @click="onClick(3, item, $event.target)">
+                    <q-img v-show="item.reel3" :src="item.url" />
+                    </q-item-section>
+                    <q-item-section style="font-weight: bolder" side v-if="item.jackpot"
+                        @dragleave="onDragleave($event.target)">
+                        <span style="font-size: 130%">{{item.jackpot}}€</span>
+                    </q-item-section>
+                    <q-item-section side v-else>{{item.points}} Pts </q-item-section>
+                </q-item>
+            </q-list>
+        </q-card-section>
+
       </q-card>
   </q-page>
 </template>
@@ -131,7 +134,7 @@ export default {
     const onDragleave = (el) => {
       el.closest('.q-item').classList.remove('inner-border');
     };
-    const onClick = (reel, item, target) => {
+    const onClick = (reel, item) => {
     //   const active = item[`reel${reel}`];
       if (reel === 3) {
         item.reel1 = false;
@@ -143,7 +146,6 @@ export default {
         item.reel1 = true;
         item.reel2 = true;
       }
-      console.log('click', reel, item, target);
     };
     onMounted(async () => {
       state.reelsData = await getReels();
@@ -156,12 +158,18 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../css/app.sass';
 .inner-border {
        background-color: rgb(236, 243, 236);
     }
 .pay-table{
+    zoom: .95;
     display: flex;
     flex-direction: row;
+    .items-section{
+        max-height: calc(100vh - #{$header-height} - 85px);
+        overflow: auto;
+    }
     .symbols{
         margin-top: 10px;
         max-height: calc(100vh - 67px);
@@ -169,35 +177,18 @@ export default {
         // min-width: 40px;
         // overflow: auto;
         .items{
-            &::-webkit-scrollbar-track
-            {
-            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-            background-color: #F5F5F5;
-            }
-            &::-webkit-scrollbar
-            {
-            width: 4px !important;
-            background-color: #F5F5F5;
-            }
-            &::-webkit-scrollbar-thumb
-            {
-            background-color: rgb(143, 140, 140);
-            }
-            display: flex;
+            margin-left: 20px;
+            zoom: .98;
             flex-direction: row;
             width: 200px;
-            /* padding: 5px; */
             height: 100%;
             overflow: auto;
-            /* margin: auto; */
-            justify-content: center;
-            align-content: flex-start;
         }
     }
     .table{
         // width: 100%;
         min-width: 200px;
-        margin: 10px auto auto 40px;
+        margin: 10px auto auto 0;
         // background-color: rgba(250, 250, 210, 0.404);
         padding: 10px;
         box-shadow: 0 1px 1px rgba(0,0,0,0.12),

@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center">
-      <Symbols :items="reelsData.symbols" @del="delItem"/>
+      <Symbols :items="reelsData.symbols" @del="delItem" direction="row" :show-menu="false"/>
 <!-- <pre>{{reelsData}}</pre> -->
   </q-page>
 </template>
@@ -38,6 +38,6 @@ export default {
 </script>
 <style lang="scss">
     .items{
-        height: calc(100vh - 40px);
+        // height: calc(100vh - 40px);
     }
 </style>

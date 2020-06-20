@@ -1,5 +1,5 @@
 <template>
-<div class="items">
+<div class="items small-scrollbar">
 
     <q-card v-for="item in items" :key="item.id" class="item" draggable='true'
                     :class="{active: item === selectedItem}"
@@ -46,6 +46,7 @@ export default {
     showUrl: { default: () => false },
     showMenu: { default: () => true },
     wrap: { default: () => true },
+    direction: { default: 'column' },
     showPaymentType: { default: () => false },
   },
   setup(props, { emit }) {
@@ -75,6 +76,9 @@ export default {
       console.log('items', _items);
       const itemsParent = document.querySelector('.items');
       itemsParent.style.flexWrap = props.wrap ? 'wrap' : '';
+      itemsParent.style.flexDirection = props.direction;
+      //   itemsParent.style.
+      if (props.direction === 'row') itemsParent.style.alignContent = 'flex-start';
       const items = document.querySelectorAll('.items .item');
       // eslint-disable-next-line no-unused-vars
       items.forEach((_item) => {
@@ -99,8 +103,7 @@ export default {
 <style lang="scss">
 .items{
     display: flex;
-    flex-direction: column;
-    // flex-wrap: wrap;
+    align-self: baseline;
     .item{
         margin: 6px;
         width: 50px;
