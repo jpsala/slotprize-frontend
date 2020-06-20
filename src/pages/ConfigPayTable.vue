@@ -11,18 +11,21 @@
         </q-card-section>
         <q-separator class="q-mb-sm" />
         <q-list  separator>
-            <q-item v-ripple v-for="(item, index) of tableData" :key="index">
+            <q-item v-ripple clickable="" v-for="(item, index) of tableData" :key="index">
                 <q-item-section avatar @dragover="onDragover(1, item, $event.target)"
-                    @dragleave="onDragleave($event.target)">
-                <q-img :src="item.url1" />
+                    @dragleave="onDragleave($event.target)"
+                    @click="onClick(1, item, $event.target)">
+                <q-img v-show="item.reel1" :src="item.url" />
                 </q-item-section>
                 <q-item-section avatar @dragover="onDragover(2, item, $event.target)"
-                    @dragleave="onDragleave($event.target)">
-                <q-img :src="item.url2" />
+                    @dragleave="onDragleave($event.target)"
+                    @click="onClick(2, item, $event.target)">
+                <q-img v-show="item.reel2" :src="item.url" />
                 </q-item-section>
                 <q-item-section avatar @dragover="onDragover(3, item, $event.target)"
-                    @dragleave="onDragleave($event.target)">
-                <q-img :src="item.url3" />
+                    @dragleave="onDragleave($event.target)"
+                    @click="onClick(3, item, $event.target)">
+                <q-img v-show="item.reel3" :src="item.url" />
                 </q-item-section>
                 <q-item-section style="font-weight: bolder" side v-if="item.jackpot"
                     @dragleave="onDragleave($event.target)">
@@ -49,58 +52,67 @@ export default {
       reelsData: [],
       tableData: [
         {
-          url1: 'http://wopidom.homelinux.com/public/assets/symbols/food/apple.png',
-          url2: 'http://wopidom.homelinux.com/public/assets/symbols/food/apple.png',
-          url3: 'http://wopidom.homelinux.com/public/assets/symbols/food/apple.png',
+          url: 'http://wopidom.homelinux.com/public/assets/symbols/food/apple.png',
+          reel1: true,
+          reel2: true,
+          reel3: true,
           points: '1000',
           jackpot: '1000 ',
         },
         {
-          url1: 'http://wopidom.homelinux.com/public/assets/symbols/food/cat_sticer.png',
-          url2: 'http://wopidom.homelinux.com/public/assets/symbols/food/cat_sticer.png',
-          url3: 'http://wopidom.homelinux.com/public/assets/symbols/food/cat_sticer.png',
+          url: 'http://wopidom.homelinux.com/public/assets/symbols/food/cat_sticer.png',
+          reel1: true,
+          reel2: true,
+          reel3: true,
           points: '100',
         },
         {
-          url1: 'http://wopidom.homelinux.com/public/assets/symbols/food/eggs.png',
-          url2: 'http://wopidom.homelinux.com/public/assets/symbols/food/eggs.png',
-          url3: 'http://wopidom.homelinux.com/public/assets/symbols/food/eggs.png',
+          url: 'http://wopidom.homelinux.com/public/assets/symbols/food/eggs.png',
+          reel1: true,
+          reel2: true,
+          reel3: true,
           points: '80',
         },
         {
-          url1: 'http://wopidom.homelinux.com/public/assets/symbols/food/berries.png',
-          url2: 'http://wopidom.homelinux.com/public/assets/symbols/food/berries.png',
-          url3: 'http://wopidom.homelinux.com/public/assets/symbols/food/berries.png',
+          url: 'http://wopidom.homelinux.com/public/assets/symbols/food/berries.png',
+          reel1: false,
+          reel2: true,
+          reel3: true,
           points: '80',
         },
         {
-          url1: '',
-          url2: 'http://wopidom.homelinux.com/public/assets/symbols/food/porcini.png',
-          url3: 'http://wopidom.homelinux.com/public/assets/symbols/food/porcini.png',
+          url: 'http://wopidom.homelinux.com/public/assets/symbols/food/porcini.png',
+          reel1: false,
+          reel2: true,
+          reel3: true,
           points: '50',
         },
         {
-          url1: 'http://wopidom.homelinux.com/public/assets/symbols/food/fried_eggs.png',
-          url2: 'http://wopidom.homelinux.com/public/assets/symbols/food/fried_eggs.png',
-          url3: 'http://wopidom.homelinux.com/public/assets/symbols/food/fried_eggs.png',
+          url: 'http://wopidom.homelinux.com/public/assets/symbols/food/fried_eggs.png',
+          reel1: false,
+          reel2: true,
+          reel3: true,
           points: '70',
         },
         {
-          url1: '',
-          url2: 'http://wopidom.homelinux.com/public/assets/symbols/food/fried_eggs.png',
-          url3: 'http://wopidom.homelinux.com/public/assets/symbols/food/fried_eggs.png',
+          url: 'http://wopidom.homelinux.com/public/assets/symbols/food/fried_eggs.png',
+          reel1: false,
+          reel2: true,
+          reel3: true,
           points: '20',
         },
         {
-          url1: '',
-          url2: '',
-          url3: 'http://wopidom.homelinux.com/public/assets/symbols/food/fried_eggs.png',
+          url: 'http://wopidom.homelinux.com/public/assets/symbols/food/fried_eggs.png',
+          reel1: false,
+          reel2: false,
+          reel3: true,
           points: '10',
         },
         {
-          url1: '',
-          url2: '',
-          url3: 'http://wopidom.homelinux.com/public/assets/symbols/food/fried_eggs.png',
+          url: 'http://wopidom.homelinux.com/public/assets/symbols/food/fried_eggs.png',
+          reel1: false,
+          reel2: false,
+          reel3: true,
           points: '10',
         },
       ],
@@ -109,23 +121,35 @@ export default {
     const onDrop = (evt, list) => {
       console.log('onDrop', evt, list);
       const item = JSON.parse(evt.dataTransfer.getData('item'));
-      state.itemDraggingOver.item[`url${state.itemDraggingOver.reel}`] = item.texture_url;
-      console.log(state.itemDraggingOver.item);
-      evt.target.classList.remove('inner-border');
+      state.itemDraggingOver.item.url = item.texture_url;
+      evt.target.closest('.q-item').classList.remove('inner-border');
     };
     const onDragover = (reel, item, target) => {
       state.itemDraggingOver = { reel, item };
-      target.classList.add('inner-border');
+      target.closest('.q-item').classList.add('inner-border');
     };
     const onDragleave = (el) => {
-      console.log('el.classList', el.classList);
-      el.classList.remove('inner-border');
+      el.closest('.q-item').classList.remove('inner-border');
+    };
+    const onClick = (reel, item, target) => {
+    //   const active = item[`reel${reel}`];
+      if (reel === 3) {
+        item.reel1 = false;
+        item.reel2 = false;
+      } else if (reel === 2) {
+        item.reel1 = false;
+        item.reel2 = true;
+      } else {
+        item.reel1 = true;
+        item.reel2 = true;
+      }
+      console.log('click', reel, item, target);
     };
     onMounted(async () => {
       state.reelsData = await getReels();
     });
     return {
-      ...toRefs(state), onDrop, onDragover, onDragleave,
+      ...toRefs(state), onDrop, onDragover, onDragleave, onClick,
     };
   },
 };
@@ -133,7 +157,7 @@ export default {
 
 <style lang="scss">
 .inner-border {
-       background-color: lightgreen;
+       background-color: rgb(236, 243, 236);
     }
 .pay-table{
     display: flex;

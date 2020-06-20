@@ -113,7 +113,7 @@ export default {
           items: [
             { label: 'Reels', to: '/config-reels' },
             { label: 'Symbols', to: '/config-symbols' },
-            { label: 'Play Table', to: '/config-play-table' },
+            { label: 'Pay Table', to: '/config-pay-table' },
           ],
         },
       ]),

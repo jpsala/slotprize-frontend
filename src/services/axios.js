@@ -3,12 +3,13 @@
 import axios from 'axios';
 // import router from '../router';
 console.log('document.location.hostname', document.location.hostname);
-const local = document.location.hostname === 'localhost'
-                    || document.location.hostname === 'front.wopidom.homelinux.com';
+const local = document.location.hostname === 'localhost';
+// || document.location.hostname === 'front.wopidom.homelinux.com';
+console.log('hostname', document.location.hostname);
 const getAxios = () => {
   console.log('Axios, solo una vez!');
   axios.defaults.baseURL = local ? 'http://localhost:8888/api'
-    : 'http://iae.dyndns.org:8888';
+    : 'http://wopidom.homelinux.com:8888/api';
   axios.interceptors.response.use((response) => {
     const endPoint = response.config.url.substring(response.config.url.lastIndexOf('/') + 1);
     console.log('endpoint %O %O response.data %O', endPoint, response, response.data);
