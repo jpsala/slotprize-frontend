@@ -50,7 +50,6 @@ export default {
     const onSubmit = async () => {
       try {
         const loginData = await login(user.value);
-        console.log('ld', loginData);
         if (loginData.status === 200) gotoHomePage();
         else { notifyFailure(`error status: ${loginData.status}`); }
       } catch (error) {

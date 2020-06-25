@@ -111,8 +111,8 @@ export default {
           icon: 'build',
           open: true,
           items: [
-            { label: 'Reels', to: '/config-reels' },
-            { label: 'Symbols', to: '/config-symbols' },
+            // { label: 'Reels', to: '/config-reels' },
+            // { label: 'Symbols', to: '/config-symbols' },
             { label: 'Pay Table', to: '/config-pay-table' },
           ],
         },

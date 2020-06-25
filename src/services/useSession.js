@@ -19,6 +19,7 @@ const useSocio = () => {
   };
   const setUser = (data) => {
     state.user = data;
+    console.log('detalle', state);
   };
   const logout = () => {
     setApiToken(undefined);
@@ -28,18 +29,19 @@ const useSocio = () => {
   };
   const login = async (_user) => {
     if (loggedIn.value) return loggedIn.value;
-    const response = await axios.post('/meta/auth', _user);
+    const response = await axios.post('/slot/auth', _user);
     if (!response) throw Error('Error de conexión');
     if (response.status !== 200) return response;
     setApiToken(response.headers.token);
-    setUser(response.data.user);
+    console.log('response.data', response.data);
+    setUser(response.data);
     return response;
   };
   const tryToLogin = async () => {
     try {
-      const response = await axios({ method: 'get', url: '/meta/auth/with-token', params: { token: apiToken.value } });
-      setUser(response.data.user);
-      return Boolean(response.data.user);
+      const response = await axios({ method: 'get', url: '/slot/with-token', params: { token: apiToken.value } });
+      setUser(response.data);
+      return Boolean(response.data);
     } catch (error) {
       console.log('detalle', error);
       return false;
