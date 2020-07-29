@@ -1,7 +1,7 @@
 <template>
-  <q-page class="flex pay-table">
+  <q-page class="flex pay-table content-center">
       <div class="symbols">
-        <Symbols :items="reelsData.symbols" :wrap="true" :show-menu="false" direction="row"
+        <Symbols :items="reelsData.symbols" :wrap="true" :show-menu="false" direction="column"
                             :show-url="false" :show-paymant-type="false" symbol-size="50px"/>
       </div>
       <q-card class="table" @drop='onDrop($event, 1)' @dragover.prevent @dragenter.prevent
@@ -177,6 +177,7 @@ export default {
         // min-width: 40px;
         // overflow: auto;
         .items{
+        align-content: flex-start;
             margin-left: 20px;
             zoom: .98;
             flex-direction: row;
@@ -188,7 +189,7 @@ export default {
     .table{
         // width: 100%;
         min-width: 200px;
-        margin: 10px auto auto 0;
+        margin: 10px auto auto 15%;
         // background-color: rgba(250, 250, 210, 0.404);
         padding: 10px;
         box-shadow: 0 1px 1px rgba(0,0,0,0.12),

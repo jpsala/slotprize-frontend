@@ -1,31 +1,30 @@
 <template>
-<div class="items small-scrollbar">
-
+<div class="items small-scrollbar relative-position">
+    <q-btn round color="primary" icon="icon-user" />
     <q-card v-for="item in items" :key="item.id" class="item" draggable='true'
                     :class="{active: item === selectedItem}"
                     @mouseenter="hover(item, $event)" @mouseleave="hover(item, $event)"
                     @dragstart="startDrag($event, item)">
         <div v-if="showMenu" class="menu-item">
             <q-btn round color="primary" icon="more_vert" flat
-                         v-show="item === selectedItem">
+                            v-show="item === selectedItem">
         <q-menu>
-          <q-list style="min-width: 100px">
+            <q-list style="min-width: 100px">
             <q-item @click="delItem(item)" clickable v-close-popup>
-              <q-item-section>Delete from DB</q-item-section>
+                <q-item-section>Delete from DB</q-item-section>
             </q-item>
             <q-item @click="delItem(item, true)" clickable v-close-popup>
-              <q-item-section>Delete File</q-item-section>
+                <q-item-section>Delete File</q-item-section>
             </q-item>
-          </q-list>
+            </q-list>
         </q-menu>
-      </q-btn>
+        </q-btn>
         </div>
-      <img :src="item.texture_url">
-      <q-card-section v-if="showPaymentType || showUrl">
+        <img :src="item.texture_url">
+        <q-card-section v-if="showPaymentType || showUrl">
         <div v-if="showPaymentType" class="text-h6">{{item.payment_type}}</div>
         <div v-if="showUrl" class="texture_url">{{item.texture_url}}</div>
-      </q-card-section>
-
+        </q-card-section>
     </q-card>
 </div>
 </template>
@@ -105,7 +104,7 @@ export default {
     display: flex;
     align-self: baseline;
     .item{
-        margin: 6px;
+        margin: 4px;
         width: 50px;
         height: 50px;
         .texture_url{
