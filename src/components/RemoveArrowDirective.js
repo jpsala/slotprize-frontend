@@ -1,13 +1,13 @@
 /* eslint-disable no-underscore-dangle */
 // non-angular-link-directive.js
 // import Vue from 'vue'
-import { elIsVisible } from '../helpers';
+import { elIsVisible } from '../helpers'
 
 export const RemoveArrow = {
-  async inserted(el) {
+  async inserted (el) {
     elIsVisible(el).then(() => {
-      const arrowEl = el.querySelector('.q-btn-dropdown__arrow-container');
-      arrowEl.remove();
-    });
-  },
-};
+      const arrowEl = el.querySelector('.q-btn-dropdown__arrow-container')
+      arrowEl.remove()
+    })
+  }
+}

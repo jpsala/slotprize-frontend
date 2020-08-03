@@ -73,72 +73,70 @@
 </template>
 
 <script>
-import { ref, onBeforeMount } from '@vue/composition-api';
-import { RemoveArrow } from 'app/src/components/RemoveArrowDirective';
-import myDrawerContent from 'app/src/components/MyDrawerContent';
-import useSession from '../services/useSession';
-import useWindowResize from '../services/useWindowResize';
-import { router } from '../boot/router';
+import { ref, onBeforeMount } from '@vue/composition-api'
+import { RemoveArrow } from 'app/src/components/RemoveArrowDirective'
+import myDrawerContent from 'app/src/components/MyDrawerContent'
+import useSession from '../services/useSession'
+import useWindowResize from '../services/useWindowResize'
+import { router } from '../boot/router'
 
-function setItemsDefaults(items, level = 0) {
+function setItemsDefaults (items, level = 0) {
   items.forEach((e) => {
-    if (e.protected === undefined) e.protected = false;
-    e.level = level;
+    if (e.protected === undefined) e.protected = false
+    e.level = level
     // if (level === 0) e.group = 'uno';
-    e.group = String(level);
+    e.group = String(level)
     if (e.items) {
-      level += 0.3;
-      e.items = setItemsDefaults(e.items, level);
-      level -= 0.3;
+      level += 0.3
+      e.items = setItemsDefaults(e.items, level)
+      level -= 0.3
     }
-  });
-  return items;
+  })
+  return items
 }
 export default {
   directives: { RemoveArrow },
   components: { myDrawerContent },
 
-  setup() {
+  setup () {
     const items = ref(
       setItemsDefaults([
         {
           label: 'Home',
           icon: 'home',
-          to: '/',
+          to: '/'
         },
         {
           label: 'Config',
           icon: 'build',
           open: true,
           items: [
-            // { label: 'Reels', to: '/config-reels' },
-            // { label: 'Symbols', to: '/config-symbols' },
-            { label: 'Pay Table', to: '/config-pay-table' },
-          ],
-        },
-      ]),
-    );
-    const Screen = useWindowResize();
+            { label: 'Events', to: '/events' }
+          ]
+        }
+      ])
+    )
+    const Screen = useWindowResize()
 
-    const left = ref(false);
+    const left = ref(false)
     const {
-      tryToLogin, loggedIn, user, logout: sessionLogout,
-    } = useSession();
+      tryToLogin, loggedIn, user, logout: sessionLogout
+    } = useSession()
     const logout = () => {
-      sessionLogout();
+      sessionLogout()
     //   if (root.$route.path !== '/login') root.$router.push('/login');
-    };
+    }
     onBeforeMount(async () => {
       try {
-        const isLoggedIn = await tryToLogin();
-        if (!isLoggedIn) router.push('/login');
+        const isLoggedIn = await tryToLogin()
+        if (!isLoggedIn) router.push('/login')
       } catch (error) {
-        console.log('error!!! trying to login in app.vue', error);
+        console.log('error!!! trying to login in app.vue', error)
       }
-    });
+    })
     return {
-      logout, left, items, loggedIn, Screen, user,
-    };
-  },
-};
+      logout, left, items, loggedIn, Screen, user
+    }
+  }
+}
 </script>

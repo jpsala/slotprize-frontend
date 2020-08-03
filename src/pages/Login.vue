@@ -20,56 +20,56 @@
   </div>
 </template>
 <script>
-import { ref, onBeforeMount, watch } from '@vue/composition-api';
-import useSession from '../services/useSession';
+import { ref, onBeforeMount, watch } from '@vue/composition-api'
+import useSession from '../services/useSession'
 // import router from '../boot/router';
 // import store from 'src/store'
 
 export default {
-  setup(props, ctx) {
+  setup (props, ctx) {
     const user = ref({
       email: '',
       password: '',
-      saveCredentials: 'false',
-    });
+      saveCredentials: 'false'
+    })
     const {
-      login, logout, loggedIn,
-    } = useSession();
+      login, logout, loggedIn
+    } = useSession()
     const gotoHomePage = () => {
-      ctx.root.$router.push('/');
-    };
+      ctx.root.$router.push('/')
+    }
     const notifyFailure = (error) => {
-      console.log('error', error);
+      console.log('error', error)
       ctx.root.$q.notify({
         color: 'red-4',
         textColor: 'white',
         icon: 'fas fa-check-circle',
-        message: error,
-      });
-    };
+        message: error
+      })
+    }
     const onSubmit = async () => {
       try {
-        const loginData = await login(user.value);
-        if (loginData.status === 200) gotoHomePage();
-        else { notifyFailure(`error status: ${loginData.status}`); }
+        const loginData = await login(user.value)
+        if (loginData.status === 200) gotoHomePage()
+        else { notifyFailure(`error status: ${loginData.status}`) }
       } catch (error) {
-        console.error('onsubmit', error);
-        if (error.status === 401) notifyFailure('Revise los datos (401)');
-        else notifyFailure(`error: ${error}`);
+        console.error('onsubmit', error)
+        if (error.status === 401) notifyFailure('Revise los datos (401)')
+        else notifyFailure(`error: ${error}`)
       }
-    };
+    }
     onBeforeMount(() => {
-      console.log('li', loggedIn.value);
-    });
+      console.log('li', loggedIn.value)
+    })
     watch(() => loggedIn.value, (_loggedIn) => {
-      if (_loggedIn) gotoHomePage();
-    }, { immediate: true });
+      if (_loggedIn) gotoHomePage()
+    }, { immediate: true })
     return {
-      user, login, logout, onSubmit,
-    };
-  },
+      user, login, logout, onSubmit
+    }
+  }
 
-};
+}
 </script>
 <style lang="stylus" scoped>
 .my-card

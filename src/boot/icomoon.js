@@ -1,4 +1,4 @@
-import '../statics/icomoon/style.css';
+import '../statics/icomoon/style.css'
 
 export default () => {
-};
+}

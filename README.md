@@ -1,6 +1,6 @@
-# Wopidom Frontend (wopi.front)
+# Wopidom Front (wopi.front)
 
-WopiDom FrontEnd
+Wopidom Frontend
 
 ## Install the dependencies
 ```bash

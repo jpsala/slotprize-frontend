@@ -1,8 +1,9 @@
 <template>
   <q-item
-    clickable exact
+    clickable
     tag="a"
-    :to="link"
+    target="_blank"
+    :href="link"
   >
     <q-item-section
       v-if="icon"
@@ -26,23 +27,23 @@ export default {
   props: {
     title: {
       type: String,
-      required: true,
+      required: true
     },
 
     caption: {
       type: String,
-      default: '',
+      default: ''
     },
 
     link: {
       type: String,
-      default: '#',
+      default: '#'
     },
 
     icon: {
       type: String,
-      default: '',
-    },
-  },
-};
+      default: ''
+    }
+  }
+}
 </script>

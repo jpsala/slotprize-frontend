@@ -31,16 +31,16 @@ export default {
   name: 'MyDrawerContent',
   props: { items: null, label: null },
 
-  setup() {
+  setup () {
     // const store = ctx.root.$store;
-    const allowedItem = (item) => !item.protected || (item.protected && true);
+    const allowedItem = (item) => !item.protected || (item.protected && true)
     const exec = (e) => {
       if (e.exec) {
-        e.exec(e);
+        e.exec(e)
       }
-    };
-    return { allowedItem, exec };
-  },
+    }
+    return { allowedItem, exec }
+  }
 
-};
+}
 </script>
