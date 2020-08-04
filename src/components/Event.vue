@@ -1,12 +1,12 @@
 <template>
   <q-card :class="{'disabled': disabled, 'editing': editMode}" class='bg-grey-1 event'>
-    <q-btn class='dot-menu' color='grey-7' round flat icon='more_vert'>
+    <q-btn :disable="editMode || disabled" class='dot-menu' color='grey-7' round flat icon='more_vert'>
       <q-menu cover auto-close>
         <q-list>
-          <q-item clickable :disable="editMode">
+          <q-item clickable :disable="editMode || disabled">
             <q-item-section @click="()=> $emit('remove', event)">Remove Event</q-item-section>
           </q-item>
-          <q-item clickable :disable="editMode">
+          <q-item clickable :disable="editMode || disabled">
             <q-item-section @click='edit(eventClone)'>Edit Event</q-item-section>
           </q-item>
         </q-list>
@@ -24,43 +24,75 @@
                 </div>
               </template>
             </q-field>
-            <q-input v-if='editMode' label='Multiplier' v-model.number='eventClone.multiplier' type='number' />
-            <q-field v-else label='Multiplier' stack-label borderless>
-              <template v-slot:control>
-                <div class='self-center full-width no-outline' tabindex='0'>
-                  {{ eventClone.multiplier }}
-                </div>
-              </template>
-            </q-field>
-            <q-input v-if='editMode' label='Bet Price' v-model.number='eventClone.betPrice' type='number' />
-            <q-field v-else label='Bet Price' stack-label borderless>
-              <template v-slot:control>
-                <div class='self-center full-width no-outline' tabindex='0'>
-                  {{ eventClone.betPrice }}
-                </div>
-              </template>
-            </q-field>
-            <q-input v-if='editMode' label='Duration' v-model.number='eventClone.duration' />
-            <q-field v-else label='Duration' stack-label borderless>
-              <template v-slot:control>
-                <div class='self-center full-width no-outline' tabindex='0'>
-                  {{ eventClone.duration }}
-                </div>
-              </template>
-            </q-field>
-            <q-select
-              label="Skin"
-              stack-label
-              v-if="editMode"
-              v-model="eventClone.skin"
-              :options="skins"
-              option-value="id"
-              option-label="name"
-            />
+            <div class="row">
+              <div class="col">
+                <q-input v-if='editMode' label='Multiplier' v-model.number='eventClone.multiplier' type='number' />
+                <q-field v-else label='Multiplier' stack-label borderless>
+                  <template v-slot:control>
+                    <div class='self-center full-width no-outline' tabindex='0'>
+                      {{ eventClone.multiplier }}
+                    </div>
+                  </template>
+                </q-field>
+              </div>
+              <div class="col">
+                <q-input v-if='editMode' label='Bet Price' v-model.number='eventClone.betPrice' type='number' />
+                <q-field v-else label='Bet Price' stack-label borderless>
+                  <template v-slot:control>
+                    <div class='self-center full-width no-outline' tabindex='0'>
+                      {{ eventClone.betPrice }}
+                    </div>
+                  </template>
+                </q-field>
+              </div>
+              <div class="col">
+                <q-input v-if='editMode' label='Duration' v-model.number='eventClone.duration' />
+                <q-field v-else label='Duration' stack-label borderless>
+                  <template v-slot:control>
+                    <div class='self-center full-width no-outline' tabindex='0'>
+                      {{ eventClone.duration }}
+                    </div>
+                  </template>
+                </q-field>
+              </div>
+            </div>
+            <q-select label="Skin" stack-label v-if="editMode" v-model="eventClone.skin" :options="skins" option-value="id" option-label="name" />
             <q-field v-else label='Skin' stack-label borderless>
               <template v-slot:control>
                 <div class='self-center full-width no-outline' tabindex='0'>
                   {{ eventClone.skin ? eventClone.skin.name : '' }}
+                </div>
+              </template>
+            </q-field>
+            <q-input v-if='editMode' label='Popup Message' v-model.number='eventClone.popupMessage' />
+            <q-field v-else label='Popup Message' stack-label borderless>
+              <template v-slot:control>
+                <div class='self-center full-width no-outline' tabindex='0'>
+                  {{ eventClone.popupMessage }}
+                </div>
+              </template>
+            </q-field>
+            <q-input v-if='editMode' label='Popup Texture URL' v-model.number='eventClone.popupTextureUrl' />
+            <q-field v-else label='Popup Texture URL' stack-label borderless>
+              <template v-slot:control>
+                <div class='self-center full-width no-outline' tabindex='0'>
+                  {{ eventClone.popupTextureUrl }}
+                </div>
+              </template>
+            </q-field>
+            <q-input v-if='editMode' label='Notification Message' v-model.number='eventClone.notificationMessage' />
+            <q-field v-else label='Notification Message' stack-label borderless>
+              <template v-slot:control>
+                <div class='self-center full-width no-outline' tabindex='0'>
+                  {{ eventClone.notificationMessage }}
+                </div>
+              </template>
+            </q-field>
+            <q-input v-if='editMode' label='Notification Texture URL' v-model.number='eventClone.notificationTextureUrl' />
+            <q-field v-else label='Notification Texture URL' stack-label borderless>
+              <template v-slot:control>
+                <div class='self-center full-width no-outline' tabindex='0'>
+                  {{ eventClone.notificationTextureUrl }}
                 </div>
               </template>
             </q-field>
@@ -147,8 +179,7 @@ export default {
       state.editMode = false
       emit('cancel')
     }
-    onMounted(() => {
-    })
+    onMounted(() => {})
     watch(
       () => props.event,
       event => {
@@ -177,10 +208,12 @@ export default {
     max-width: 250px;
     margin: 10px;
     min-width: 260px;
-    &.editing{
+
+    &.editing {
       background-color: white !important;
       // background-color: #ad2a2a0d !important;
     }
+
     .dot-menu {
       position: absolute;
       top: 0;
