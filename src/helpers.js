@@ -92,11 +92,11 @@ const notify = ({
 const soloEnDevMode = (func) => {
   if (process.env.NODE_ENV === 'development') func()
 }
-const log = (...args) => {
-  if (!process.env.NODE_ENV === 'development') return
-  console.warn(...args)
-  console.trace()
-}
+// const log = (...args) => {
+//   if (!process.env.NODE_ENV === 'development') return
+//   console.warn(...args)
+//   console.trace()
+// }
 const handleAxiosError = (_error) => {
   const error = {}
   if (!_error) error.statusMsg = 'Error'
@@ -112,5 +112,5 @@ const elIsVisible = (domElement) => new Promise((resolve) => {
   o.observe(domElement)
 })
 export {
-  notify, soloEnDevMode, log, handleAxiosError, elIsVisible, alerta, debounce, throttle
+  notify, soloEnDevMode, handleAxiosError, elIsVisible, alerta, debounce, throttle
 }

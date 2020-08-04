@@ -1,0 +1,8 @@
+{
+  "wrap_attributes_indent_size": 20,
+  "indent_size": 2,
+  "indent_char": " ",
+  "css": {
+    "indent_size": 2
+  }
+}

@@ -1,4 +1,4 @@
-import { reactive, computed } from '@vue/composition-api'
+import { reactive, computed, watch } from '@vue/composition-api'
 import axios, { setApiTokenInAxiosService } from './axios'
 import { router } from '../boot/router'
 
@@ -12,6 +12,8 @@ const useSession = () => {
   const user = computed(() => state.user)
   const apiToken = computed(() => state.apiToken)
   const loggedIn = computed(() => Boolean(state.user))
+  let loggedInHandle = () => false
+  const onLoggedInChange = (cb) => { loggedInHandle = cb }
   //   const loggedIn = computed(() => Boolean(state.user));
   const setApiToken = (value) => {
     console.log('setApiToken', value)
@@ -48,6 +50,9 @@ const useSession = () => {
       return false
     }
   }
+  watch(() => Boolean(state.user), (loggendIn) => {
+    loggedInHandle(loggendIn)
+  }, { immediate: true })
   setApiTokenInAxiosService(setApiToken)
   return {
     user,
@@ -56,7 +61,8 @@ const useSession = () => {
     logout,
     loggedIn,
     setApiToken,
-    apiToken
+    apiToken,
+    onLoggedInChange
   }
 }
 export default useSession

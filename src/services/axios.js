@@ -16,8 +16,10 @@ const getAxios = () => {
   axios.interceptors.response.use((response) => {
     const endPoint = response.config.url.substring(response.config.url.lastIndexOf('/') + 1)
     console.log('endpoint %O %O response.data %O', endPoint, response, response.data)
-    if (response.data && response.data.jwt) {
-      setApiToken(response.data.jwt)
+    if (response.data && (response.data.jwt || response.headers.token)) {
+      setApiToken(response.data.jwt || response.headers.token)
+      apiToken = response.data.jwt || response.headers.token
+      console.log('apiToken', apiToken)
     }
     return response
   }, (error) => {
@@ -32,6 +34,7 @@ const getAxios = () => {
       // const token = `Bearer ${apiToken.value}`;
       // console.log('token', token);
       // eslint-disable-next-line no-param-reassign
+      console.log('detalle', apiToken)
       if (config.url !== '/auth/local') config.headers.token = apiToken
       // if (config.url !== '/auth/local') config.headers.Authorization = token;
       return config

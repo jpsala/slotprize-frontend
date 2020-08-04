@@ -1,75 +1,191 @@
 <template>
-    <q-card class="bg-grey-1 event">
-        <q-btn class="dot-menu" color="grey-7" round flat icon="more_vert">
-            <q-menu cover auto-close>
-            <q-list>
-                <q-item clickable>
-                <q-item-section>Remove Event</q-item-section>
-                </q-item>
-                <q-item clickable>
-                <q-item-section @click="editMode = !editMode">Edit Event</q-item-section>
-                </q-item>
-            </q-list>
-            </q-menu>
-        </q-btn>
-        <q-card-section>
-        <div class="row items-center no-wrap">
-            <div class="col">
-            <div class="text-h6">
-                <q-input v-model="event.name" label="Name" />
-            </div>
-            <!-- <div class="text-subtitle2 q-pt-sm"><q-chip icon="event">{{event.type}}</q-chip></div> -->
-                <div class="text-h6">
-                    <q-select  emit-value map-options v-model="event.type" :options="eventTypes" label="Type" />
+  <q-card :class="{'disabled': disabled, 'editing': editMode}" class='bg-grey-1 event'>
+    <q-btn class='dot-menu' color='grey-7' round flat icon='more_vert'>
+      <q-menu cover auto-close>
+        <q-list>
+          <q-item clickable :disable="editMode">
+            <q-item-section @click="()=> $emit('remove', event)">Remove Event</q-item-section>
+          </q-item>
+          <q-item clickable :disable="editMode">
+            <q-item-section @click='edit(eventClone)'>Edit Event</q-item-section>
+          </q-item>
+        </q-list>
+      </q-menu>
+    </q-btn>
+    <q-card-section>
+      <div v-if="eventClone" class='row items-center no-wrap'>
+        <div class='col'>
+          <div class='text-h6'>
+            <q-input v-if='editMode' v-model='eventClone.name' label='Name' autofocus="" />
+            <q-field v-else label='Name' stack-label borderless>
+              <template v-slot:control>
+                <div class='self-center full-width no-outline' tabindex='0'>
+                  {{ eventClone.name }}
                 </div>
-            </div>
+              </template>
+            </q-field>
+            <q-input v-if='editMode' label='Multiplier' v-model.number='eventClone.multiplier' type='number' />
+            <q-field v-else label='Multiplier' stack-label borderless>
+              <template v-slot:control>
+                <div class='self-center full-width no-outline' tabindex='0'>
+                  {{ eventClone.multiplier }}
+                </div>
+              </template>
+            </q-field>
+            <q-input v-if='editMode' label='Bet Price' v-model.number='eventClone.betPrice' type='number' />
+            <q-field v-else label='Bet Price' stack-label borderless>
+              <template v-slot:control>
+                <div class='self-center full-width no-outline' tabindex='0'>
+                  {{ eventClone.betPrice }}
+                </div>
+              </template>
+            </q-field>
+            <q-input v-if='editMode' label='Duration' v-model.number='eventClone.duration' />
+            <q-field v-else label='Duration' stack-label borderless>
+              <template v-slot:control>
+                <div class='self-center full-width no-outline' tabindex='0'>
+                  {{ eventClone.duration }}
+                </div>
+              </template>
+            </q-field>
+            <q-select
+              label="Skin"
+              stack-label
+              v-if="editMode"
+              v-model="eventClone.skin"
+              :options="skins"
+              option-value="id"
+              option-label="name"
+            />
+            <q-field v-else label='Skin' stack-label borderless>
+              <template v-slot:control>
+                <div class='self-center full-width no-outline' tabindex='0'>
+                  {{ eventClone.skin ? eventClone.skin.name : '' }}
+                </div>
+              </template>
+            </q-field>
+            <q-input v-if='editMode' label='Rule' v-model.number='eventClone.rule' />
+            <q-field v-else label='Rule' stack-label borderless>
+              <template v-slot:control>
+                <div class='self-center full-width no-outline' tabindex='0'>
+                  {{ eventClone.rule }}
+                </div>
+              </template>
+            </q-field>
+          </div>
+          <!-- <div class="text-subtitle2 q-pt-sm"><q-chip icon="event">{{eventClone.type}}</q-chip></div> -->
         </div>
-        </q-card-section>
-        <component :is="event.type" :event="event" />
-    </q-card>
+      </div>
+    </q-card-section>
+    <q-separator />
+
+    <q-card-actions v-if='editMode' align='right'>
+      <q-btn flat @click='cancel(eventClone)'>Cancel</q-btn>
+      <q-btn flat @click='save(eventClone)'>Ok</q-btn>
+    </q-card-actions>
+    <q-card-actions v-else align='right'>
+      <q-btn :disable="disabled" flat @click='edit(eventClone)'>Edit</q-btn>
+    </q-card-actions>
+  </q-card>
 </template>
 
 <script>
 /* eslint-disable vue/no-unused-components */
-import EventMultiplier from 'src/components/EventMultiplier'
-import EventRaffle from 'src/components/EventRaffle'
-import { computed, reactive, toRefs } from '@vue/composition-api'
+import {
+  reactive,
+  toRefs,
+  watch,
+  onMounted,
+  ref
+} from '@vue/composition-api'
+import clone from 'rfdc'
+
 export default {
-  components: { EventMultiplier, EventRaffle },
   name: 'Event',
   props: {
     event: {
       type: Object,
       required: true
+    },
+    new: {
+      type: Boolean,
+      default: false,
+      required: false
+    },
+    skins: {
+      type: Array,
+      default: () => [],
+      required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
-  setup (props) {
+  setup (props, {
+    emit
+  }) {
     const state = reactive({
       editMode: false,
-      eventTypes: [
-        { label: 'Happy Hour', value: 'EventMultiplier' },
-        { label: 'Raffle', value: 'EventRaffle' }
-      ]
+      eventClone: ref(undefined),
+      eventBackup: undefined
     })
-    const component = computed(() => {
-      if (props.event.type === 1) return 'EventMultiplier'
-      if (props.event.type === 2) return 'EventRaffle'
+    const save = event => {
+      state.editMode = false
+      state.eventClone.skinId = state.eventClone.skin.id
+      emit('change', state.eventClone)
+      console.log('save here')
+    }
+    const edit = event => {
+      state.eventBackup = clone()(event)
+      state.eventClone = clone()(event)
+      state.editMode = true
+      emit('editing', event)
+    }
+    const cancel = event => {
+      state.eventClone = clone()(state.eventBackup)
+      state.editMode = false
+      emit('cancel')
+    }
+    onMounted(() => {
     })
-    return { component, ...toRefs(state) }
+    watch(
+      () => props.event,
+      event => {
+        state.eventClone = clone()(event)
+        state.eventClone.skin = props.skins.find(skin => skin.id === state.eventClone.skinId)
+        console.log('state.eventClone', state.eventClone)
+        if (props.new) {
+          state.editMode = true
+        }
+      }, {
+        immediate: true
+      }
+    )
+    return {
+      ...toRefs(state),
+      save,
+      edit,
+      cancel
+    }
   }
 }
 </script>
 
 <style lang="stylus">
-.event{
+  .event {
     max-width: 250px;
     margin: 10px;
     min-width: 260px;
-    .dot-menu{
-        position: absolute;
-        top: 0;
-        right: 0;
-        z-index 2;
+    &.editing{
+      background-color: white !important;
+      // background-color: #ad2a2a0d !important;
     }
-}
-</style>
+    .dot-menu {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index 2;
+    }
+  }
+</style>>
