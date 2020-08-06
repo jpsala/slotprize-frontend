@@ -16,13 +16,11 @@ const useSession = () => {
   const onLoggedInChange = (cb) => { loggedInHandle = cb }
   //   const loggedIn = computed(() => Boolean(state.user));
   const setApiToken = (value) => {
-    console.log('setApiToken', value)
     state.apiToken = value
     window.localStorage.setItem(jwtSecret, value)
   }
   const setUser = (data) => {
     state.user = data
-    console.log('detalle', state)
   }
   const logout = () => {
     setApiToken(undefined)
@@ -36,7 +34,6 @@ const useSession = () => {
     if (!response) throw Error('Error de conexión')
     if (response.status !== 200) return response
     setApiToken(response.headers.token)
-    console.log('response.data', response.data)
     setUser(response.data)
     return response
   }
@@ -46,7 +43,7 @@ const useSession = () => {
       setUser(response.data.user)
       return Boolean(response.data)
     } catch (error) {
-      console.log('detalle', error)
+      console.log('tryToLogin error', error)
       return false
     }
   }

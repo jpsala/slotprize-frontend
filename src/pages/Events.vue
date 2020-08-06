@@ -2,10 +2,10 @@
   <div class="q-pa-md q-gutter-md justify-center">
     <h3 class="q-ml-xl q-pl-xl">Events</h3>
     <div class="row">
-      <Event @change="eventChange" @remove="removeEvent" :skins="skins" @cancel="cancel"
+      <Event ref='eventsRef' @change="eventSave" @remove="removeEvent" :skins="skins" @cancel="cancel"
              :event="event" v-for="(event, index) in events" :key="index" @editing="editing"
              :disabled="editingEvent && editingEvent.id !== event.id"/>
-      <Event v-if="newEvent" @cancel="cancel" @change="eventChange" @remove="removeEvent"
+      <Event ref="eventRefNew" v-if="newEvent" @cancel="cancel" @change="eventSave" @remove="removeEvent"
              :skins="skins" :event="newEvent" :new="true"  />
     </div>
     <q-page-sticky position="top-left" :offset="[18, 18]">
@@ -19,10 +19,12 @@
 import {
   reactive,
   toRefs,
-  watch
+  watch,
+  ref
 } from '@vue/composition-api'
 import Event from 'src/components/Event'
 import useSession from '../services/useSession'
+// import axios from 'axios'
 import axios from '../services/axios'
 import clone from 'rfdc'
 export default {
@@ -30,7 +32,7 @@ export default {
     Event
   },
   name: 'Events',
-  setup () {
+  setup (_, { root }) {
     const {
       loggedIn
     } = useSession()
@@ -41,14 +43,35 @@ export default {
       newEventOriginal: undefined,
       editingEvent: undefined
     })
-    const eventChange = async (event) => {
-      const eventForSave = clone()(event)
-      delete eventForSave.skin
-      await axios.post('slot/event', eventForSave)
-      state.editingEvent = undefined
+    const eventsRef = ref(undefined)
+    const eventRefNew = ref(undefined)
 
-      // console.log('change', event)
+    const eventSave = async (event) => {
+      const formData = new FormData()
+      for (var key in event) formData.append(key, event[key])
+      const axiosAnt = axios.defaults.headers.post['Content-Type']
+      axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
+      const response = await axios({
+        method: 'post',
+        url: 'slot/event',
+        data: formData,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+      axios.defaults.headers.post['Content-Type'] = axiosAnt
+      state.editingEvent = undefined
+      console.log('response', response)
+      console.log('eventRefNew', eventRefNew.value, response.data.id !== -1)
+      const ref = response.data.id !== -1 ? eventRefNew.value : eventsRef.value.find(ref => ref.event.id === event.id)
+      ref.setData(response.data)
+      if (response.popupFile) event.popupTextureUrl = response.popupFile
+      if (response.notificationFile) event.notificationUrl = response.notificationFile
+      if (response.data.isNew) {
+        state.newEvent = undefined
+        state.events.push(event)
+      }
+      return response
     }
+
     const getEvents = async () => {
       if (!loggedIn.value) return
       const respEvents = await axios.get('slot/events')
@@ -56,12 +79,13 @@ export default {
       state.events = respEvents.data.events
       state.skins = respSkins.data
       state.newEventOriginal = respEvents.data.newEvent
-      console.log('sq', state.newEvent)
     }
+
     const editing = (event) => {
       console.log('editing', event)
       state.editingEvent = event
     }
+
     const removeEvent = (event) => {
       console.log('remove', event)
       state.editingEvent = undefined
@@ -80,11 +104,13 @@ export default {
     })
     return {
       ...toRefs(state),
-      eventChange,
+      eventSave,
       removeEvent,
       addEvent,
       cancel,
-      editing
+      editing,
+      eventsRef,
+      eventRefNew
     }
   }
 }

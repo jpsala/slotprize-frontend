@@ -1,5 +1,5 @@
 <template>
-  <q-card :class="{'disabled': disabled, 'editing': editMode}" class='bg-grey-1 event'>
+  <q-card v-if="eventClone" :class="{'disabled': disabled, 'editing': editMode}" class='bg-grey-1 event'>
     <q-btn :disable="editMode || disabled" class='dot-menu' color='grey-7' round flat icon='more_vert'>
       <q-menu cover auto-close>
         <q-list>
@@ -13,100 +13,49 @@
       </q-menu>
     </q-btn>
     <q-card-section>
-      <div v-if="eventClone" class='row items-center no-wrap'>
-        <div class='col'>
+      <div  class='row items-center no-wrap'>
+        <q-form class='col' enctype="multipart/form-data">
           <div class='text-h6'>
-            <q-input v-if='editMode' v-model='eventClone.name' label='Name' autofocus="" />
-            <q-field v-else label='Name' stack-label borderless>
-              <template v-slot:control>
-                <div class='self-center full-width no-outline' tabindex='0'>
-                  {{ eventClone.name }}
-                </div>
-              </template>
-            </q-field>
+            <q-input :disable="!editMode" v-model='eventClone.name' label='Name' autofocus="" />
             <div class="row">
-              <div class="col">
-                <q-input v-if='editMode' label='Multiplier' v-model.number='eventClone.multiplier' type='number' />
-                <q-field v-else label='Multiplier' stack-label borderless>
-                  <template v-slot:control>
-                    <div class='self-center full-width no-outline' tabindex='0'>
-                      {{ eventClone.multiplier }}
-                    </div>
-                  </template>
-                </q-field>
-              </div>
-              <div class="col">
-                <q-input v-if='editMode' label='Bet Price' v-model.number='eventClone.betPrice' type='number' />
-                <q-field v-else label='Bet Price' stack-label borderless>
-                  <template v-slot:control>
-                    <div class='self-center full-width no-outline' tabindex='0'>
-                      {{ eventClone.betPrice }}
-                    </div>
-                  </template>
-                </q-field>
-              </div>
-              <div class="col">
-                <q-input v-if='editMode' label='Duration' v-model.number='eventClone.duration' />
-                <q-field v-else label='Duration' stack-label borderless>
-                  <template v-slot:control>
-                    <div class='self-center full-width no-outline' tabindex='0'>
-                      {{ eventClone.duration }}
-                    </div>
-                  </template>
-                </q-field>
-              </div>
+                <q-input :borderless="!editMode" class="col" :disable="!editMode" label='Multiplier' v-model.number='eventClone.multiplier' type='number' />
+                <q-input :borderless="!editMode" class="col" :disable="!editMode" label='Bet Price' v-model.number='eventClone.betPrice' type='number' />
+                <q-input :borderless="!editMode" class="col" :disable="!editMode" label='Duration' v-model.number='eventClone.duration' />
             </div>
-            <q-select label="Skin" stack-label v-if="editMode" v-model="eventClone.skin" :options="skins" option-value="id" option-label="name" />
-            <q-field v-else label='Skin' stack-label borderless>
-              <template v-slot:control>
-                <div class='self-center full-width no-outline' tabindex='0'>
-                  {{ eventClone.skin ? eventClone.skin.name : '' }}
-                </div>
+
+            <q-select @input="selectChange" :borderless="!editMode" :disable="!editMode" label="Skin"
+                      stack-label :value="eventClone.skin" :options="skins"
+                      option-value="id" option-label="name" :key="key"/>
+
+            <q-separator v-if="!editMode"/>
+            <div style="font-size: small; color: gray">Popup</div>
+            <q-input :borderless="!editMode" :disable="!editMode" class="q-pl-md" label='Message'
+                     v-model.number='eventClone.popupMessage' />
+            <q-file :borderless="!editMode" :disable="!editMode" class="q-pl-md" label="Texture URL"
+                     v-model="eventClone.popupFile">
+              <template v-slot:before>
+                <q-avatar>
+                  <img  v-if="eventClone.popupTextureUrl" :src="eventClone.popupTextureUrl">
+                  <q-icon v-else name="attach_file" />
+                </q-avatar>
               </template>
-            </q-field>
-            <q-input v-if='editMode' label='Popup Message' v-model.number='eventClone.popupMessage' />
-            <q-field v-else label='Popup Message' stack-label borderless>
-              <template v-slot:control>
-                <div class='self-center full-width no-outline' tabindex='0'>
-                  {{ eventClone.popupMessage }}
-                </div>
+            </q-file>
+            <q-separator v-if="!editMode"/>
+            <div style="font-size: small; color: gray">Notification</div>
+            <q-input :borderless="!editMode" :disable="!editMode" class="q-pl-md" label='Message' v-model.number='eventClone.notificationMessage' />
+            <q-file :borderless="!editMode" class="col q-pl-md" label="Texture URL" v-model="eventClone.notificationFile">
+              <template v-slot:before>
+                <q-avatar>
+                  <img :key="key" v-if="eventClone.notificationTextureUrl"
+                       :src="eventClone.notificationTextureUrl">
+                  <q-icon v-else name="attach_file" />
+                </q-avatar>
               </template>
-            </q-field>
-            <q-input v-if='editMode' label='Popup Texture URL' v-model.number='eventClone.popupTextureUrl' />
-            <q-field v-else label='Popup Texture URL' stack-label borderless>
-              <template v-slot:control>
-                <div class='self-center full-width no-outline' tabindex='0'>
-                  {{ eventClone.popupTextureUrl }}
-                </div>
-              </template>
-            </q-field>
-            <q-input v-if='editMode' label='Notification Message' v-model.number='eventClone.notificationMessage' />
-            <q-field v-else label='Notification Message' stack-label borderless>
-              <template v-slot:control>
-                <div class='self-center full-width no-outline' tabindex='0'>
-                  {{ eventClone.notificationMessage }}
-                </div>
-              </template>
-            </q-field>
-            <q-input v-if='editMode' label='Notification Texture URL' v-model.number='eventClone.notificationTextureUrl' />
-            <q-field v-else label='Notification Texture URL' stack-label borderless>
-              <template v-slot:control>
-                <div class='self-center full-width no-outline' tabindex='0'>
-                  {{ eventClone.notificationTextureUrl }}
-                </div>
-              </template>
-            </q-field>
-            <q-input v-if='editMode' label='Rule' v-model.number='eventClone.rule' />
-            <q-field v-else label='Rule' stack-label borderless>
-              <template v-slot:control>
-                <div class='self-center full-width no-outline' tabindex='0'>
-                  {{ eventClone.rule }}
-                </div>
-              </template>
-            </q-field>
+            </q-file>
+            <q-input :borderless="!editMode" :disable='!editMode' label='Rule' v-model.number='eventClone.rule' />
           </div>
           <!-- <div class="text-subtitle2 q-pt-sm"><q-chip icon="event">{{eventClone.type}}</q-chip></div> -->
-        </div>
+        </q-form>
       </div>
     </q-card-section>
     <q-separator />
@@ -160,34 +109,61 @@ export default {
     const state = reactive({
       editMode: false,
       eventClone: ref(undefined),
-      eventBackup: undefined
+      eventBackup: undefined,
+      key: 1
     })
     const save = event => {
       state.editMode = false
       state.eventClone.skinId = state.eventClone.skin.id
       emit('change', state.eventClone)
-      console.log('save here')
     }
     const edit = event => {
       state.eventBackup = clone()(event)
       state.eventClone = clone()(event)
+      state.eventClone.popupFile = null
+      state.eventClone.notificationFile = null
       state.editMode = true
       emit('editing', event)
     }
     const cancel = event => {
-      state.eventClone = clone()(state.eventBackup)
-      state.editMode = false
+      if (!props.new) {
+        state.eventClone = clone()(state.eventBackup)
+        state.eventClone.popupFile = null
+        state.eventClone.notificationFile = null
+        state.editMode = false
+      }
       emit('cancel')
+    }
+    const setData = (data) => {
+      console.log('data', data)
+      if (data.id) state.eventClone.id = data.id
+      if (data.notificationFile) {
+        state.key += 1
+        state.eventClone.notificationTextureUrl = `${data.notificationFile}?key=${state.key}`
+      }
+      if (data.popupFile) {
+        state.key += 1
+        state.eventClone.popupTextureUrl = `${data.popupFile}?key=${state.key}`
+      }
+    }
+    const selectChange = (value) => {
+      console.log('value', value, state.eventClone)
+      state.eventClone.skin = value
+      state.key += 1
     }
     onMounted(() => {})
     watch(
       () => props.event,
       event => {
+        console.log('event change')
         state.eventClone = clone()(event)
         state.eventClone.skin = props.skins.find(skin => skin.id === state.eventClone.skinId)
-        console.log('state.eventClone', state.eventClone)
+        state.eventClone.popupFile = undefined
+        state.eventClone.notificationFile = undefined
+        state.key += 1
         if (props.new) {
           state.editMode = true
+          state.eventClone.skin = null
         }
       }, {
         immediate: true
@@ -197,20 +173,27 @@ export default {
       ...toRefs(state),
       save,
       edit,
-      cancel
+      cancel,
+      setData,
+      selectChange
     }
   }
 }
 </script>
 
 <style lang="stylus">
+  .event *{
+      color: black !important;
+      font-size: 1rem;
+  }
   .event {
-    max-width: 250px;
+    max-width: 450px;
     margin: 10px;
-    min-width: 260px;
+    min-width: 360px;
 
-    &.editing {
       background-color: white !important;
+    &.editing {
+      background-color: #ad2a2a0d !important;
       // background-color: #ad2a2a0d !important;
     }
 
