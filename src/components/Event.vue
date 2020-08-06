@@ -43,7 +43,7 @@
             <q-separator v-if="!editMode"/>
             <div style="font-size: small; color: gray">Notification</div>
             <q-input :borderless="!editMode" :disable="!editMode" class="q-pl-md" label='Message' v-model.number='eventClone.notificationMessage' />
-            <q-file :borderless="!editMode" class="col q-pl-md" label="Texture URL" v-model="eventClone.notificationFile">
+            <q-file :borderless="!editMode" :disable="!editMode" class="col q-pl-md" label="Texture URL" v-model="eventClone.notificationFile">
               <template v-slot:before>
                 <q-avatar>
                   <img :key="key" v-if="eventClone.notificationTextureUrl"
