@@ -134,9 +134,8 @@ export default {
       }
       emit('cancel')
     }
-    const setData = (data) => {
-      console.log('data', data)
-      if (data.id) state.eventClone.id = data.id
+    const setDataAfterSave = (data) => {
+      if (data.id !== -1) state.eventClone.id = data.id
       if (data.notificationFile) {
         state.key += 1
         state.eventClone.notificationTextureUrl = `${data.notificationFile}?key=${state.key}`
@@ -174,7 +173,7 @@ export default {
       save,
       edit,
       cancel,
-      setData,
+      setDataAfterSave,
       selectChange
     }
   }

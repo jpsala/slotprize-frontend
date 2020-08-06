@@ -59,10 +59,8 @@ export default {
       })
       axios.defaults.headers.post['Content-Type'] = axiosAnt
       state.editingEvent = undefined
-      console.log('response', response)
-      console.log('eventRefNew', eventRefNew.value, response.data.id !== -1)
-      const ref = response.data.id !== -1 ? eventRefNew.value : eventsRef.value.find(ref => ref.event.id === event.id)
-      ref.setData(response.data)
+      const eventRef = response.data.isNew ? eventRefNew.value : eventsRef.value.find(ref => ref.event.id === event.id)
+      eventRef.setDataAfterSave(response.data)
       if (response.popupFile) event.popupTextureUrl = response.popupFile
       if (response.notificationFile) event.notificationUrl = response.notificationFile
       if (response.data.isNew) {
