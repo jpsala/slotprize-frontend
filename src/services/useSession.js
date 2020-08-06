@@ -1,5 +1,5 @@
 import { reactive, computed, watch } from '@vue/composition-api'
-import axios, { setApiTokenInAxiosService } from './axios'
+import axios from './axios'
 import { router } from '../boot/router'
 
 const jwtSecret = 'wopidom.front'
@@ -8,17 +8,17 @@ const state = reactive({
   apiToken: window.localStorage.getItem(jwtSecret),
   user: undefined
 })
+export const setApiToken = (value) => {
+  state.apiToken = value
+  window.localStorage.setItem(jwtSecret, value)
+}
+export const getApiToken = (value) => state.apiToken
 const useSession = () => {
   const user = computed(() => state.user)
   const apiToken = computed(() => state.apiToken)
   const loggedIn = computed(() => Boolean(state.user))
   let loggedInHandle = () => false
   const onLoggedInChange = (cb) => { loggedInHandle = cb }
-  //   const loggedIn = computed(() => Boolean(state.user));
-  const setApiToken = (value) => {
-    state.apiToken = value
-    window.localStorage.setItem(jwtSecret, value)
-  }
   const setUser = (data) => {
     state.user = data
   }
@@ -50,7 +50,6 @@ const useSession = () => {
   watch(() => Boolean(state.user), (loggendIn) => {
     loggedInHandle(loggendIn)
   }, { immediate: true })
-  setApiTokenInAxiosService(setApiToken)
   return {
     user,
     tryToLogin,

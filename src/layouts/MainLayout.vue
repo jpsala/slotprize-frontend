@@ -111,7 +111,8 @@ export default {
           icon: 'build',
           open: true,
           items: [
-            { label: 'Events', to: '/events' }
+            { label: 'Events', to: '/events' },
+            { label: 'Players', to: '/players' }
           ]
         }
       ])
