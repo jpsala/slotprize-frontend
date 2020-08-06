@@ -16,16 +16,21 @@
       <div  class='row items-center no-wrap'>
         <q-form class='col' enctype="multipart/form-data">
           <div class='text-h6'>
-            <q-input :disable="!editMode" v-model='eventClone.name' label='Name' autofocus="" />
+            <q-input class="col" :disable="!editMode" v-model='eventClone.name' label='Name' autofocus="" />
+
+            <q-input :disable="!editMode" v-model='eventClone.description' label='Description' autofocus="" />
             <div class="row">
                 <q-input :borderless="!editMode" class="col" :disable="!editMode" label='Multiplier' v-model.number='eventClone.multiplier' type='number' />
                 <q-input :borderless="!editMode" class="col" :disable="!editMode" label='Bet Price' v-model.number='eventClone.betPrice' type='number' />
                 <q-input :borderless="!editMode" class="col" :disable="!editMode" label='Duration' v-model.number='eventClone.duration' />
             </div>
 
-            <q-select @input="selectChange" :borderless="!editMode" :disable="!editMode" label="Skin"
+            <div class="row justify-between">
+            <q-select class="col-8" @input="selectChange" :borderless="!editMode" :disable="!editMode" label="Skin"
                       stack-label :value="eventClone.skin" :options="skins"
                       option-value="id" option-label="name" :key="key"/>
+            <q-checkbox class="col-3 q-ml-sm justify-end" size="sm" color="" :disable="!editMode" v-model="eventClone.active" :true-value="1" :false-value="0" label="Active" />
+            </div>
 
             <q-separator v-if="!editMode"/>
             <div style="font-size: small; color: gray">Popup</div>
@@ -158,7 +163,10 @@ export default {
         state.eventClone = clone()(event)
         state.eventClone.skin = props.skins.find(skin => skin.id === state.eventClone.skinId)
         state.eventClone.popupFile = undefined
+        state.eventClone.popupFile = undefined
         state.eventClone.notificationFile = undefined
+        // if (state.eventClone.popupTextureUrl) state.eventClone.popupTextureUrl += '?version=' + rand(1, 1000)
+        // if (state.eventClone.notificationTextureUrl) state.eventClone.notificationTextureUrl += '?version=' + rand(1, 1000)
         state.key += 1
         if (props.new) {
           state.editMode = true
@@ -182,7 +190,7 @@ export default {
 
 <style lang="stylus">
   .event *{
-      color: black !important;
+      // color: black !important;
       font-size: 1rem;
   }
   .event {

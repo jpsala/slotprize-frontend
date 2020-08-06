@@ -89,6 +89,10 @@ const notify = ({
     timeout
   })
 }
+const rand = (min, max) => {
+  const randomNum = Math.random() * (max - min) + min
+  return Math.floor(randomNum)
+}
 const soloEnDevMode = (func) => {
   if (process.env.NODE_ENV === 'development') func()
 }
@@ -112,5 +116,5 @@ const elIsVisible = (domElement) => new Promise((resolve) => {
   o.observe(domElement)
 })
 export {
-  notify, soloEnDevMode, handleAxiosError, elIsVisible, alerta, debounce, throttle
+  rand, notify, soloEnDevMode, handleAxiosError, elIsVisible, alerta, debounce, throttle
 }
