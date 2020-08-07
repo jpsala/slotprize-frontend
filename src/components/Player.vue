@@ -1,6 +1,9 @@
 <template>
   <div class="q-pa-md">
-    <div class="q-gutter-y-md" style="max-width: 600px">
+    <div @click="$emit('back')" style="font-size: 16px" class="q-mb-lg cursor-pointer">
+      <q-icon name="keyboard_backspace" /> Back
+    </div>
+    <div class="q-gutter-y-md" style="max-width: 950px">
       <q-card>
         <q-tabs
           v-model="tab"
@@ -13,7 +16,8 @@
         >
           <q-tab name="profile" label="Profile" />
           <q-tab name="raffleHistory" label="Raffle History" />
-          <q-tab name="movies" label="Movies" />
+          <q-tab name="SupportMessages" label="Support messages" />
+          <q-tab name="Wallet" label="Wallet" />
         </q-tabs>
 
         <q-separator />
@@ -24,13 +28,14 @@
           </q-tab-panel>
 
           <q-tab-panel name="raffleHistory">
-            <div class="text-h6">Raffle History</div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            <PlayerRaffles :player="player" />
           </q-tab-panel>
 
-          <q-tab-panel name="movies">
-            <div class="text-h6">Movies</div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          <q-tab-panel name="SupportMessages">
+            <PlayerSupportMessages :player="player" />
+          </q-tab-panel>
+          <q-tab-panel name="Wallet">
+            <PlayerWallet :player="player" />
           </q-tab-panel>
         </q-tab-panels>
       </q-card>
@@ -40,8 +45,11 @@
 <script>
 import { reactive, toRefs } from '@vue/composition-api'
 import PlayerProfile from '../components/PlayerProfile'
+import PlayerWallet from '../components/PlayerWallet'
+import PlayerRaffles from '../components/PlayerRaffles'
+import PlayerSupportMessages from '../components/PlayerSupportMessages'
 export default {
-  components: { PlayerProfile },
+  components: { PlayerProfile, PlayerRaffles, PlayerSupportMessages, PlayerWallet },
   props: {
     player: {
       type: Object,

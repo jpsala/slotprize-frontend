@@ -1,5 +1,5 @@
 <template>
-<Player v-if="selected" :player="selected" @change="playerChange"/>
+<Player @back="selected = undefined" v-if="selected" :player="selected" @change="playerChange"/>
   <div v-else class="players q-pa-md">
     <q-input style="width:400px" bottom-slots v-model="filter" label="Filter">
       <template v-slot:prepend>

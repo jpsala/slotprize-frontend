@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-h6">Player Profile</div>
+    <!-- <div class="text-h6">Player Profile</div> -->
     <q-list bordered separator>
       <q-item v-for="(value, index) in playerEntries" :key="index">
         <q-item-section style="max-width: 120px">
@@ -21,6 +21,7 @@ import {
   reactive,
   toRefs
 } from '@vue/composition-api'
+import { format } from 'date-fns/esm'
 export default {
   props: {
     player: {
@@ -33,7 +34,9 @@ export default {
       playerEntries: undefined
     })
     onMounted(() => {
-      console.log('p', props.player)
+      props.player.createdAt = format(new Date(props.player.created_at), 'yyyy/MM/dd')
+      delete props.player.modified_at
+      delete props.player.password
       state.playerEntries = Object.entries(camelcaseKeys(props.player, {
         pascalCase: true
       }))
