@@ -112,7 +112,8 @@ export default {
           open: true,
           items: [
             { label: 'Events', to: '/events' },
-            { label: 'Players', to: '/players' }
+            { label: 'Players', to: '/players' },
+            { label: 'Jackpot', to: '/jackpot' }
           ]
         }
       ])

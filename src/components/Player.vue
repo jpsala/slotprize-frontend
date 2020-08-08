@@ -18,6 +18,7 @@
           <q-tab name="raffleHistory" label="Raffle History" />
           <q-tab name="SupportMessages" label="Support messages" />
           <q-tab name="Wallet" label="Wallet" />
+          <q-tab name="LoginInfo" label="Login Info" />
         </q-tabs>
 
         <q-separator />
@@ -37,6 +38,9 @@
           <q-tab-panel name="Wallet">
             <PlayerWallet :player="player" />
           </q-tab-panel>
+          <q-tab-panel name="LoginInfo">
+            <PlayerLoginHistory :player="player" />
+          </q-tab-panel>
         </q-tab-panels>
       </q-card>
     </div>
@@ -48,8 +52,9 @@ import PlayerProfile from '../components/PlayerProfile'
 import PlayerWallet from '../components/PlayerWallet'
 import PlayerRaffles from '../components/PlayerRaffles'
 import PlayerSupportMessages from '../components/PlayerSupportMessages'
+import PlayerLoginHistory from '../components/PlayerLoginHistory'
 export default {
-  components: { PlayerProfile, PlayerRaffles, PlayerSupportMessages, PlayerWallet },
+  components: { PlayerProfile, PlayerRaffles, PlayerSupportMessages, PlayerWallet, PlayerLoginHistory },
   props: {
     player: {
       type: Object,

@@ -24,7 +24,6 @@ import {
 } from '@vue/composition-api'
 import Event from 'src/components/Event'
 import useSession from '../services/useSession'
-// import axios from 'axios'
 import axios from '../services/axios'
 import clone from 'rfdc'
 export default {
