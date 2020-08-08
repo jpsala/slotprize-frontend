@@ -113,7 +113,8 @@ export default {
           items: [
             { label: 'Events', to: '/events' },
             { label: 'Players', to: '/players' },
-            { label: 'Jackpot', to: '/jackpot' }
+            { label: 'Jackpot', to: '/jackpot' },
+            { label: 'Tombola', to: '/tombola' }
           ]
         }
       ])

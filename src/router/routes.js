@@ -8,6 +8,7 @@ const routes = [
       { path: 'events', component: () => import('pages/Events.vue') },
       { path: 'login', component: () => import('pages/Login.vue') },
       { path: 'jackpot', component: () => import('pages/Jackpot.vue') },
+      { path: 'tombola', component: () => import('pages/Tombola.vue') },
       { path: 'players', component: () => import('pages/Players.vue') }
     ]
   },
