@@ -1,157 +1,157 @@
 <template>
-  <q-page class="flex pay-table">
+  <q-page class="flex paytable">
       <div class="symbols">
-        <Symbols :items="symbols" :wrap="true" :show-menu="false" direction="column"
+        <Symbols @remove="removeSymbol"  @saveSymbol="saveSymbol" :items="symbols" :wrap="true" :show-menu="false" direction="column"
                             :show-url="false" :show-paymant-type="false" symbol-size="50px"/>
       </div>
-      <q-card class="table" @drop='onDrop($event, 1)' @dragover.prevent @dragenter.prevent
-                    >
+      <q-card class="table" >
         <q-card-section>
         <div class="text-h6 text-center">Pay Table</div>
         </q-card-section>
         <q-separator class="q-mb-sm" />
         <q-card-section class="items-section small-scrollbars">
             <q-list  separator>
-                <q-item v-ripple clickable="" v-for="(item, index) of tableData" :key="index">
-                    <q-item-section avatar @dragover="onDragover(1, item, $event.target)"
-                        @dragleave="onDragleave($event.target)"
-                        @click="onClick(1, item, $event.target)">
+                <q-item v-for="(item, index) of paytable" :key="index" clickable
+                        @click="paytableClick(item, $event)">
+                    <q-item-section avatar>
                     <q-img v-show="item.reel1" :src="item.url" />
                     </q-item-section>
-                    <q-item-section avatar @dragover="onDragover(2, item, $event.target)"
-                        @dragleave="onDragleave($event.target)"
-                        @click="onClick(2, item, $event.target)">
+                    <q-item-section avatar>
                     <q-img v-show="item.reel2" :src="item.url" />
                     </q-item-section>
-                    <q-item-section avatar @dragover="onDragover(3, item, $event.target)"
-                        @dragleave="onDragleave($event.target)"
-                        @click="onClick(3, item, $event.target)">
+                    <q-item-section avatar>
                     <q-img v-show="item.reel3" :src="item.url" />
                     </q-item-section>
-                    <q-item-section style="font-weight: bolder" side v-if="item.jackpot"
-                        @dragleave="onDragleave($event.target)">
-                        <span style="font-size: 130%">{{item.jackpot}}€</span>
+                    <q-item-section v-if="item.jackpot" style="font-weight: bolder" side>
+                        <span style="font-size: 130%">{{item.points}}€</span>
                     </q-item-section>
-                    <q-item-section side v-else>{{item.points}} Pts </q-item-section>
+                    <q-item-section side v-else>
+                      <div class="row">
+                            <q-input dense flat borderless class="col self-end" filled
+                              @change="itemInput(item, 'p', $event)" :value="item.points"
+                              style="width: 45px">
+                            </q-input>
+                            <q-input dense flat borderless class="col self-end" filled
+                              @change="itemInput(item, 'r', $event)" :value="item.probability"
+                              style="width:75px">
+                            </q-input>
+                      </div>
+                      </q-item-section>
+                </q-item>
+                <q-item>
+                  <q-item-section>
+                    <span style="font-size: 1.3rem">Total probabilities</span>
+                  </q-item-section>
+                  <q-item-section :class="{error: totalProbability !== 100}">
+                    <q-input dense flat borderless filled readonly
+                      :value="totalProbability" style="width:60px; margin-right: 15px;text-align: right" class="self-end">
+                    </q-input>
+                  </q-item-section>
                 </q-item>
             </q-list>
         </q-card-section>
-
       </q-card>
+      <SymbolSelect @close="symbolSelectClose" :symbols="symbols" :active="symbolSelectActive" />
   </q-page>
 </template>
 
 <script>
-/* eslint-disable dot-notation */
-import { onMounted, reactive, toRefs } from '@vue/composition-api'
+import { onMounted, reactive, toRefs, computed } from '@vue/composition-api'
 import Symbols from '../components/Symbols'
-import { getSymbols } from '../services/slot'
+import SymbolSelect from '../components/SymbolSelect'
+import { getTombolaData } from '../services/slot'
+import axios from '../services/axios'
 
 export default {
-  components: { Symbols },
+  components: { Symbols, SymbolSelect },
 
-  setup () {
+  setup (_, { root }) {
     const state = reactive({
       symbols: [],
-      tableData: [
-        {
-          url: 'http://wopidom.homelinux.com/public/assets/symbols/food/apple.png',
-          reel1: true,
-          reel2: true,
-          reel3: true,
-          points: '1000',
-          jackpot: '1000 '
-        },
-        {
-          url: 'http://wopidom.homelinux.com/public/assets/symbols/food/cat_sticer.png',
-          reel1: true,
-          reel2: true,
-          reel3: true,
-          points: '100'
-        },
-        {
-          url: 'http://wopidom.homelinux.com/public/assets/symbols/food/eggs.png',
-          reel1: true,
-          reel2: true,
-          reel3: true,
-          points: '80'
-        },
-        {
-          url: 'http://wopidom.homelinux.com/public/assets/symbols/food/berries.png',
-          reel1: false,
-          reel2: true,
-          reel3: true,
-          points: '80'
-        },
-        {
-          url: 'http://wopidom.homelinux.com/public/assets/symbols/food/porcini.png',
-          reel1: false,
-          reel2: true,
-          reel3: true,
-          points: '50'
-        },
-        {
-          url: 'http://wopidom.homelinux.com/public/assets/symbols/food/fried_eggs.png',
-          reel1: false,
-          reel2: true,
-          reel3: true,
-          points: '70'
-        },
-        {
-          url: 'http://wopidom.homelinux.com/public/assets/symbols/food/fried_eggs.png',
-          reel1: false,
-          reel2: true,
-          reel3: true,
-          points: '20'
-        },
-        {
-          url: 'http://wopidom.homelinux.com/public/assets/symbols/food/fried_eggs.png',
-          reel1: false,
-          reel2: false,
-          reel3: true,
-          points: '10'
-        },
-        {
-          url: 'http://wopidom.homelinux.com/public/assets/symbols/food/fried_eggs.png',
-          reel1: false,
-          reel2: false,
-          reel3: true,
-          points: '10'
-        }
-      ],
-      itemDraggingOver: undefined
+      tableData: [],
+      jackpot: {},
+      itemDraggingOver: undefined,
+      symbolSelectActive: false
     })
-    const onDrop = (evt, list) => {
-      console.log('onDrop', evt, list)
-      const item = JSON.parse(evt.dataTransfer.getData('item'))
-      state.itemDraggingOver.item.url = item.texture_url
-      evt.target.closest('.q-item').classList.remove('inner-border')
+    const saveSymbol = (symbol) => {
+      const idx = state.symbols.findIndex(_symbol => _symbol.id === Number(symbol.id))
+      if (idx < 0) state.symbols.push(symbol)
+      else state.symbols[idx] = symbol
     }
-    const onDragover = (reel, item, target) => {
-      state.itemDraggingOver = { reel, item }
-      target.closest('.q-item').classList.add('inner-border')
+    const paytableClick = (item, event) => {
+      console.log('event.target', event.target.classList, event.target.classList.contains('q-item__section--avatar'))
+      if (!event.target.classList.contains('q-img__content') &&
+         !event.target.classList.contains('q-item__section--avatar')) return
+      state.symbolSelectActive = true
+      state.selectedPaytableItemForChange = item
     }
-    const onDragleave = (el) => {
-      el.closest('.q-item').classList.remove('inner-border')
-    }
-    const onClick = (reel, item) => {
-    //   const active = item[`reel${reel}`];
-      if (reel === 3) {
-        item.reel1 = false
-        item.reel2 = false
-      } else if (reel === 2) {
-        item.reel1 = false
-        item.reel2 = true
-      } else {
-        item.reel1 = true
-        item.reel2 = true
+    const symbolSelectClose = (symbol) => {
+      if (symbol) {
+        const tableDataIdx = state.tableData.findIndex(tdRow => tdRow.symbol.textureUrl === state.selectedPaytableItemForChange.url)
+        state.tableData[tableDataIdx].symbol = symbol
       }
+      state.symbolSelectActive = undefined
+      state.selectedPaytableItemForChange = undefined
     }
+    const itemInput = (item, property, event) => {
+      console.log(event)
+      const tableDataItem = state.tableData.find(tdRow => tdRow.symbol.id === item.symbolId)
+      tableDataItem.url = ''
+      tableDataItem[property === 'p' ? 'points' : 'probability'] = event.target.value
+    }
+    const removeSymbol = (symbol) => {
+      root.$q.dialog({
+        title: 'Confirm',
+        message: 'Would you like to remove this symbol?',
+        cancel: true,
+        persistent: true
+      }).onOk(async () => {
+        const idx = state.symbols.findIndex(_symbol => _symbol.id === symbol.id)
+        if (idx) {
+          await axios({ method: 'delete', url: '/slot/symbol', params: { id: symbol.id } })
+          state.symbols.splice(idx, 1)
+        }
+      })
+    }
+    const totalProbability = computed(() => {
+      const total = state.tableData.reduce((prev, current) => {
+        console.log(prev, current)
+        return prev + Number(current.probability)
+      }, 0)
+      return total
+    })
+    const paytable = computed(() => state.tableData
+      .map(pt => {
+        return {
+          symbolId: pt.symbol.id,
+          reel3: pt.symbolAmount > 0,
+          reel2: pt.symbolAmount > 1,
+          reel1: pt.symbolAmount > 2,
+          points: pt.points,
+          probability: pt.probability,
+          url: pt.symbol.textureUrl,
+          jackpot: pt.symbol.paymentType === 'jackpot'
+        }
+      }).sort((a, b) => {
+        if (Number(a.probability) < Number(b.probability)) { return -1 }
+        if (Number(a.probability) > Number(b.probability)) { return 1 }
+        return 0
+      }), { deep: true }
+    )
     onMounted(async () => {
-      state.symbols = await getSymbols()
+      const tombolaData = await getTombolaData()
+      state.symbols = tombolaData.symbols
+      state.tableData = tombolaData.paytable
     })
     return {
-      ...toRefs(state), onDrop, onDragover, onDragleave, onClick
+      ...toRefs(state),
+      saveSymbol,
+      removeSymbol,
+      paytable,
+      paytableClick,
+      symbolSelectClose,
+      itemInput,
+      totalProbability
     }
   }
 }
@@ -162,13 +162,9 @@ export default {
 .inner-border {
        background-color: rgb(236, 243, 236);
     }
-.pay-table{
+.paytable{
     display: flex;
     flex-direction: row;
-    .items-section{
-        amax-height: calc(100vh - #{$header-height} - 85px);
-        aoverflow: auto;
-    }
     .table{
         // width: 100%;
         min-width: 200px;
@@ -180,6 +176,13 @@ export default {
               0 4px 4px rgba(0,0,0,0.12),
               0 8px 8px rgba(0,0,0,0.12),
               0 16px 16px rgba(0,0,0,0.12);
+    }
+    .q-item{
+      cursor: pointer;
+    }
+    .error *{
+      background-color: rgb(240, 69, 69);
+      color: white;
     }
 }
 </style>

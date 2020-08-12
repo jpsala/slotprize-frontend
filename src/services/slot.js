@@ -1,7 +1,7 @@
 import axios from './axios'
 
-export const getSymbols = async () => {
-  const resp = await axios.get('/slot/symbols_for_crud')
+export const getTombolaData = async () => {
+  const resp = await axios.get('/slot/tombola_for_crud')
   return resp.data
 }
 export const delItem = async (itemId, file = false) => {

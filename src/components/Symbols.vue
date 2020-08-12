@@ -1,6 +1,6 @@
 <template>
-<div class="items small-scrollbar relative-position">
-  <SymbolDialog :symbol="selected"/>
+<div class="items small-scrollbar relative-position small-scrollbars">
+  <SymbolDialog :symbol="selected" @close="symbolClose" @cancel="symbolCancel"/>
   <q-list bordered>
       <q-item @click="selected = symbolNew" clickable v-ripple>
         <q-item-section avatar>
@@ -12,11 +12,12 @@
           </span>
         </q-item-section>
       </q-item>
-      <q-item @click="selected = item" v-for="item in items" :key="item.id" clickable v-ripple>
+      <q-item @click="setSelected(item, $event)" v-for="item in sortedItems" :key="item.id" clickable v-ripple>
+        <q-icon @click="$emit('remove', item)" class="remove" name="remove_circle_outline"
+                size="30px" color="red-5" />
         <q-item-section avatar>
           <q-img color="teal" :src="item.textureUrl" />
         </q-item-section>
-
         <q-item-section>{{item.paymentType}}</q-item-section>
       </q-item>
   </q-list>
@@ -26,10 +27,10 @@
 <script>
 import {
   // eslint-disable-next-line no-unused-vars
-  reactive, toRefs, watch
+  reactive, toRefs, watch, computed
 } from '@vue/composition-api'
-import { delItem as slotDelItem } from '../services/slot'
 import SymbolDialog from '../components/SymbolDialog'
+import axios from '../services/axios'
 
 export default {
   components: { SymbolDialog },
@@ -45,7 +46,7 @@ export default {
     direction: { default: 'column' },
     showPaymentType: { default: () => false }
   },
-  setup (props, { emit }) {
+  setup (props, { emit, root }) {
     const state = reactive({
       selectedItem: undefined,
       menuVisible: true,
@@ -62,12 +63,6 @@ export default {
       } else {
         // state.selectedItem = undefined;
         // target.style.overflow = 'hidden';
-      }
-    }
-    const delItem = async (item, file = false) => {
-      const resp = await slotDelItem(item.id, file)
-      if (+resp.symbols > 0) {
-        emit('del', item)
       }
     }
     // eslint-disable-next-line no-unused-vars
@@ -91,9 +86,46 @@ export default {
       evt.dataTransfer.setData('item', JSON.stringify(item))
       console.log('startDrag', evt, item)
     }
+    const symbolClose = async (data) => {
+      const { symbol, files } = data
+      var fd = new FormData()
+      fd.append('id', symbol.id)
+      fd.append('payment_type', symbol.paymentType)
+      fd.append('texture_url', symbol.textureUrl)
+      if (files.length > 0) { fd.append('image', files[0]) }
+      const axiosAnt = axios.defaults.headers.post['Content-Type']
+      axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
+      const response = await axios({
+        method: 'post',
+        url: 'slot/symbol',
+        data: fd,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+      axios.defaults.headers.post['Content-Type'] = axiosAnt
+      console.log('response', response)
+      emit('saveSymbol', response.data)
+      state.selected = undefined
+    }
+    const setSelected = (item, event) => {
+      if (event.target.tagName === 'I') return
+      state.selected = item
+    }
+    const symbolCancel = () => {
+      state.selected = undefined
+    }
+    const sortedItems = computed(() => {
+      if (!props.items) return []
+      function compare (a, b) {
+        if (a.paymentType < b.paymentType) { return -1 }
+        if (a.paymentType > b.paymentType) { return 1 }
+        return 0
+      }
+
+      return props.items.sort(compare)
+    })
     // watch(() => props.items, setItemsStyle)
     return {
-      ...toRefs(state), hover, delItem, startDrag
+      ...toRefs(state), hover, startDrag, symbolClose, sortedItems, symbolCancel, setSelected
     }
   }
 }
@@ -101,7 +133,15 @@ export default {
 
 <style lang="scss">
 .items{
-    max-height: 90vh;
-    overflow-y: auto;
+  .q-item .remove{
+    position:absolute; right: 0px; top: 8px;
+    display: none;
+  }
+  .q-item:hover>.remove {
+    display: block;
+  }
+  width: 230px;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 </style>

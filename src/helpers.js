@@ -118,3 +118,7 @@ const elIsVisible = (domElement) => new Promise((resolve) => {
 export {
   rand, notify, soloEnDevMode, handleAxiosError, elIsVisible, alerta, debounce, throttle
 }
+export const isNotebook = () => {
+  console.log('hostname', location.hostname)
+  return location.hostname === 'localhost'
+}
