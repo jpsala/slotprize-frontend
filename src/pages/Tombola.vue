@@ -23,15 +23,18 @@
                     <q-img v-show="item.reel3" :src="item.url" />
                     </q-item-section>
                     <q-item-section v-if="item.jackpot" style="font-weight: bolder" side>
-                        <span style="font-size: 130%">{{item.points}}€</span>
+                            <q-input dense flat borderless class="col q-ml-sm self-end" filled
+                              @change="itemInput(item, 'p', $event)" :value="item.points"
+                              style="width: 61px; margin-left: 19px">
+                            </q-input>
                     </q-item-section>
                     <q-item-section side v-else>
-                      <div class="row">
-                            <q-input dense flat borderless class="col self-end" filled
+                      <div class="row on-right">
+                            <q-input dense flat borderless class="col q-ml-sm self-end" filled
                               @change="itemInput(item, 'p', $event)" :value="item.points"
                               style="width: 45px">
                             </q-input>
-                            <q-input dense flat borderless class="col self-end" filled
+                            <q-input dense flat borderless class="col q-ml-sm self-end" filled
                               @change="itemInput(item, 'r', $event)" :value="item.probability"
                               style="width:75px">
                             </q-input>
