@@ -70,6 +70,6 @@ export default {
     width: 200px;
     height: 200px;
     margin: auto;
-    margin: 30px 80px 20px 80px
+    margin: 30px 80px 20px 80px;
 }
 </style>
