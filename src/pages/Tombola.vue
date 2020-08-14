@@ -54,9 +54,21 @@
               <q-item-section>
                 <span style="font-size: 1.3rem">Total probabilities</span>
               </q-item-section>
-              <q-item-section :class="{error: totalProbability !== 100}">
+              <q-item-section  :class="{error: totalProbability !== 100}">
                 <q-input dense flat borderless readonly class="self-end"
-                  :value="totalProbability" style="width:60px; margin-right: 15px;text-align: right">
+                  :value="totalProbability" suffix="%" style="width:80px; margin-right: 15px;text-align: right">
+                </q-input>
+              </q-item-section>
+                <q-item-section avatar>
+                </q-item-section>
+            </q-item>
+            <q-item v-if="totalProbability !== 100">
+              <q-item-section>
+                <span style="font-size: 1.3rem">Diff</span>
+              </q-item-section>
+              <q-item-section  :class="{error: totalProbability !== 100}">
+                <q-input dense flat borderless readonly class="self-end"
+                  :value="totalProbability - 100" suffix="%" style="width:80px; margin-right: 15px;text-align: right">
                 </q-input>
               </q-item-section>
                 <q-item-section avatar>
@@ -76,12 +88,12 @@
 </template>
 
 <script>
-import { onMounted, reactive, toRefs, computed, watch } from '@vue/composition-api'
+import { onMounted, reactive, toRefs, computed, watch, onUnmounted } from '@vue/composition-api'
 import Symbols from '../components/Symbols'
 import SymbolSelect from '../components/SymbolSelect'
 import { getTombolaData } from '../services/slot'
 import axios from '../services/axios'
-import { rand } from 'src/helpers'
+import { rand, alerta, resizeObserver } from 'src/helpers'
 
 export default {
   components: { Symbols, SymbolSelect },
@@ -118,35 +130,39 @@ export default {
         }
       })
     }
-    const symbolSelect = (symbol) => {
-      if (symbol) {
-        const tableDataIdx = state.tableData.findIndex(tdRow => tdRow.symbol.textureUrl === state.selectedPaytableItemForChange.url)
-        console.log('state.tableData[tableDataIdx]', state.tableData[tableDataIdx])
-        if (symbol.paymentType === 'jackpot') {
-          const jackpotExists = state.tableData.find(tdRow => tdRow.jackpot)
-          if (jackpotExists) {
-            console.log('state.tableData[tableDataIdx]', state.tableData[jackpotExists])
-            alert('jackpot already exists')
-            state.symbolSelectActive = undefined
-            state.selectedPaytableItemForChange = undefined
-            return
-          }
-          state.tableData[tableDataIdx].jackpot = true
-          state.tableData[tableDataIdx].probability = 0
-        } else {
-          state.tableData[tableDataIdx].jackpot = false
-        }
-        state.tableData[tableDataIdx].symbol = symbol
-        state.tableData[tableDataIdx].symbolId = symbol.id
-      }
-      state.symbolSelectActive = undefined
-      state.selectedPaytableItemForChange = undefined
-    }
     const paytableRowClick = (item, event) => {
       if (!event.target.classList.contains('q-img__content') &&
          !event.target.classList.contains('q-item__section--avatar')) return
       state.symbolSelectActive = true
-      state.selectedPaytableItemForChange = item
+      state.selectedPaytableItemForChange = state.tableData.find(tdRow => tdRow.id === item.id)
+    }
+    const symbolSelect = async (symbol) => {
+      const clean = () => {
+        state.symbolSelectActive = undefined
+        state.selectedPaytableItemForChange = undefined
+      }
+      if (symbol) {
+        if (state.selectedPaytableItemForChange.jackpot && symbol.textureUrl !== 'jackpot') {
+          alerta('Jackpot only row', 'In this row only a symbol named "jackpot" can be used')
+          clean()
+          return
+        }
+        if (symbol.paymentType === 'jackpot') {
+          const jackpotExists = state.tableData.find(tdRow => tdRow.jackpot)
+          if (jackpotExists) {
+            await alerta('jackpot already exists', 'There can only be one jackpot row')
+            clean()
+            return
+          }
+          state.selectedPaytableItemForChange.jackpot = true
+          state.selectedPaytableItemForChange.probability = -1
+        } else {
+          state.selectedPaytableItemForChange.jackpot = false
+        }
+        state.selectedPaytableItemForChange.symbol = symbol
+        state.selectedPaytableItemForChange.symbolId = symbol.id
+      }
+      clean()
     }
     const paytableInputChange = (item, property, event) => {
       const tableDataItem = state.tableData.find(tdRow => tdRow.id === item.id)
@@ -182,6 +198,9 @@ export default {
         })
       return isDuplicated
     }
+    const paytableResize = async (e) => {
+      console.warn('resize', e)
+    }
     const save = async () => {
       try {
         const resp = await axios.post('slot/tombola_for_crud', state.tableData)
@@ -209,26 +228,25 @@ export default {
       )
     }
     watch(() => state.tableData, () => {
-      console.log('tableData watch')
       state.thereIsANewItem = false
       state.withError = false
       state.totalProbability = 0
       for (const row of state.tableData) {
         const isNewRow = row.symbolId === -1
-        const probabilityZeroRow = Number(row.probability) === 0
-        const zeroPointsRow = Number(row.points) === 0
-        const jackpotRow = row.symbol.paymentType === 'jackpot'
-        const duplicatedRow = checkDuplicatedRow(row)
+        const isProbabilityZeroRow = Number(row.probability) === 0
+        const isZeroPointsRow = Number(row.points) === 0
+        const isJackpotRow = row.symbol.paymentType === 'jackpot'
+        const isDuplicatedRow = checkDuplicatedRow(row)
         state.totalProbability += Number(row.probability)
         if (isNewRow) state.thereIsANewItem = true
-        if ((probabilityZeroRow || isNewRow || zeroPointsRow || duplicatedRow) && !jackpotRow) {
+        if (isJackpotRow) row.jackpot = true
+        if ((isProbabilityZeroRow || isNewRow || isZeroPointsRow || isDuplicatedRow) && !isJackpotRow) {
           state.withError = true
           row.withError = true
         } else row.withError = false
       }
       state.paytable = state.tableData
         .map(pt => {
-          console.log('paytable computed', pt)
           return {
             id: pt.id,
             symbolId: pt.symbol.id,
@@ -247,8 +265,20 @@ export default {
           return 0
         })
     }, { deep: true, inmediate: true })
+    onUnmounted(() => {
+      // const listEl = document.querySelector('.items-section .q-list')
+      // listEl.removeEventListener('resize', listResize)
+    })
+
     onMounted(async () => {
       const tombolaData = await getTombolaData()
+      const listEl = document.querySelector('.items-section .q-list')
+      const symbolsEl = document.querySelector('.items')
+      console.log('symbolsEl', symbolsEl)
+      const listObserver = resizeObserver(listEl, (event) => {
+        symbolsEl.style.maxHeight = event.height + 130 + 'px'
+      })
+      listObserver.observe(listEl)
       state.symbols = tombolaData.symbols
       state.tableData = tombolaData.paytable/* .map(ptRow => Object.assign(ptRow, { withError: true })) */
     })
@@ -267,7 +297,8 @@ export default {
       addRow,
       removeItemFromPaytable,
       save,
-      tableIsValid
+      tableIsValid,
+      paytableResize
     }
   }
 }
@@ -300,9 +331,12 @@ export default {
       cursor: pointer;
     }
     .error {
-      background-color: rgba(255, 0, 0, 0.164) !important;
+      background-color: rgba(252, 22, 22, 0.68) !important;
       color: white;
-      border-radius: 10px;
+      border-radius: 5px;
+      input, .q-field__suffix, i{
+        color: white !important;
+      }
     }
 }
 </style>

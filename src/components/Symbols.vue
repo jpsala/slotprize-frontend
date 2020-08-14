@@ -141,7 +141,7 @@ export default {
     display: block;
   }
   width: 230px;
-  max-height: 90vh;
+  min-height: 90vh;
   overflow-y: auto;
 }
 </style>

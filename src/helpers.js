@@ -115,8 +115,15 @@ const elIsVisible = (domElement) => new Promise((resolve) => {
   })
   o.observe(domElement)
 })
+const resizeObserver = (el, cb) => new ResizeObserver((el) => {
+  const entry = el[0]
+  const cr = entry.contentRect
+  if (!cb) throw new Error('Please pass a callback function')
+  cb(cr, el)
+  return this
+})
 export {
-  rand, notify, soloEnDevMode, handleAxiosError, elIsVisible, alerta, debounce, throttle
+  rand, notify, soloEnDevMode, handleAxiosError, elIsVisible, alerta, debounce, throttle, resizeObserver
 }
 export const isNotebook = () => {
   console.log('hostname', location.hostname)
