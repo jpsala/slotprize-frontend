@@ -44,7 +44,7 @@
                         <q-input dense flat borderless class="col q-ml-sm self-end"
                           @change="itemInput(item, 'r', $event)" :value="item.probability"
                           style="width:75px">
-                        </q-input>{{item.withError}}
+                        </q-input>
                   </div>
                   </q-item-section>
                 <q-item-section avatar>
@@ -92,6 +92,7 @@ export default {
     const state = reactive({
       symbols: [],
       tableData: [],
+      paytable: [],
       jackpot: false,
       itemDraggingOver: undefined,
       symbolSelectActive: false,
@@ -169,6 +170,20 @@ export default {
       const idx = state.tableData.findIndex(tdRow => tdRow.id === item.id)
       if (idx) state.tableData.splice(idx, 1)
     }
+    const checkDuplicated = (tdRowBeenChecked) => {
+      let isDuplicated = false
+      state.tableData
+        .filter(tdRow =>
+          tdRow.symbol.paymentType === tdRowBeenChecked.symbol.paymentType &&
+            tdRow.symbolAmount === tdRowBeenChecked.symbolAmount &&
+            tdRow.id !== tdRowBeenChecked.id)
+        .forEach(dup => {
+          dup.withError = true
+          state.withError = true
+          isDuplicated = true
+        })
+      return isDuplicated
+    }
     const save = async () => {
       try {
         const resp = await axios.post('slot/tombola_for_crud', state.tableData)
@@ -201,26 +216,64 @@ export default {
       }, 0)
       return total
     })
-    const paytable = computed(() => state.tableData
-      .map(pt => {
-        return {
-          id: pt.id,
-          symbolId: pt.symbol.id,
-          reel3: pt.symbolAmount > 0,
-          reel2: pt.symbolAmount > 1,
-          reel1: pt.symbolAmount > 2,
-          points: pt.points,
-          withError: pt.withError,
-          probability: pt.probability,
-          url: pt.symbol.textureUrl,
-          jackpot: pt.symbol.paymentType === 'jackpot'
-        }
-      }).sort((a, b) => {
-        if (Number(a.probability) < Number(b.probability)) { return -1 }
-        if (Number(a.probability) > Number(b.probability)) { return 1 }
-        return 0
-      }), { deep: true }
-    )
+    watch(() => state.tableData, () => {
+      console.log('tableData watch')
+      state.thereIsANewItem = false
+      state.withError = false
+      for (const row of state.tableData) {
+        const isNewRow = row.symbolId === -1
+        const probabilityZeroRow = Number(row.probability) === 0
+        const zeroPointsRow = Number(row.points) === 0
+        const jackpotRow = row.symbol.paymentType === 'jackpot'
+        const duplicatedRow = checkDuplicated(row)
+        if (isNewRow) state.thereIsANewItem = true
+        if ((probabilityZeroRow || isNewRow || zeroPointsRow || duplicatedRow) && !jackpotRow) {
+          state.withError = true
+          row.withError = true
+        } else row.withError = false
+      }
+      state.paytable = state.tableData
+        .map(pt => {
+          console.log('paytable computed', pt)
+          return {
+            id: pt.id,
+            symbolId: pt.symbol.id,
+            reel3: pt.symbolAmount > 0,
+            reel2: pt.symbolAmount > 1,
+            reel1: pt.symbolAmount > 2,
+            points: pt.points,
+            withError: pt.withError,
+            probability: pt.probability,
+            url: pt.symbol.textureUrl,
+            jackpot: pt.symbol.paymentType === 'jackpot'
+          }
+        }).sort((a, b) => {
+          if (Number(a.probability) < Number(b.probability)) { return -1 }
+          if (Number(a.probability) > Number(b.probability)) { return 1 }
+          return 0
+        })
+    }, { deep: true, inmediate: true })
+    // const paytable = computed(() => state.tableData
+    //   .map(pt => {
+    //     console.log('paytable computed', pt)
+    //     return {
+    //       id: pt.id,
+    //       symbolId: pt.symbol.id,
+    //       reel3: pt.symbolAmount > 0,
+    //       reel2: pt.symbolAmount > 1,
+    //       reel1: pt.symbolAmount > 2,
+    //       points: pt.points,
+    //       withError: pt.withError,
+    //       probability: pt.probability,
+    //       url: pt.symbol.textureUrl,
+    //       jackpot: pt.symbol.paymentType === 'jackpot'
+    //     }
+    //   }).sort((a, b) => {
+    //     if (Number(a.probability) < Number(b.probability)) { return -1 }
+    //     if (Number(a.probability) > Number(b.probability)) { return 1 }
+    //     return 0
+    //   }), { deep: true }
+    // )
     onMounted(async () => {
       const tombolaData = await getTombolaData()
       state.symbols = tombolaData.symbols
@@ -229,26 +282,10 @@ export default {
     const tableIsValid = computed(() =>
       !state.thereIsANewItem && totalProbability.value === 100 && !state.withError
     )
-    watch(() => state.tableData, () => {
-      state.thereIsANewItem = false
-      state.withError = false
-      for (const row of state.tableData) {
-        const isNewRow = row.symbolId === -1
-        const probabilityZeroRow = Number(row.probability) === 0
-        const zeroPointsRow = Number(row.points) === 0
-        const jackpotRow = row.symbol.paymentType === 'jackpot'
-        if (isNewRow) state.thereIsANewItem = true
-        if ((probabilityZeroRow || isNewRow || zeroPointsRow) && !jackpotRow) {
-          state.withError = true
-          row.withError = true
-        } else row.withError = false
-      }
-    }, { deep: true })
     return {
       ...toRefs(state),
       saveSymbol,
       removeSymbol,
-      paytable,
       paytableClick,
       symbolSelect,
       itemInput,
