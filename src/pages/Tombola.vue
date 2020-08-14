@@ -12,7 +12,7 @@
       <q-card-section class="items-section small-scrollbars">
         <q-list separator>
             <q-item v-for="(item, index) of paytable" :key="index" clickable :class="{error: item.withError}"
-                    @click="paytableClick(item, $event)" @mouseenter="hovered = item">
+                    @click="paytableClick(item, $event)" @mouseenter="hovered = item" @mouseleave="hovered = undefined">
                 <q-item-section avatar>
                 <q-icon v-if="!item.jackpot" @click="removePaymentType(item)"
                         :name="item.symbolId > -1 && hovered && hovered.id === item.id && !item.reel1 ? 'add_circle_outline':''" size="38px" />
@@ -71,9 +71,9 @@
       <q-btn :disable="thereIsANewItem" fab icon="add" color="red" @click="addRow"/>
     </q-page-sticky>
     <q-page-sticky position="top-left" :offset="[288, 18]">
-      <q-btn :disable="!tableIsValid" fab icon="save" color="secondary" @click="save"/>
+      <q-btn :disable="!tableIsValid" fab icon="save" color="green-8" @click="save"/>
     </q-page-sticky>
-    <SymbolSelect @close="symbolSelectClose" :symbols="symbols" :active="symbolSelectActive" />
+    <SymbolSelect @close="symbolSelect" :symbols="symbols" :active="symbolSelectActive" />
   </q-page>
 </template>
 
@@ -110,9 +110,24 @@ export default {
       state.symbolSelectActive = true
       state.selectedPaytableItemForChange = item
     }
-    const symbolSelectClose = (symbol) => {
+    const symbolSelect = (symbol) => {
       if (symbol) {
         const tableDataIdx = state.tableData.findIndex(tdRow => tdRow.symbol.textureUrl === state.selectedPaytableItemForChange.url)
+        console.log('state.tableData[tableDataIdx]', state.tableData[tableDataIdx])
+        if (symbol.paymentType === 'jackpot') {
+          const jackpotExists = state.tableData.find(tdRow => tdRow.jackpot)
+          if (jackpotExists) {
+            console.log('state.tableData[tableDataIdx]', state.tableData[jackpotExists])
+            alert('jackpot already exists')
+            state.symbolSelectActive = undefined
+            state.selectedPaytableItemForChange = undefined
+            return
+          }
+          state.tableData[tableDataIdx].jackpot = true
+          state.tableData[tableDataIdx].probability = 0
+        } else {
+          state.tableData[tableDataIdx].jackpot = false
+        }
         state.tableData[tableDataIdx].symbol = symbol
         state.tableData[tableDataIdx].symbolId = symbol.id
       }
@@ -154,8 +169,15 @@ export default {
       const idx = state.tableData.findIndex(tdRow => tdRow.id === item.id)
       if (idx) state.tableData.splice(idx, 1)
     }
-    const save = () => {
-      console.log('save')
+    const save = async () => {
+      try {
+        const resp = await axios.post('slot/tombola_for_crud', state.tableData)
+        if (resp.data.status === 'ok') alert('Saved')
+        else alert('Error saving ' + resp.data)
+        console.log('save', resp)
+      } catch (error) {
+        alert('Error saving data ' + error)
+      }
     }
     const addRow = () => {
       state.tableData.push(
@@ -211,16 +233,15 @@ export default {
       state.thereIsANewItem = false
       state.withError = false
       for (const row of state.tableData) {
-        if (row.symbolId === -1) {
-          state.thereIsANewItem = true
-        }
-        if ((Number(row.probability) === 0 || row.symbolId === -1 || Number(row.points) === 0) &&
-            row.symbol.paymentType !== 'jackpot') {
+        const isNewRow = row.symbolId === -1
+        const probabilityZeroRow = Number(row.probability) === 0
+        const zeroPointsRow = Number(row.points) === 0
+        const jackpotRow = row.symbol.paymentType === 'jackpot'
+        if (isNewRow) state.thereIsANewItem = true
+        if ((probabilityZeroRow || isNewRow || zeroPointsRow) && !jackpotRow) {
           state.withError = true
           row.withError = true
-        } else { row.withError = false }
-
-        // if (row.)
+        } else row.withError = false
       }
     }, { deep: true })
     return {
@@ -229,7 +250,7 @@ export default {
       removeSymbol,
       paytable,
       paytableClick,
-      symbolSelectClose,
+      symbolSelect,
       itemInput,
       totalProbability,
       removePaymentType,
