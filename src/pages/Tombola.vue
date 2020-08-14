@@ -12,9 +12,9 @@
       <q-card-section class="items-section small-scrollbars">
         <q-list separator>
             <q-item v-for="(item, index) of paytable" :key="index" clickable :class="{error: item.withError}"
-                    @click="paytableClick(item, $event)" @mouseenter="hovered = item" @mouseleave="hovered = undefined">
+                    @click="paytableRowClick(item, $event)" @mouseenter="hovered = item" @mouseleave="hovered = undefined">
                 <q-item-section avatar>
-                <q-icon v-if="!item.jackpot" @click="removePaymentType(item)"
+                <q-icon v-if="!item.jackpot" @click="removePaymentTypeFromRow(item)"
                         :name="item.symbolId > -1 && hovered && hovered.id === item.id && !item.reel1 ? 'add_circle_outline':''" size="38px" />
                 </q-item-section>
                 <q-item-section avatar>
@@ -26,29 +26,27 @@
                 <q-item-section avatar>
                 <q-img v-show="item.reel3" :src="item.url" />
                 </q-item-section>
-                <q-icon v-if="!item.jackpot" @click="addPaymentType(item)"
-                        :name="item.symbolId >= 0 && hovered && hovered.id === item.id && item.reel2 ? 'remove_circle_outline':''" size="38px"/>
-
+                <q-icon v-if="!item.jackpot" @click="addPaymentTypeToRow(item)"  size="38px"
+                        :name="item.symbolId >= 0 && hovered && hovered.id === item.id && item.reel2 ? 'remove_circle_outline':''"/>
                 <q-item-section v-if="item.jackpot" style="font-weight: bolder" side>
-                  <q-input dense flat borderless class="col q-ml-sm self-end"
-                    @change="itemInput(item, 'p', $event)" :value="item.points"
-                    style="width: 61px; margin-left: 19px">
+                  <q-input dense flat borderless @change="paytableInputChange(item, 'p', $event)"
+                           :value="item.points" style="margin-left: 35px;width: 45px">
                   </q-input>
                 </q-item-section>
                 <q-item-section side v-else>
                   <div class="row on-right">
-                        <q-input dense flat borderless class="col q-ml-sm self-end"
-                          @change="itemInput(item, 'p', $event)" :value="item.points"
-                          style="width: 45px">
+                        <q-input dense flat borderless class="col self-end"
+                          @change="paytableInputChange(item, 'p', $event)" :value="item.points"
+                          style="width: 75px; padding-right: 10px" suffix="Points">
                         </q-input>
                         <q-input dense flat borderless class="col q-ml-sm self-end"
-                          @change="itemInput(item, 'r', $event)" :value="item.probability"
+                          @change="paytableInputChange(item, 'r', $event)" :value="item.probability"
                           style="width:75px">
                         </q-input>
                   </div>
                   </q-item-section>
                 <q-item-section avatar>
-                  <q-icon @click="removeItem(item)" name="highlight_off" size="40px" color="red-6"
+                  <q-icon @click="removeItemFromPaytable(item)" name="highlight_off" size="40px" color="red-6"
                           v-if="!item.jackpot &&hovered && item.id === hovered.id" />
                   </q-item-section>
             </q-item>
@@ -57,8 +55,8 @@
                 <span style="font-size: 1.3rem">Total probabilities</span>
               </q-item-section>
               <q-item-section :class="{error: totalProbability !== 100}">
-                <q-input dense flat borderless readonly
-                  :value="totalProbability" style="width:60px; margin-right: 15px;text-align: right" class="self-end">
+                <q-input dense flat borderless readonly class="self-end"
+                  :value="totalProbability" style="width:60px; margin-right: 15px;text-align: right">
                 </q-input>
               </q-item-section>
                 <q-item-section avatar>
@@ -98,18 +96,27 @@ export default {
       symbolSelectActive: false,
       hovered: undefined,
       thereIsANewItem: false,
-      withError: false
+      withError: false,
+      totalProbability: 0
     })
     const saveSymbol = (symbol) => {
       const idx = state.symbols.findIndex(_symbol => _symbol.id === Number(symbol.id))
       if (idx < 0) state.symbols.push(symbol)
       else state.symbols[idx] = symbol
     }
-    const paytableClick = (item, event) => {
-      if (!event.target.classList.contains('q-img__content') &&
-         !event.target.classList.contains('q-item__section--avatar')) return
-      state.symbolSelectActive = true
-      state.selectedPaytableItemForChange = item
+    const removeSymbol = (symbol) => {
+      root.$q.dialog({
+        title: 'Confirm',
+        message: 'Would you like to remove this symbol?',
+        cancel: true,
+        persistent: true
+      }).onOk(async () => {
+        const idx = state.symbols.findIndex(_symbol => _symbol.id === symbol.id)
+        if (idx) {
+          await axios({ method: 'delete', url: '/slot/symbol', params: { id: symbol.id } })
+          state.symbols.splice(idx, 1)
+        }
+      })
     }
     const symbolSelect = (symbol) => {
       if (symbol) {
@@ -135,42 +142,33 @@ export default {
       state.symbolSelectActive = undefined
       state.selectedPaytableItemForChange = undefined
     }
-    const itemInput = (item, property, event) => {
+    const paytableRowClick = (item, event) => {
+      if (!event.target.classList.contains('q-img__content') &&
+         !event.target.classList.contains('q-item__section--avatar')) return
+      state.symbolSelectActive = true
+      state.selectedPaytableItemForChange = item
+    }
+    const paytableInputChange = (item, property, event) => {
       const tableDataItem = state.tableData.find(tdRow => tdRow.id === item.id)
       tableDataItem.url = ''
       tableDataItem[property === 'p' ? 'points' : 'probability'] = event.target.value
     }
-    const removePaymentType = (item) => {
-      addRemovePaymentType(item, 1)
+    const removePaymentTypeFromRow = (item) => {
+      addRemovePaymentTypeFromRow(item, 1)
     }
-    const addPaymentType = (item) => {
-      addRemovePaymentType(item, -1)
+    const addPaymentTypeToRow = (item) => {
+      addRemovePaymentTypeFromRow(item, -1)
     }
-    const addRemovePaymentType = (_item, cant) => {
-      if (cant > 0 && _item.reel1) return
-      if (cant < 0 && !_item.reel2) return
-      const item = state.tableData.find(tdRow => tdRow.id === _item.id)
-      item.symbolAmount += cant
+    const addRemovePaymentTypeFromRow = (paytableRow, cant) => {
+      if ((cant > 0 && paytableRow.reel1) || (cant < 0 && !paytableRow.reel2)) return
+      const savedPaytableRow = state.tableData.find(tdRow => tdRow.id === paytableRow.id)
+      savedPaytableRow.symbolAmount += cant
     }
-    const removeSymbol = (symbol) => {
-      root.$q.dialog({
-        title: 'Confirm',
-        message: 'Would you like to remove this symbol?',
-        cancel: true,
-        persistent: true
-      }).onOk(async () => {
-        const idx = state.symbols.findIndex(_symbol => _symbol.id === symbol.id)
-        if (idx) {
-          await axios({ method: 'delete', url: '/slot/symbol', params: { id: symbol.id } })
-          state.symbols.splice(idx, 1)
-        }
-      })
-    }
-    const removeItem = (item) => {
+    const removeItemFromPaytable = (item) => {
       const idx = state.tableData.findIndex(tdRow => tdRow.id === item.id)
       if (idx) state.tableData.splice(idx, 1)
     }
-    const checkDuplicated = (tdRowBeenChecked) => {
+    const checkDuplicatedRow = (tdRowBeenChecked) => {
       let isDuplicated = false
       state.tableData
         .filter(tdRow =>
@@ -210,22 +208,18 @@ export default {
         }
       )
     }
-    const totalProbability = computed(() => {
-      const total = state.tableData.reduce((prev, current) => {
-        return prev + Number(current.probability)
-      }, 0)
-      return total
-    })
     watch(() => state.tableData, () => {
       console.log('tableData watch')
       state.thereIsANewItem = false
       state.withError = false
+      state.totalProbability = 0
       for (const row of state.tableData) {
         const isNewRow = row.symbolId === -1
         const probabilityZeroRow = Number(row.probability) === 0
         const zeroPointsRow = Number(row.points) === 0
         const jackpotRow = row.symbol.paymentType === 'jackpot'
-        const duplicatedRow = checkDuplicated(row)
+        const duplicatedRow = checkDuplicatedRow(row)
+        state.totalProbability += Number(row.probability)
         if (isNewRow) state.thereIsANewItem = true
         if ((probabilityZeroRow || isNewRow || zeroPointsRow || duplicatedRow) && !jackpotRow) {
           state.withError = true
@@ -253,47 +247,25 @@ export default {
           return 0
         })
     }, { deep: true, inmediate: true })
-    // const paytable = computed(() => state.tableData
-    //   .map(pt => {
-    //     console.log('paytable computed', pt)
-    //     return {
-    //       id: pt.id,
-    //       symbolId: pt.symbol.id,
-    //       reel3: pt.symbolAmount > 0,
-    //       reel2: pt.symbolAmount > 1,
-    //       reel1: pt.symbolAmount > 2,
-    //       points: pt.points,
-    //       withError: pt.withError,
-    //       probability: pt.probability,
-    //       url: pt.symbol.textureUrl,
-    //       jackpot: pt.symbol.paymentType === 'jackpot'
-    //     }
-    //   }).sort((a, b) => {
-    //     if (Number(a.probability) < Number(b.probability)) { return -1 }
-    //     if (Number(a.probability) > Number(b.probability)) { return 1 }
-    //     return 0
-    //   }), { deep: true }
-    // )
     onMounted(async () => {
       const tombolaData = await getTombolaData()
       state.symbols = tombolaData.symbols
       state.tableData = tombolaData.paytable/* .map(ptRow => Object.assign(ptRow, { withError: true })) */
     })
     const tableIsValid = computed(() =>
-      !state.thereIsANewItem && totalProbability.value === 100 && !state.withError
+      !state.thereIsANewItem && state.totalProbability === 100 && !state.withError
     )
     return {
       ...toRefs(state),
       saveSymbol,
       removeSymbol,
-      paytableClick,
+      paytableRowClick,
       symbolSelect,
-      itemInput,
-      totalProbability,
-      removePaymentType,
-      addPaymentType,
+      paytableInputChange,
+      removePaymentTypeFromRow,
+      addPaymentTypeToRow,
       addRow,
-      removeItem,
+      removeItemFromPaytable,
       save,
       tableIsValid
     }
@@ -309,6 +281,9 @@ export default {
 .paytable{
     display: flex;
     flex-direction: row;
+    input{
+      text-align: right;
+    }
     .table{
         // width: 100%;
         min-width: 200px;
