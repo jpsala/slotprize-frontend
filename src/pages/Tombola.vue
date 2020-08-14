@@ -35,11 +35,11 @@
                 </q-item-section>
                 <q-item-section side v-else>
                   <div class="row on-right">
-                        <q-input dense flat borderless class="col self-end"
+                        <q-input dense flat :borderless="false" class="col self-end"
                           @change="paytableInputChange(item, 'p', $event)" :value="item.points"
-                          style="width: 75px; padding-right: 10px" suffix="Points">
+                          style="width: 75px" suffix="Points">
                         </q-input>
-                        <q-input dense flat borderless class="col q-ml-sm self-end"
+                        <q-input dense flat :borderless="false" class="col q-ml-sm self-end" suffix="%"
                           @change="paytableInputChange(item, 'r', $event)" :value="item.probability"
                           style="width:75px">
                         </q-input>
@@ -197,7 +197,7 @@ export default {
         {
           new: true,
           id: rand(1, 10000),
-          points: 1,
+          points: 0,
           probability: 0,
           symbol: { id: -1, paymentType: '', textureUrl: '' },
           paymentType: 1,
