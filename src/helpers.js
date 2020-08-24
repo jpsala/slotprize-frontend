@@ -77,6 +77,22 @@ const alerta = async (title = 'Alerta', message = '') => new Promise((resolve) =
     resolve()
   })
 })
+const confirma = async (title, msg) => {
+  return new Promise((resolve) => {
+    Dialog.create({
+      title: title,
+      message: msg,
+      persistent: true,
+      cancel: {
+        label: 'Cancela'
+      }
+    }).onOk(() => {
+      resolve(true)
+    }).onCancel(() => {
+      resolve(false)
+    })
+  })
+}
 const notify = ({
   message = 'Falta', error = false, timeout = 3000, icon = ''
 } = {}) => {
@@ -123,7 +139,8 @@ const resizeObserver = (el, cb) => new ResizeObserver((el) => {
   return this
 })
 export {
-  rand, notify, soloEnDevMode, handleAxiosError, elIsVisible, alerta, debounce, throttle, resizeObserver
+  rand, notify, soloEnDevMode, handleAxiosError, elIsVisible, alerta,
+  debounce, throttle, resizeObserver, confirma
 }
 export const isNotebook = () => {
   console.log('hostname', location.hostname)

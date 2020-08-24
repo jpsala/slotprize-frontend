@@ -28,7 +28,6 @@ const getAxios = () => {
   axios.interceptors.request.use(
     async (config) => {
       if (!apiToken) apiToken = getApiToken()
-      console.log('interceptor', apiToken)
       if (config.url !== '/auth/local') config.headers.token = apiToken
       return config
     },
