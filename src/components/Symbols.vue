@@ -13,7 +13,7 @@
         </q-item-section>
       </q-item>
       <q-item @click="setSelected(item, $event)" v-for="item in sortedItems" :key="item.id" clickable v-ripple>
-        <q-icon @click="$emit('remove', item)" class="remove" name="remove_circle_outline"
+        <q-icon v-show="showRemove(item)" @click="$emit('remove', item)" class="remove" name="remove_circle_outline"
                 size="30px" color="red-5" />
         <q-item-section avatar>
           <q-img color="teal" :src="item.textureUrl" />
@@ -44,7 +44,8 @@ export default {
     showMenu: { default: () => true },
     wrap: { default: () => true },
     direction: { default: 'column' },
-    showPaymentType: { default: () => false }
+    showPaymentType: { default: () => false },
+    payTable: { default: () => [] }
   },
   setup (props, { emit, root }) {
     const state = reactive({
@@ -110,6 +111,10 @@ export default {
       if (event.target.tagName === 'I') return
       state.selected = item
     }
+    const showRemove = (symbol) => {
+      const used = props.payTable.find(ptItem => ptItem.symbolId === symbol.id)
+      return used === undefined
+    }
     const symbolCancel = () => {
       state.selected = undefined
     }
@@ -125,7 +130,7 @@ export default {
     })
     // watch(() => props.items, setItemsStyle)
     return {
-      ...toRefs(state), hover, startDrag, symbolClose, sortedItems, symbolCancel, setSelected
+      ...toRefs(state), hover, startDrag, symbolClose, sortedItems, symbolCancel, setSelected, showRemove
     }
   }
 }

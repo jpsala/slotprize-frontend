@@ -22,14 +22,15 @@
             <div class="row">
                 <q-input :borderless="!editMode" class="col" :disable="!editMode" label='Multiplier' v-model.number='eventClone.multiplier' type='number' />
                 <q-input :borderless="!editMode" class="col" :disable="!editMode" label='Bet Price' v-model.number='eventClone.betPrice' type='number' />
-                <q-input :borderless="!editMode" class="col" :disable="!editMode" label='Duration' v-model.number='eventClone.duration' />
+                <q-input :borderless="!editMode" class="col" :disable="!editMode" label='Duration in seconds' v-model.number='eventClone.duration' />
             </div>
 
             <div class="row justify-between">
-            <q-select class="col-8" @input="selectChange" :borderless="!editMode" :disable="!editMode" label="Skin"
+            <q-select class="col-6" @input="selectChange" :borderless="!editMode" :disable="!editMode" label="Skin"
                       stack-label :value="eventClone.skin" :options="skins"
                       option-value="id" option-label="name" :key="key"/>
-            <q-checkbox class="col-3 q-ml-sm justify-end" size="sm" color="" :disable="!editMode" v-model="eventClone.active" :true-value="1" :false-value="0" label="Active" />
+            <q-checkbox class="col-2 q-ml-sm justify-end" size="sm" color="" :disable="!editMode" v-model="eventClone.devOnly" :true-value="1" :false-value="0" label="DevOnly" />
+            <q-checkbox class="col-2 q-ml-sm justify-end" size="sm" color="" :disable="!editMode" v-model="eventClone.active" :true-value="1" :false-value="0" label="Active" />
             </div>
 
             <q-separator v-if="!editMode"/>

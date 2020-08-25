@@ -25,35 +25,14 @@
             <div class="col col-right">
               <!-- <h4 class="raffle-title">Raffle</h4> -->
                 <div class="q-pa-md" style="max-width: 300px">
-                  <q-input label="Closing Date" v-model="raffleCopy.closingDate">
-                    <template v-slot:prepend>
-                      <q-icon name="event" class="cursor-pointer">
-                        <q-popup-proxy ref='date' transition-show="scale" transition-hide="scale">
-                          <q-date flat v-model="raffleCopy.closingDate" mask="YYYY/MM/DD HH:mm:ss"
-                                  @input="$refs.date.hide()">
-                            <div class="row items-center justify-end q-gutter-sm">
-                              <q-btn label="Cancel" color="primary" flat v-close-popup />
-                              <q-btn label="OK" color="primary" flat v-close-popup />
-                            </div>
-                          </q-date>
-                        </q-popup-proxy>
-                      </q-icon>
-                    </template>
-                    <template v-slot:append>
-                      <q-icon name="access_time" class="cursor-pointer">
-                        <q-popup-proxy ref="time" transition-show="scale" transition-hide="scale">
-                          <q-time v-model="raffleCopy.closingDate" mask="YYYY/MM/DD HH:mm:ss" format24h
-                                  @input="$refs.time.hide()">
-                            <div class="row items-center justify-end q-gutter-sm">
-                              <q-btn label="Cancel" color="primary" flat v-close-popup />
-                              <q-btn label="OK" color="primary" flat v-close-popup />
-                            </div>
-                          </q-time>
-                        </q-popup-proxy>
-                      </q-icon>
-                    </template>
-                  </q-input>
-                    <q-input v-model="raffleCopy.price" label="Number Price" />
+                  {{raffleCopy.closingDate}}
+                  <date-picker v-model="raffleCopy.liveDate" label="Live Date" />
+                  <date-picker v-model="raffleCopy.closingDate" label="Closing Date"/>
+                  <q-input v-model="raffleCopy.price" label="Number Price" />
+                  <q-select class="col-6" label="Status"
+                            stack-label v-model="raffleCopy.state" :options="['waiting', 'delivered']"
+                            option-value="id" option-label="name"
+                            :disable="!['waiting', 'delivered'].includes(raffleCopy.state)"/>
                 </div>
             </div>
             </div>
@@ -86,7 +65,9 @@
 import { reactive, toRefs, watch } from '@vue/composition-api'
 import { klona } from 'klona/json'
 import { isNotebook } from 'src/helpers'
+import DatePicker from '../components/DatePicker.vue'
 export default {
+  components: { DatePicker },
   props: {
     raffle: {
       type: Object,
@@ -116,17 +97,19 @@ export default {
       }
       state.reader.readAsDataURL(event.target.files[0])
     }
+    const statusChange = (value) => {
+      console.log('value', value, state.eventClone)
+      state.eventClone.skin = value
+      state.key += 1
+    }
+
     const submit = () => {
       var files = state.inputImgRef.files
       emit('close', { raffle: state.raffleCopy, files })
       // state.raffleCopy = undefined
     }
-    watch(() => props.raffle, raffle => {
-      console.log('watch', raffle)
-      state.raffleCopy = klona(raffle)
-      console.log('state.raffleCopy', state.raffleCopy)
-    }, { deep: true })
-    return { ...toRefs(state), close, imgChange, submit, cancel }
+    watch(() => props.raffle, raffle => { state.raffleCopy = klona(raffle) }, { deep: true })
+    return { ...toRefs(state), close, imgChange, submit, cancel, statusChange }
   }
 }
 </script>

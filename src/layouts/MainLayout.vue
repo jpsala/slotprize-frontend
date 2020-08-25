@@ -115,7 +115,7 @@ export default {
             { label: 'Players', to: '/players' },
             { label: 'Jackpot', to: '/jackpot' },
             { label: 'Raffles', to: '/raffles' },
-            { label: 'Tombola', to: '/tombola' }
+            { label: 'Slot Machine', to: '/slotMachine' }
           ]
         }
       ])

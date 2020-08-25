@@ -4,25 +4,30 @@
       <q-btn v-if="tab==='ready'" :disable="thereIsNewItem" fab icon="add" color="red" @click="addRaffle"/>
     </q-page-sticky>
     <h3 class="q-ml-xl q-pl-xl">Raffles</h3>
-    <q-tabs v-model="tab" class="text-grey" active-color="primary"
+    <q-tabs v-model="tab" class="text-grey" active-color="primary" align="justify"
             indicator-color="primary">
       <q-tab name="ready" label="Ready" />
+      <q-tab name="live" label="Live" />
       <q-tab name="waiting" label="Waiting" />
-      <q-tab name="past" label="Past" />
+      <q-tab name="history" label="History" />
     </q-tabs>
     <q-separator />
     <q-tab-panels v-model="tab" animated>
       <q-tab-panel name="ready">
         <raffles-table :raffles="readyRaffles" @select-raffle="selectRaffle" @removeRaffle="removeRaffle"  type="ready"/>
       </q-tab-panel>
-      <q-tab-panel name="waiting">
-        <raffles-table :raffles="waitingRaffles" @select-raffle="selectRaffle" type="waiting"/>
+      <q-tab-panel name="live">
+        <raffles-table :raffles="liveRaffles" @select-raffle="selectRaffle" type="live"/>
       </q-tab-panel>
-      <q-tab-panel name="past">
-        <raffles-table :raffles="pastRaffles" @select-raffle="selectRaffle" @remove-raffle="removeRaffle"  type="past"/>
+      <q-tab-panel name="waiting">
+        <raffles-table @show-player="showPlayer" :raffles="waitingRaffles" @select-raffle="selectRaffle" type="waiting"/>
+      </q-tab-panel>
+      <q-tab-panel name="history">
+        <raffles-table @show-player="showPlayer" :raffles="pastRaffles" @select-raffle="selectRaffle" @remove-raffle="removeRaffle"  type="history"/>
       </q-tab-panel>
     </q-tab-panels>
     <raffle :raffle="selected" @close="closeRaffleDlg"/>
+    <player-dialog :player='playerForShowing' @close='playerForShowing = undefined'/>
   </div>
 </template>
 
@@ -31,11 +36,12 @@ import { reactive, toRefs, watch, computed } from '@vue/composition-api'
 import useSession from 'src/services/useSession'
 import axios from '../services/axios'
 import raffle from '../components/Raffle'
+import playerDialog from '../components/PlayerDialog'
 import rafflesTable from '../components/RafflesTable'
 import { alerta, confirma } from 'src/helpers'
 
 export default {
-  components: { raffle, rafflesTable },
+  components: { raffle, rafflesTable, playerDialog },
   setup () {
     const { loggedIn } = useSession()
     let newRaffle
@@ -44,7 +50,8 @@ export default {
       raffles: [],
       selected: undefined,
       languages: [],
-      tab: 'ready'
+      tab: 'ready',
+      playerForShowing: undefined
     })
     const closeRaffleDlg = async (data) => {
       try {
@@ -83,7 +90,8 @@ export default {
       }
     }
     const selectRaffle = async (data) => {
-      if (data.event.target.tagName === 'I') return
+      console.log('data.event.target.tagName', data.event.target.tagName)
+      if (data.event.target.tagName === 'I' || data.event.target.tagName === 'SPAN') return
       state.selected = data.raffle
     }
     const removeRaffle = async (raffle) => {
@@ -101,13 +109,23 @@ export default {
         if (idx) state.raffles.splice(idx, 1)
       } else alerta('Could not delete raffle')
     }
+    const showPlayer = async (player) => {
+      const response = await axios({ url: '/slot/playerForFront', method: 'get', params: { id: player } })
+      console.log('resp', response)
+      state.playerForShowing = response.data
+    }
     const addRaffle = () => {
       state.selected = newRaffle
       console.log('add')
     }
-    const readyRaffles = computed(() => state.raffles.filter((raffle) => raffle.state === 'ready'))
-    const pastRaffles = computed(() => state.raffles.filter((raffle) => raffle.isPast && raffle.state !== 'ready' && raffle.state !== 'raffled'))
-    const waitingRaffles = computed(() => state.raffles.filter((raffle) => raffle.state === 'raffled'))
+    const readyRaffles = computed(() => state.raffles.filter((raffle) => raffle.state === 'ready' && !raffle.isLive))
+    const liveRaffles = computed(() => state.raffles.filter((raffle) => raffle.state === 'ready' && raffle.isLive))
+    const waitingRaffles = computed(() => state.raffles.filter((raffle) => {
+      return raffle.state === 'waiting' || (raffle.isPast && raffle.sold === 0)
+    }))
+    const pastRaffles = computed(() => state.raffles.filter((raffle) => {
+      return raffle.isPast && raffle.sold > 0 && raffle.state !== 'waiting'
+    }))
 
     watch(() => loggedIn, async () => {
       const response = await axios({ url: '/slot/raffles_for_crud', method: 'get' })
@@ -115,7 +133,7 @@ export default {
       state.languages = response.data.languages
       newRaffle = response.data.newRaffle
     }, { immediate: true })
-    return { ...toRefs(state), addRaffle, closeRaffleDlg, readyRaffles, pastRaffles, removeRaffle, selectRaffle, waitingRaffles }
+    return { ...toRefs(state), showPlayer, addRaffle, closeRaffleDlg, readyRaffles, pastRaffles, removeRaffle, selectRaffle, waitingRaffles, liveRaffles }
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex paytable">
     <div class="symbols">
-      <Symbols @remove="removeSymbol"  @saveSymbol="saveSymbol" :items="symbols" :wrap="true"
+      <Symbols @remove="removeSymbol" :payTable=paytable  @saveSymbol="saveSymbol" :items="symbols" :wrap="true"
                :show-menu="false" direction="column" :show-url="false" :show-paymant-type="false" symbol-size="50px"/>
     </div>
     <q-card class="table">
@@ -29,7 +29,7 @@
                 <q-icon v-if="!item.jackpot" @click="addPaymentTypeToRow(item)"  size="38px"
                         :name="item.symbolId >= 0 && hovered && hovered.id === item.id && item.reel2 ? 'remove_circle_outline':''"/>
                 <q-item-section v-if="item.jackpot" style="font-weight: bolder" side>
-                  <q-input dense flat borderless @change="paytableInputChange(item, 'p', $event)"
+                  <q-input readonly dense flat borderless @change="paytableInputChange(item, 'p', $event)"
                            :value="item.points" style="margin-left: 35px;width: 45px">
                   </q-input>
                 </q-item-section>
