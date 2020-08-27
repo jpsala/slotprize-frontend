@@ -10,8 +10,17 @@
 
 
 >raffle ready live waiting (link al player profile, en in dialog, columnas profile status)
-waiting for profile completion
+>waiting for profile completion
 >cantidad de participaciones en otra columna en waiting y en history
 >raffles no comprados quedan en waiting, no va a haber winner
 
 >no dejar borrar un símbolo cuando está siendo usado
+
+
+>closing date after live
+>cajita con colores para estados
+>wait gris
+>deli verd
+>closed rojo
+>nowinner naranja
+>completed todos los campos llenos verde rojo

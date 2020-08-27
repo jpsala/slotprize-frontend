@@ -25,14 +25,14 @@
             <div class="col col-right">
               <!-- <h4 class="raffle-title">Raffle</h4> -->
                 <div class="q-pa-md" style="max-width: 300px">
-                  {{raffleCopy.closingDate}}
+                  <!-- {{raffleCopy.closingDate}} -->
                   <date-picker v-model="raffleCopy.liveDate" label="Live Date" />
                   <date-picker v-model="raffleCopy.closingDate" label="Closing Date"/>
                   <q-input v-model="raffleCopy.price" label="Number Price" />
                   <q-select class="col-6" label="Status"
-                            stack-label v-model="raffleCopy.state" :options="['waiting', 'delivered']"
+                            stack-label v-model="raffleCopy.state" :options="['waiting', 'delivered', 'closed']"
                             option-value="id" option-label="name"
-                            :disable="!['waiting', 'delivered'].includes(raffleCopy.state)"/>
+                            :disable="!['waiting', 'delivered', 'closed', 'nopurchase'].includes(raffleCopy.state)"/>
                 </div>
             </div>
             </div>

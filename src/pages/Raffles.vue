@@ -1,7 +1,7 @@
 <template>
   <div class="q-pa-md q-gutter-md justify-center">
     <q-page-sticky  position="top-left" :offset="[18, 18]">
-      <q-btn v-if="tab==='ready'" :disable="thereIsNewItem" fab icon="add" color="red" @click="addRaffle"/>
+      <q-btn :disable="thereIsNewItem" fab icon="add" color="red" @click="addRaffle"/>
     </q-page-sticky>
     <h3 class="q-ml-xl q-pl-xl">Raffles</h3>
     <q-tabs v-model="tab" class="text-grey" active-color="primary" align="justify"
@@ -121,10 +121,11 @@ export default {
     const readyRaffles = computed(() => state.raffles.filter((raffle) => raffle.state === 'ready' && !raffle.isLive))
     const liveRaffles = computed(() => state.raffles.filter((raffle) => raffle.state === 'ready' && raffle.isLive))
     const waitingRaffles = computed(() => state.raffles.filter((raffle) => {
-      return raffle.state === 'waiting' || (raffle.isPast && raffle.sold === 0)
+      return ['waiting', 'delivered', 'nopurchase'].includes(raffle.state) ||
+             (raffle.isPast && raffle.sold === 0)
     }))
     const pastRaffles = computed(() => state.raffles.filter((raffle) => {
-      return raffle.isPast && raffle.sold > 0 && raffle.state !== 'waiting'
+      if (!readyRaffles.value.includes(raffle) && !liveRaffles.value.includes(raffle) && !waitingRaffles.value.includes(raffle)) { return raffle }
     }))
 
     watch(() => loggedIn, async () => {

@@ -34,7 +34,7 @@ export default {
       playerEntries: undefined
     })
     onMounted(() => {
-      props.player.createdAt = format(new Date(props.player.created_at), 'yyyy/MM/dd')
+      props.player.createdAt = format(new Date(props.player.created_at), 'yyyy-MM-dd')
       delete props.player.modified_at
       delete props.player.password
       state.playerEntries = Object.entries(camelcaseKeys(props.player, {

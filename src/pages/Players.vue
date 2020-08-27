@@ -69,7 +69,7 @@ export default {
           'last Name': player.last_name,
           email: player.email,
           'device Id': player.device_id,
-          'created At': format(new Date(player.created_at), 'yyyy/MM/dd')
+          'created At': format(new Date(player.created_at), 'yyyy-MM-dd')
         }
       })
     })

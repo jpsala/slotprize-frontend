@@ -1,14 +1,14 @@
 <template>
-  <q-input v-bind="$attrs" v-model="model">
+  <q-input v-bind="$attrs" v-model="model" @change="updateDate($event.target.value)">
     <template v-slot:prepend>
       <q-icon name="event" class="cursor-pointer">
         <q-popup-proxy ref='date' transition-show="scale" transition-hide="scale">
-          <q-date flat :value="model" mask="YYYY/MM/DD HH:mm:ss"
-                  @input="$refs.date.hide(); $emit('input', $event)">
-            <div class="row items-center justify-end q-gutter-sm">
+          <q-date flat :value="model" mask="YYYY-MM-DD HH:mm:ss"
+                  @input="$refs.date.hide() ; updateDate($event)">
+            <!-- <div class="row items-center justify-end q-gutter-sm">
               <q-btn label="Cancel" color="primary" flat v-close-popup />
               <q-btn label="OK" color="primary" flat v-close-popup />
-            </div>
+            </div> -->
           </q-date>
         </q-popup-proxy>
       </q-icon>
@@ -16,12 +16,12 @@
     <template v-slot:append>
       <q-icon name="access_time" class="cursor-pointer">
         <q-popup-proxy ref="time" transition-show="scale" transition-hide="scale">
-          <q-time :value="model" mask="YYYY/MM/DD HH:mm:ss" format24h
-                  @input="$refs.time.hide(); $emit('input', $event)">
-            <div class="row items-center justify-end q-gutter-sm">
+          <q-time :value="model" mask="YYYY-MM-DD HH:mm:ss" format24h
+                  @input="$refs.time.hide() ; updateDate($event)">
+            <!-- <div class="row items-center justify-end q-gutter-sm">
               <q-btn label="Cancel" color="primary" flat v-close-popup />
               <q-btn label="OK" color="primary" flat v-close-popup />
-            </div>
+            </div> -->
           </q-time>
         </q-popup-proxy>
       </q-icon>
@@ -29,15 +29,26 @@
   </q-input>
 </template>
 <script>
+import { reactive, toRefs } from '@vue/composition-api'
 export default {
   props: {
-    model: {
+    value: {
       default: () => ''
     }
   },
   model: {
-    prop: 'model',
+    prop: 'value',
     event: 'input'
+  },
+  setup (props, { emit }) {
+    const state = reactive({
+      model: props.value
+    })
+    const updateDate = (value) => {
+      state.model = value
+      emit('input', state.model)
+    }
+    return { updateDate, ...toRefs(state) }
   }
 }
 </script>

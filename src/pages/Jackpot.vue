@@ -11,7 +11,7 @@
           <q-list  bordered separator>
           <q-item>
             <q-item-section style="max-width: 120px">
-              <q-input @input="change" v-model="cycle" label="CYCLE" />
+              <q-input @input="submit" v-model="cycle" label="CYCLE" />
             </q-item-section>
           </q-item>
           <q-item>
@@ -31,6 +31,10 @@
           </q-item>
         </q-list>
       </q-card-section>
+      <q-card-actions align="right">
+        <!-- <q-btn flat>Action 1</q-btn> -->
+        <q-btn @click="submit" flat>Submit</q-btn>
+      </q-card-actions>
     </q-card>
   </div>
 </template>
@@ -52,7 +56,7 @@ export default {
     state.progressLabel = computed(() => {
       return (state.progress * 100).toFixed(2) + '%'
     })
-    const change = async () => {
+    const submit = async () => {
       axios({
         method: 'post',
         url: '/slot/spin_data',
@@ -73,7 +77,7 @@ export default {
       state.prize = response.data.prize
       state.spinCount = response.data.spinCount
     }, { immediate: true })
-    return { ...toRefs(state), change }
+    return { ...toRefs(state), submit }
   }
 }
 </script>
