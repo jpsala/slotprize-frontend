@@ -20,6 +20,10 @@
           <span>Ingreso/Registro</span>
         </q-btn>
         <!-- profile menu , ya ingresó-->
+        <q-spinner-tail v-show="loading"
+          color="white"
+          size="2em"
+        />
         <q-btn-dropdown
           v-if="loggedIn"
           id="profile-btn"
@@ -78,6 +82,7 @@ import { RemoveArrow } from 'app/src/components/RemoveArrowDirective'
 import myDrawerContent from 'app/src/components/MyDrawerContent'
 import useSession from '../services/useSession'
 import useWindowResize from '../services/useWindowResize'
+import useGlobal from '../services/useGlobal'
 import { router } from '../boot/router'
 
 function setItemsDefaults (items, level = 0) {
@@ -99,6 +104,7 @@ export default {
   components: { myDrawerContent },
 
   setup () {
+    const { loading } = useGlobal()
     const items = ref(
       setItemsDefaults([
         {
@@ -140,7 +146,7 @@ export default {
       }
     })
     return {
-      logout, left, items, loggedIn, Screen, user
+      logout, left, items, loggedIn, Screen, user, loading
     }
   }
 }

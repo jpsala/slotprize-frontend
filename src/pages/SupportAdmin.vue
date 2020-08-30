@@ -3,7 +3,7 @@
     <h3 class="q-ml-xl q-pl-xl">Support Admin</h3>
     <q-form class="q-gutter-md">
       <div class="row">
-        <q-input v-model="email" label="Email for support *" type="email"  @input="requestChange()"/>
+        <q-input autofocus v-model="email" label="Email for support *" type="email"  @input="requestChange()"/>
       </div>
     </q-form>
     <q-markup-table class="q-mt-xl">
@@ -40,6 +40,8 @@ import { reactive, toRefs, watch } from '@vue/composition-api'
 import playerDialog from '../components/PlayerDialog'
 import useSession from 'src/services/useSession'
 import axios from '../services/axios'
+import { debounce } from 'quasar'
+
 export default {
   components: { playerDialog },
   setup () {
@@ -56,14 +58,14 @@ export default {
       console.log('resp', response)
       state.playerForShowing = response.data
     }
-    const requestChange = async (request) => {
+    const requestChange = debounce(async (request) => {
       const response = await axios({
         url: '/slot/support_admin_for_crud',
         method: 'post',
         data: { request, email: state.email }
       })
       console.log('responsiv', response)
-    }
+    }, 800)
     watch(
       () => loggedIn,
       async () => {
