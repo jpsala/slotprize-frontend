@@ -31,7 +31,7 @@
         </tr>
       </tbody>
     </q-markup-table>
-    <player-dialog :player='playerForShowing' @close='playerForShowing = undefined'/>
+    <player-dialog persistent :player='playerForShowing' @close='playerForShowing = undefined'/>
   </div>
 </template>
 

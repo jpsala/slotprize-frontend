@@ -1,5 +1,5 @@
 <template>
-<q-dialog :value="player !== undefined" persistent transition-show="scale" transition-hide="scale">
+<q-dialog :value="player !== undefined" v-bind="$attrs" transition-show="scale" transition-hide="scale">
   <q-card class="raffle-card">
     <q-card-section>
       <Player @back="$emit('close')" v-if="player" :player="player"/>
@@ -31,6 +31,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="sass">
+  .raffle-card
+    width: 80vw
+    max-width: 900px!important
 </style>

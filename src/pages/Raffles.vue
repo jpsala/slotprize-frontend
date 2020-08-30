@@ -27,7 +27,7 @@
       </q-tab-panel>
     </q-tab-panels>
     <raffle :raffle="selected" @close="closeRaffleDlg"/>
-    <player-dialog :player='playerForShowing' @close='playerForShowing = undefined'/>
+    <player-dialog persistent :player='playerForShowing' @close='playerForShowing = undefined'/>
   </div>
 </template>
 
