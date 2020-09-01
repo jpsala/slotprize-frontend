@@ -87,7 +87,10 @@ export default {
         const languageFromDb = response.data
         state.selected = undefined
         if (language.isNew) state.rows.push(languageFromDb)
-        else state.selected = languageFromDb
+        else {
+          const idxLanguage = state.rows.findIndex(lang => lang.id === languageFromDb.id)
+          state.rows[idxLanguage] = languageFromDb
+        }
       } catch (error) {
         await alerta('Error submiting language', error)
       }
