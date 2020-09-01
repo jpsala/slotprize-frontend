@@ -1,6 +1,7 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable no-underscore-dangle */
 import axios from 'axios'
+
 import useGlobal from '../services/useGlobal'
 import { setApiToken, getApiToken } from './useSession'
 // import router from '../router';
@@ -25,9 +26,14 @@ const getAxios = () => {
     }
     return response
   }, (error) => {
-    console.log('Error en axios.interceptors.response: ', error.message || error)
+    stopLoading()
+    console.log('error', error)
+    let msg = error.response?.data?.message
+    if (!msg) msg = error.message
+    if (!msg) msg = error
+    console.log('Error en axios.interceptors.response: ', msg)
     // throw error;
-    return Promise.reject(error)
+    return Promise.reject(msg)
   })
 
   axios.interceptors.request.use(

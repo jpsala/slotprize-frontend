@@ -94,11 +94,14 @@ import SymbolSelect from '../components/SymbolSelect'
 import { getTombolaData } from '../services/slot'
 import axios from '../services/axios'
 import { rand, alerta, resizeObserver } from 'src/helpers'
+import useGlobal from '../services/useGlobal'
 
 export default {
   components: { Symbols, SymbolSelect },
 
   setup (_, { root }) {
+    const { showSpinner, hideSpinner } = useGlobal()
+
     const state = reactive({
       symbols: [],
       tableData: [],
@@ -125,8 +128,10 @@ export default {
       }).onOk(async () => {
         const idx = state.symbols.findIndex(_symbol => _symbol.id === symbol.id)
         if (idx) {
+          showSpinner()
           await axios({ method: 'delete', url: '/slot/symbol', params: { id: symbol.id } })
           state.symbols.splice(idx, 1)
+          hideSpinner()
         }
       })
     }
@@ -202,13 +207,16 @@ export default {
       console.warn('resize', e)
     }
     const save = async () => {
+      showSpinner()
       try {
         const resp = await axios.post('slot/tombola_for_crud', state.tableData)
-        if (resp.data.status === 'ok') alert('Saved')
-        else alert('Error saving ' + resp.data)
-        console.log('save', resp)
+        hideSpinner()
+        if (resp.data.status === 'ok') alerta('Saved')
+        else alerta('Error saving ' + resp.data)
       } catch (error) {
-        alert('Error saving data ' + error)
+        alerta('Error saving data ' + error)
+      } finally {
+        hideSpinner()
       }
     }
     const addRow = () => {
@@ -271,6 +279,7 @@ export default {
     })
 
     onMounted(async () => {
+      showSpinner()
       const tombolaData = await getTombolaData()
       const listEl = document.querySelector('.items-section .q-list')
       const symbolsEl = document.querySelector('.items')
@@ -281,6 +290,7 @@ export default {
       listObserver.observe(listEl)
       state.symbols = tombolaData.symbols
       state.tableData = tombolaData.paytable/* .map(ptRow => Object.assign(ptRow, { withError: true })) */
+      hideSpinner()
     })
     const tableIsValid = computed(() =>
       !state.thereIsANewItem && state.totalProbability === 100 && !state.withError

@@ -1,9 +1,11 @@
-import { computed, reactive } from '@vue/composition-api'
+import { computed, reactive, watch } from '@vue/composition-api'
+import {
+  Loading,
+  QSpinnerDots
+} from 'quasar'
 const state = reactive({
   loading: false,
-  forExport: {
-    test: 1
-  }
+  spinner: false
 })
 const useGlobal = () => {
   const startLoading = () => {
@@ -12,9 +14,23 @@ const useGlobal = () => {
   const stopLoading = () => {
     state.loading = false
   }
+  const showSpinner = () => {
+    state.spinner = true
+  }
+  const hideSpinner = () => {
+    state.spinner = false
+  }
   const loading = computed(() => {
     return state.loading
   })
-  return { startLoading, stopLoading, loading }
+  watch(() => state.spinner, (value) => {
+    if (value) Loading.show({ spinner: QSpinnerDots })
+    else {
+      setTimeout(() => {
+        Loading.hide()
+      }, 1000)
+    }
+  })
+  return { startLoading, stopLoading, loading, showSpinner, hideSpinner }
 }
 export default useGlobal

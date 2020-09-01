@@ -121,6 +121,7 @@ export default {
             { label: 'Players', to: '/players' },
             { label: 'Jackpot', to: '/jackpot' },
             { label: 'Raffles', to: '/raffles' },
+            { label: 'Languages', to: '/languages' },
             { label: 'Support Admin', to: '/supportAdmin' },
             { label: 'Slot Machine', to: '/slotMachine' }
           ]

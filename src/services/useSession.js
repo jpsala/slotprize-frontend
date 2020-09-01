@@ -1,7 +1,6 @@
 import { reactive, computed, watch } from '@vue/composition-api'
 import axios from './axios'
 import { router } from '../boot/router'
-
 const jwtSecret = 'wopidom.front'
 const state = reactive({
   loading: false,

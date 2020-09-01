@@ -10,6 +10,7 @@ const routes = [
       { path: 'jackpot', component: () => import('pages/Jackpot.vue') },
       { path: 'slotMachine', component: () => import('pages/SlotMachine.vue') },
       { path: 'raffles', component: () => import('pages/Raffles.vue') },
+      { path: 'languages', component: () => import('pages/Languages.vue') },
       { path: 'supportAdmin', component: () => import('pages/SupportAdmin.vue') },
       { path: 'players', component: () => import('pages/Players.vue') }
     ]
