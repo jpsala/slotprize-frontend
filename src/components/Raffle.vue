@@ -97,7 +97,6 @@ export default {
       state.reader.readAsDataURL(event.target.files[0])
     }
     const statusChange = (value) => {
-      console.log('value', value, state.eventClone)
       state.eventClone.skin = value
       state.key += 1
     }

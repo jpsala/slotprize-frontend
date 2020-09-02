@@ -52,25 +52,21 @@ export default {
       playerForShowing: undefined
     })
     const showPlayer = async (player, event) => {
-      console.log('data.event.target.tagName', event.target.tagName)
       if (event.target.tagName !== 'TD') return
       const response = await axios({ url: '/slot/playerForFront', method: 'get', params: { id: player } })
-      console.log('resp', response)
       state.playerForShowing = response.data
     }
     const requestChange = debounce(async (request) => {
-      const response = await axios({
+      await axios({
         url: '/slot/support_admin_for_crud',
         method: 'post',
         data: { request, email: state.email }
       })
-      console.log('responsiv', response)
     }, 800)
     watch(
       () => loggedIn,
       async () => {
         const response = await axios({ url: '/slot/support_admin_for_crud', method: 'get' })
-        console.log('response', response)
         state.email = response.data.email
         state.requests = response.data.requests
       },

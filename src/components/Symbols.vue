@@ -68,7 +68,6 @@ export default {
     }
     // eslint-disable-next-line no-unused-vars
     const setItemsStyle = (_items) => {
-      console.log('items', _items)
       const itemsParent = document.querySelector('.items')
       itemsParent.style.flexWrap = props.wrap ? 'wrap' : ''
       itemsParent.style.flexDirection = props.direction
@@ -80,12 +79,6 @@ export default {
         // _item.style.width = props.symbolSize;
         // _item.style.height = props.symbolSize;
       })
-    }
-    const startDrag = (evt, item) => {
-      evt.dataTransfer.dropEffect = 'move'
-      evt.dataTransfer.effectAllowed = 'move'
-      evt.dataTransfer.setData('item', JSON.stringify(item))
-      console.log('startDrag', evt, item)
     }
     const symbolClose = async (data) => {
       const { symbol, files } = data
@@ -103,7 +96,6 @@ export default {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
       axios.defaults.headers.post['Content-Type'] = axiosAnt
-      console.log('response', response)
       emit('saveSymbol', response.data)
       state.selected = undefined
     }
@@ -130,7 +122,7 @@ export default {
     })
     // watch(() => props.items, setItemsStyle)
     return {
-      ...toRefs(state), hover, startDrag, symbolClose, sortedItems, symbolCancel, setSelected, showRemove
+      ...toRefs(state), hover, symbolClose, sortedItems, symbolCancel, setSelected, showRemove
     }
   }
 }

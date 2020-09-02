@@ -58,7 +58,6 @@ export default {
         if (response.data !== 1) {
           await alerta('Error deleting language')
         }
-        console.log('response', response)
         const idxLanguageForDeletion = state.rows.findIndex(lang => lang.id === languageId)
         state.rows.splice(idxLanguageForDeletion, 1)
       } catch (error) {
@@ -66,7 +65,6 @@ export default {
       }
     }
     const languageClose = async (data) => {
-      console.log('data', data)
       const { language, files } = data
       var fd = new FormData()
       fd.append('id', language.id)
@@ -106,7 +104,6 @@ export default {
     watch(() => loggedIn, async () => {
       const response = await axios({ url: '/slot/languages_for_crud', method: 'get' })
       state.rows = response.data
-      console.log('response', response)
     }, { immediate: true })
     return { ...toRefs(state), languageClose, languageCancel, addLanguage, delLanguage, selectRow }
   }

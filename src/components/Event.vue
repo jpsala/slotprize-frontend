@@ -152,7 +152,6 @@ export default {
       }
     }
     const selectChange = (value) => {
-      console.log('value', value, state.eventClone)
       state.eventClone.skin = value
       state.key += 1
     }
@@ -160,7 +159,6 @@ export default {
     watch(
       () => props.event,
       event => {
-        console.log('event change')
         state.eventClone = clone()(event)
         state.eventClone.skin = props.skins.find(skin => skin.id === state.eventClone.skinId)
         state.eventClone.popupFile = undefined

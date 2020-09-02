@@ -72,7 +72,6 @@ export default {
         method: 'get',
         params: {}
       })
-      console.log('response', response)
       state.cycle = response.data.cycle
       state.prize = response.data.prize
       state.spinCount = response.data.spinCount

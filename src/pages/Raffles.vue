@@ -56,7 +56,6 @@ export default {
     const closeRaffleDlg = async (data) => {
       try {
         if (data) {
-          console.log('close', raffle)
           const formData = new FormData()
           for (var key in data.raffle) { createFormData(formData, key, data.raffle[key]) }
           formData.append('image', data.files[0])
@@ -67,12 +66,10 @@ export default {
             data: formData,
             headers: { 'Content-Type': 'multipart/form-data' }
           })
-          console.log('response', response)
           if (!response?.data?.id) {
             await alerta('Error submiting the data')
             return
           }
-          console.log('response.data', response.data)
           if (state.selected.isNew) state.raffles.push(response.data)
           else { Object.assign(state.selected, response.data) }
         }
@@ -90,7 +87,6 @@ export default {
       }
     }
     const selectRaffle = async (data) => {
-      console.log('data.event.target.tagName', data.event.target.tagName)
       if (data.event.target.tagName === 'I' || data.event.target.tagName === 'SPAN') return
       state.selected = data.raffle
     }
@@ -111,13 +107,9 @@ export default {
     }
     const showPlayer = async (player) => {
       const response = await axios({ url: '/slot/playerForFront', method: 'get', params: { id: player } })
-      console.log('resp', response)
       state.playerForShowing = response.data
     }
-    const addRaffle = () => {
-      state.selected = newRaffle
-      console.log('add')
-    }
+    const addRaffle = () => { state.selected = newRaffle }
     const readyRaffles = computed(() => state.raffles.filter((raffle) => raffle.state === 'ready' && !raffle.isLive))
     const liveRaffles = computed(() => state.raffles.filter((raffle) => raffle.state === 'ready' && raffle.isLive))
     const waitingRaffles = computed(() => state.raffles.filter((raffle) => {

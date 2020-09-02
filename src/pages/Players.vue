@@ -47,9 +47,7 @@ export default {
       selected: undefined
     })
     const rowClick = (_, row) => {
-      console.log('_, row', _, row)
       state.selected = state.items.find(item => item.device_id === row['device Id'])
-      console.log(row, state.selected)
     }
     const getItemsFromDB = async () => {
       const resp = await axios({

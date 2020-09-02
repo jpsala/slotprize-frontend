@@ -26,10 +26,9 @@
         </tr>
       </tbody>
     </q-markup-table>
-  <CountryDialog :country="selected" :languages="languages" @close="countryClose" @cancel="countryCancel"/>
+    <CountryDialog :country="selected" :languages="languages" @close="countryClose" @cancel="countryCancel"/>
     <q-page-sticky position="top-left" :offset="[18, 18]">
-      <q-btn :disable="selected !== undefined" @click="addCountry"
-              fab icon="add" color="red-6" />
+      <q-btn :disable="selected !== undefined" @click="addCountry" fab icon="add" color="red-6" />
     </q-page-sticky>
   </div>
 </template>
@@ -65,7 +64,6 @@ export default {
         if (response.data !== 1) {
           await alerta('Error deleting country')
         }
-        console.log('response', response)
         const idxCountryForDeletion = state.rows.findIndex(lang => lang.id === countryId)
         state.rows.splice(idxCountryForDeletion, 1)
       } catch (error) {
@@ -73,7 +71,6 @@ export default {
       }
     }
     const countryClose = async (data) => {
-      console.log('data', data)
       const { country, files } = data
       var fd = new FormData()
       fd.append('id', country.id)
@@ -117,7 +114,6 @@ export default {
       const response = await axios({ url: '/slot/countries_for_crud', method: 'get' })
       state.rows = response.data.countries
       state.languages = response.data.languages
-      console.log('response', response)
     }, { immediate: true })
     return { ...toRefs(state), countryClose, countryCancel, addCountry, delCountry, selectRow }
   }

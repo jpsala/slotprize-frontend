@@ -283,7 +283,6 @@ export default {
       const tombolaData = await getTombolaData()
       const listEl = document.querySelector('.items-section .q-list')
       const symbolsEl = document.querySelector('.items')
-      console.log('symbolsEl', symbolsEl)
       const listObserver = resizeObserver(listEl, (event) => {
         symbolsEl.style.maxHeight = event.height + 130 + 'px'
       })

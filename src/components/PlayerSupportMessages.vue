@@ -37,7 +37,6 @@ export default {
       }
     })
     onMounted(async () => {
-      console.log('detalle', props.player)
       const resp = await axios.get(`/slot/support_request_for_crud?userId=${props.player.id}`)
       state.items = resp.data.map(item => {
         item.createdAt = format(new Date(item.createdAt), 'yyyy-MM-dd')

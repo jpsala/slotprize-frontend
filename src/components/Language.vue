@@ -40,7 +40,6 @@ export default {
       fileForUpload: props.language.localizationUrl ?? 'Select a JSON file'
     })
     const fileChange = (event) => {
-      console.log('fileChange', state.fileInput.files[0].name)
       state.fileForUpload = state.fileInput.files[0].name
     }
     const submit = () => {

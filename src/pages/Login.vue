@@ -20,7 +20,7 @@
   </div>
 </template>
 <script>
-import { ref, onBeforeMount, watch } from '@vue/composition-api'
+import { ref, watch } from '@vue/composition-api'
 import useSession from '../services/useSession'
 // import router from '../boot/router';
 // import store from 'src/store'
@@ -58,9 +58,6 @@ export default {
         else notifyFailure(`error: ${error}`)
       }
     }
-    onBeforeMount(() => {
-      console.log('li', loggedIn.value)
-    })
     watch(() => loggedIn.value, (_loggedIn) => {
       if (_loggedIn) gotoHomePage()
     }, { immediate: true })

@@ -96,7 +96,6 @@ const confirma = async (title, msg) => {
 const notify = ({
   message = 'Falta', error = false, timeout = 3000, icon = ''
 } = {}) => {
-  console.log(message)
   Notify.create({
     color: error ? 'red-4' : 'green-4',
     textColor: 'white',
@@ -143,6 +142,5 @@ export {
   debounce, throttle, resizeObserver, confirma
 }
 export const isNotebook = () => {
-  console.log('hostname', location.hostname)
   return location.hostname === 'localhost'
 }

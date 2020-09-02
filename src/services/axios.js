@@ -22,7 +22,6 @@ const getAxios = () => {
     if (response.data && (response.data.jwt || response.headers.token)) {
       apiToken = response.data.jwt || response.headers.token
       setApiToken(apiToken)
-      console.log('now', apiToken)
     }
     return response
   }, (error) => {

@@ -79,12 +79,10 @@ export default {
     }
 
     const editing = (event) => {
-      console.log('editing', event)
       state.editingEvent = event
     }
 
     const removeEvent = (event) => {
-      console.log('remove', event)
       state.editingEvent = undefined
     }
     const addEvent = () => {
@@ -94,7 +92,6 @@ export default {
     const cancel = () => {
       state.newEvent = undefined
       state.editingEvent = undefined
-      console.log('cancel', state)
     }
     watch(() => loggedIn.value, getEvents, {
       immediate: true
