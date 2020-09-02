@@ -20,7 +20,7 @@
       </div>
     </q-card-section>
     <q-card-actions class="q-mt-lg" align="right">
-      <q-btn flat @click="$refs.imgInput.click()" >Select JSON file</q-btn>
+      <q-btn flat @click="$refs.imgInput.click()" >Select Image</q-btn>
       <q-btn flat @click="$emit('cancel')">Cancel</q-btn>
       <q-btn flat @click="submit">Submit</q-btn>
     </q-card-actions>
