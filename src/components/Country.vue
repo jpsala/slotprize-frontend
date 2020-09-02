@@ -61,9 +61,7 @@ export default {
       state.countryCopy = clone()(props.country)
     })
     watch(() => props.country, () => {
-      console.log('watch')
       state.countryCopy = clone()(props.country)
-      console.log('countryCopy', state.countryCopy)
     }, { inmediate: true })
     return { ...toRefs(state), imgChange, submit }
   }
