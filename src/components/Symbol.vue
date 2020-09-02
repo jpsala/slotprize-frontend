@@ -36,7 +36,7 @@ export default {
       img: undefined,
       imgInput: undefined,
       reader: new FileReader(),
-      missingImage: 'http://localhost/public/assets/img/missing.png'
+      missingImage: 'http://wopidom.homelinux.com/public/assets/img/missing.png'
     })
     const imgChange = (event) => {
       state.reader.onload = function () {

@@ -45,12 +45,12 @@ export default {
       fileForUpload: props.country.countryUrl ?? 'Select a JSON file',
       img: undefined,
       reader: new FileReader(),
-      missingImage: 'http://localhost/public/assets/img/missing.png'
+      missingImage: 'http://wopidom.homelinux.com/public/assets/img/missing.png'
     })
+    state.reader.onload = function () {
+      state.img.src = state.reader.result
+    }
     const imgChange = (event) => {
-      state.reader.onload = function () {
-        state.img.src = state.reader.result
-      }
       state.reader.readAsDataURL(event.target.files[0])
     }
     const submit = () => {
