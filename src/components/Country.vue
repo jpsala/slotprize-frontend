@@ -31,7 +31,6 @@
 
 <script>
 import { reactive, toRefs, watch, onMounted } from '@vue/composition-api'
-import { isNotebook } from 'src/helpers'
 import clone from 'rfdc'
 
 export default {
@@ -46,7 +45,7 @@ export default {
       fileForUpload: props.country.countryUrl ?? 'Select a JSON file',
       img: undefined,
       reader: new FileReader(),
-      missingImage: isNotebook() ? 'http://localhost/public/assets/img/missing.png' : 'http://wopidom.homelinux.com/public/assets/img/lapices.png'
+      missingImage: 'http://localhost/public/assets/img/missing.png'
     })
     const imgChange = (event) => {
       state.reader.onload = function () {

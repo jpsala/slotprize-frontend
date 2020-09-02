@@ -23,7 +23,6 @@ import { reactive, toRefs, watch } from '@vue/composition-api'
 import useSession from 'src/services/useSession'
 // eslint-disable-next-line no-unused-vars
 import axios from '../services/axios'
-import { isNotebook } from 'src/helpers'
 export default {
   props: {
     symbol: {
@@ -37,7 +36,7 @@ export default {
       img: undefined,
       imgInput: undefined,
       reader: new FileReader(),
-      missingImage: isNotebook() ? 'http://localhost/public/assets/img/missing.png' : 'http://wopidom.homelinux.com/public/assets/img/lapices.png'
+      missingImage: 'http://localhost/public/assets/img/missing.png'
     })
     const imgChange = (event) => {
       state.reader.onload = function () {

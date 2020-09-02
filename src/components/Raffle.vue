@@ -64,7 +64,6 @@
 <script>
 import { reactive, toRefs, watch } from '@vue/composition-api'
 import { klona } from 'klona/json'
-import { isNotebook } from 'src/helpers'
 import DatePicker from '../components/DatePicker.vue'
 export default {
   components: { DatePicker },
@@ -85,7 +84,7 @@ export default {
       inputImgRef: undefined,
       imgRef: undefined,
       tab: 'info',
-      missingImage: isNotebook() ? 'http://localhost/public/assets/img/missing.png' : 'http://wopidom.homelinux.com/public/assets/img/lapices.png'
+      missingImage: 'http://localhost/public/assets/img/missing.png'
     })
     const cancel = () => {
       emit('close')
