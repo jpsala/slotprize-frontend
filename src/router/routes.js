@@ -11,6 +11,7 @@ const routes = [
       { path: 'slotMachine', component: () => import('pages/SlotMachine.vue') },
       { path: 'raffles', component: () => import('pages/Raffles.vue') },
       { path: 'languages', component: () => import('pages/Languages.vue') },
+      { path: 'countries', component: () => import('pages/Countries.vue') },
       { path: 'supportAdmin', component: () => import('pages/SupportAdmin.vue') },
       { path: 'players', component: () => import('pages/Players.vue') }
     ]
