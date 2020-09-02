@@ -2,7 +2,7 @@
   <q-card class="my-card">
     <img ref="img" class="cursor-pointer" @click="$refs.imgInput.click()" style="border-radius: 20%"
           id="output_image" :src="symbol.textureUrl ? symbol.textureUrl : missingImage">
-    <input ref='imgInput' type="file" accept="image/*" @change="imgChange($event)" class="hidden">
+    <input autofocus ref='imgInput' type="file" accept="image/*" @change="imgChange($event)" class="hidden">
     <q-card-section class="q-mb-lg" style="text-align: center;">
       <div class="text-h6">
         <q-input v-model="symbol.paymentType" label="Payment Type" />

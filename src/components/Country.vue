@@ -1,6 +1,6 @@
 <template>
   <q-card class="my-card" v-if="countryCopy">
-    <input ref='imgInput' type="file" accept="image/*" @change="imgChange($event)" class="hidden">
+    <input autofocus ref='imgInput' type="file" accept="image/*" @change="imgChange($event)" class="hidden">
     <q-card-section class="q-mb-lg" style="text-align: center;">
       <div class="row">
         <div class="text-h6">

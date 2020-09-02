@@ -1,6 +1,6 @@
 <template>
   <q-card class="my-card">
-    <input ref='fileInput' type="file" accept="application/JSON" @change="fileChange($event)" class="hidden">
+    <input autofocus ref='fileInput' type="file" accept="application/JSON" @change="fileChange($event)" class="hidden">
     <q-card-section class="q-mb-lg" style="text-align: center;">
       <div class="row">
         <div class="text-h6">

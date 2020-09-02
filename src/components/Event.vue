@@ -16,7 +16,7 @@
       <div  class='row items-center no-wrap'>
         <q-form class='col' enctype="multipart/form-data">
           <div class='text-h6'>
-            <q-input class="col" :disable="!editMode" v-model='eventClone.name' label='Name' autofocus="" />
+            <q-input autofocus class="col" :disable="!editMode" v-model='eventClone.name' label='Name'/>
 
             <q-input :disable="!editMode" v-model='eventClone.description' label='Description' autofocus="" />
             <div class="row">
