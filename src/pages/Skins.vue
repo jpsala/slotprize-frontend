@@ -66,6 +66,7 @@ export default {
         const idxSkinForDeletion = state.rows.findIndex(_skin => _skin.id === skinId)
         state.rows.splice(idxSkinForDeletion, 1)
       } catch (error) {
+        hideSpinner()
         await alerta('Error deleting skin', error)
       } finally {
         hideSpinner()

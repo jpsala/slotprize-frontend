@@ -68,6 +68,7 @@ export default {
         const idxLanguageForDeletion = state.rows.findIndex(lang => lang.id === languageId)
         state.rows.splice(idxLanguageForDeletion, 1)
       } catch (error) {
+        hideSpinner()
         await alerta('Error deleting language', error)
       } finally {
         hideSpinner()

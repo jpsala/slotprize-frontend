@@ -39,7 +39,9 @@ import useSession from 'src/services/useSession'
 import axios from '../services/axios'
 import CountryDialog from '../components/CountryDialog'
 import { alerta, confirma } from 'src/helpers'
+import useGlobal from '../services/useGlobal'
 
+const { showSpinner, hideSpinner } = useGlobal()
 export default {
   components: { CountryDialog },
   setup () {
@@ -82,6 +84,7 @@ export default {
       if (country.isNew) fd.append('isNew', country.isNew)
       if (files.length > 0) { fd.append('file', files[0]) }
       const axiosAnt = axios.defaults.headers.post['Content-Type']
+      showSpinner()
       try {
         axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
         const response = await axios({
@@ -90,6 +93,7 @@ export default {
           data: fd,
           headers: { 'Content-Type': 'multipart/form-data' }
         })
+        hideSpinner()
         axios.defaults.headers.post['Content-Type'] = axiosAnt
         const countryFromDb = response.data
         state.selected = undefined
@@ -99,7 +103,10 @@ export default {
           state.rows[idxCountry] = countryFromDb
         }
       } catch (error) {
+        hideSpinner()
         await alerta('Error submiting country', error)
+      } finally {
+        hideSpinner()
       }
     }
     const addCountry = () => {
