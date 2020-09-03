@@ -35,7 +35,9 @@ import useSession from 'src/services/useSession'
 import axios from '../services/axios'
 import SkinDialog from '../components/SkinDialog'
 import { alerta, confirma } from 'src/helpers'
+import useGlobal from '../services/useGlobal'
 
+const { showSpinner, hideSpinner } = useGlobal()
 export default {
   components: { SkinDialog },
   setup () {
@@ -51,11 +53,13 @@ export default {
     const delSkin = async (skinId) => {
       if (!(await confirma('Sure?'))) return
       try {
+        showSpinner()
         const response = await axios({
           method: 'delete',
           url: 'slot/skin_for_crud',
           params: { skinId }
         })
+        hideSpinner()
         if (response.data !== 1) {
           await alerta('Error deleting skin')
         }
@@ -63,6 +67,8 @@ export default {
         state.rows.splice(idxSkinForDeletion, 1)
       } catch (error) {
         await alerta('Error deleting skin', error)
+      } finally {
+        hideSpinner()
       }
     }
     const skinCloseDlg/* Submit */ = async (data) => {
@@ -74,6 +80,7 @@ export default {
       if (skin.machineSkinTextureUrl) fd.append('machineSkinTextureUrl', skin.machineSkinTextureUrl)
       if (skin.isNew) fd.append('isNew', skin.isNew)
       if (files.length > 0) { fd.append('file', files[0]) }
+      showSpinner()
       const axiosAnt = axios.defaults.headers.post['Content-Type']
       try {
         axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
@@ -91,8 +98,11 @@ export default {
           const idxSkin = state.rows.findIndex(_skin => _skin.id === skinFromDb.id)
           state.rows[idxSkin] = skinFromDb
         }
+        hideSpinner()
       } catch (error) {
         await alerta('Error submiting skin', error)
+      } finally {
+        hideSpinner()
       }
     }
     const addSkin = () => {
@@ -104,8 +114,10 @@ export default {
       state.selected = undefined
     }
     watch(() => loggedIn, async () => {
+      showSpinner()
       const response = await axios({ url: '/slot/skins_for_crud', method: 'get' })
       state.rows = response.data
+      hideSpinner()
     }, { immediate: true })
     return { ...toRefs(state), skinCloseDlg, skinCancel, addSkin, delSkin, selectRow }
   }

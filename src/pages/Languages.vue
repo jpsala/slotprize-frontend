@@ -36,6 +36,9 @@ import useSession from 'src/services/useSession'
 import axios from '../services/axios'
 import LanguageDialog from '../components/LanguageDialog'
 import { alerta, confirma } from 'src/helpers'
+import useGlobal from '../services/useGlobal'
+
+const { showSpinner, hideSpinner } = useGlobal()
 
 export default {
   components: { LanguageDialog },
@@ -52,11 +55,13 @@ export default {
     const delLanguage = async (languageId) => {
       if (!(await confirma('Sure?'))) return
       try {
+        showSpinner()
         const response = await axios({
           method: 'delete',
           url: 'slot/language_for_crud',
           params: { languageId }
         })
+        hideSpinner()
         if (response.data !== 1) {
           await alerta('Error deleting language')
         }
@@ -64,9 +69,12 @@ export default {
         state.rows.splice(idxLanguageForDeletion, 1)
       } catch (error) {
         await alerta('Error deleting language', error)
+      } finally {
+        hideSpinner()
       }
     }
     const languageCloseDialog = async (data) => {
+      showSpinner()
       console.log('data', data)
       const { language, files } = data
       var fd = new FormData()
@@ -95,8 +103,11 @@ export default {
           const idxLanguage = state.rows.findIndex(lang => lang.id === languageFromDb.id)
           state.rows[idxLanguage] = languageFromDb
         }
+        hideSpinner()
       } catch (error) {
         await alerta('Error submiting language', error)
+      } finally {
+        hideSpinner()
       }
     }
     const addLanguage = () => {
@@ -108,8 +119,10 @@ export default {
       state.selected = undefined
     }
     watch(() => loggedIn, async () => {
+      showSpinner()
       const response = await axios({ url: '/slot/languages_for_crud', method: 'get' })
       state.rows = response.data
+      hideSpinner()
     }, { immediate: true })
     return { ...toRefs(state), languageCloseDialog, languageCancel, addLanguage, delLanguage, selectRow }
   }
