@@ -1,20 +1,33 @@
 
+import Skins from 'src/pages/Skins'
+import Index from 'src/pages/Index'
+import Login from 'src/pages/Login'
+import Jackpot from 'src/pages/Jackpot'
+import Events from 'src/pages/Events'
+import SlotMachine from 'src/pages/SlotMachine'
+import Raffles from 'src/pages/Raffles'
+import Languages from 'src/pages/Languages'
+import Countries from 'src/pages/Countries'
+import SupportAdmin from 'src/pages/SupportAdmin'
+import Players from 'src/pages/Players'
+import Error404 from 'src/pages/Error404'
+import MainLayout from 'src/layouts/MainLayout'
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: MainLayout,
     children: [
-      { path: '', component: () => import('pages/Index.vue') },
-      { path: 'events', component: () => import('pages/Events.vue') },
-      { path: 'login', component: () => import('pages/Login.vue') },
-      { path: 'jackpot', component: () => import('pages/Jackpot.vue') },
-      { path: 'slotMachine', component: () => import('pages/SlotMachine.vue') },
-      { path: 'raffles', component: () => import('pages/Raffles.vue') },
-      { path: 'languages', component: () => import('pages/Languages.vue') },
-      { path: 'skins', component: () => import('pages/Skins.vue') },
-      { path: 'countries', component: () => import('pages/Countries.vue') },
-      { path: 'supportAdmin', component: () => import('pages/SupportAdmin.vue') },
-      { path: 'players', component: () => import('pages/Players.vue') }
+      { path: '', component: Index },
+      { path: 'events', component: Events },
+      { path: 'login', component: Login },
+      { path: 'jackpot', component: Jackpot },
+      { path: 'slotMachine', component: SlotMachine },
+      { path: 'raffles', component: Raffles },
+      { path: 'languages', component: Languages },
+      { path: 'skins', component: Skins },
+      { path: 'countries', component: Countries },
+      { path: 'supportAdmin', component: SupportAdmin },
+      { path: 'players', component: Players }
     ]
   },
 
@@ -22,7 +35,7 @@ const routes = [
   // but you can also remove it
   {
     path: '*',
-    component: () => import('pages/Error404.vue')
+    component: Error404
   }
 ]
 
