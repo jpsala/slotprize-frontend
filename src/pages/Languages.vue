@@ -5,7 +5,8 @@
       <thead>
         <tr>
           <th class="text-left">Language Code</th>
-          <th class="text-left">Localization URL</th>
+          <th class="text-left">Json File</th>
+          <th class="text-center">Image</th>
           <th class="text-left"></th>
         </tr>
       </thead>
@@ -13,6 +14,7 @@
         <tr v-for="(row) in rows" :key="row.id" @click="selectRow(row, $event)" class="cursor-pointer">
           <td class="text-left">{{row.languageCode}}</td>
           <td class="text-left">{{row.localizationUrl}}</td>
+          <td class="text-center "><img :src="row.textureUrl" /></td>
           <td class="text-right">
             <q-icon @click="delLanguage(row.id)" class="remove" name="remove_circle_outline"
                     size="30px" color="red-5" />
@@ -20,7 +22,7 @@
         </tr>
       </tbody>
     </q-markup-table>
-  <LanguageDialog :language="selected" @close="languageClose" @cancel="languageCancel"/>
+  <LanguageDialog :language="selected" @close="languageCloseDialog" @cancel="languageCancel"/>
     <q-page-sticky position="top-left" :offset="[18, 18]">
       <q-btn :disable="selected !== undefined" @click="addLanguage"
               fab icon="add" color="red-6" />
@@ -64,14 +66,18 @@ export default {
         await alerta('Error deleting language', error)
       }
     }
-    const languageClose = async (data) => {
+    const languageCloseDialog = async (data) => {
+      console.log('data', data)
       const { language, files } = data
       var fd = new FormData()
       fd.append('id', language.id)
-      fd.append('language_code', language.languageCode)
-      fd.append('localization_url', language.localizationUrl)
-      fd.append('isNew', language.isNew)
-      if (files.length > 0) { fd.append('file', files[0]) }
+      if (language.languageCode) fd.append('language_code', language.languageCode)
+      if (language.localizationUrl) fd.append('localization_url', language.localizationUrl)
+      if (language.textureUrl) fd.append('texture_url', language.textureUrl)
+      if (files.localization) { fd.append('localizationFile', files.localization) }
+      if (files.texture) { fd.append('textureFile', files.texture) }
+      if (language.isNew) fd.append('isNew', language.isNew)
+
       const axiosAnt = axios.defaults.headers.post['Content-Type']
       try {
         axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
@@ -105,7 +111,7 @@ export default {
       const response = await axios({ url: '/slot/languages_for_crud', method: 'get' })
       state.rows = response.data
     }, { immediate: true })
-    return { ...toRefs(state), languageClose, languageCancel, addLanguage, delLanguage, selectRow }
+    return { ...toRefs(state), languageCloseDialog, languageCancel, addLanguage, delLanguage, selectRow }
   }
 }
 </script>

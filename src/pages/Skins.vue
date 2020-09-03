@@ -117,11 +117,12 @@ export default {
     width: 20px;
   }
   .img-td{
-    max-width: 20px!important;
-    width: 20px!important;
+    max-width: 50px!important;
+    width: 100px!important;
     img{
       width: 100%;
       height: auto;
+      border-radius: 8px;
     }
   }
   tr{

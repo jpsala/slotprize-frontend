@@ -13,6 +13,9 @@
                    label="JSON file" />
         </div>
       </div>
+      <input autofocus ref='imgInput' type="file" accept="image/*" @change="imgChange($event)" class="hidden">
+          <img ref="img" class="cursor-pointer" @click="$refs.imgInput.click()" style="border-radius: 20%"
+               id="output_image" :src="language.textureUrl ? language.textureUrl : missingImage">
     </q-card-section>
     <q-card-actions class="q-mt-lg" align="right">
       <q-btn flat @click="$refs.fileInput.click()" >Select JSON file</q-btn>
@@ -36,14 +39,26 @@ export default {
   setup (props, { emit }) {
     const { loggedIn } = useSession()
     const state = reactive({
+      imgInput: undefined,
       fileInput: undefined,
-      fileForUpload: props.language.localizationUrl ?? 'Select a JSON file'
+      fileForUpload: props.language.localizationUrl ?? 'Select a JSON file',
+      img: undefined,
+      reader: new FileReader(),
+      missingImage: 'http://wopidom.homelinux.com/public/assets/img/missing.png'
     })
     const fileChange = (event) => {
       state.fileForUpload = state.fileInput.files[0].name
     }
+    state.reader.onload = function () {
+      state.img.src = state.reader.result
+    }
+    const imgChange = (event) => {
+      state.reader.readAsDataURL(event.target.files[0])
+    }
     const submit = () => {
-      var files = state.fileInput.files
+      const files = {}
+      if (state.fileInput.files.length > 0) files.localization = state.fileInput.files[0]
+      if (state.imgInput.files.length > 0) files.texture = state.imgInput.files[0]
       emit('close', { language: props.language, files })
     }
     watch(() => loggedIn, async () => {
@@ -51,7 +66,7 @@ export default {
     watch(() => props.language, () => {
       state.languageCopy = Object.assign({}, props.language)
     }, { inmediate: true })
-    return { ...toRefs(state), fileChange, submit }
+    return { ...toRefs(state), fileChange, submit, imgChange }
   }
 }
 </script>
