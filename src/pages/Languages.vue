@@ -14,7 +14,7 @@
         <tr v-for="(row) in rows" :key="row.id" @click="selectRow(row, $event)" class="cursor-pointer">
           <td class="text-left">{{row.languageCode}}</td>
           <td class="text-left">{{row.localizationUrl}}</td>
-          <td class="text-center "><img :src="row.textureUrl" /></td>
+          <td class="text-center  img-td"><img :src="row.textureUrl" /></td>
           <td class="text-right">
             <q-icon @click="delLanguage(row.id)" class="remove" name="remove_circle_outline"
                     size="30px" color="red-5" />
@@ -116,7 +116,16 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+  .img-td{
+    max-width: 50px!important;
+    width: 100px!important;
+    img{
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+  }
   tr .remove{
     position:absolute; right: 0px; top: 8px;
     display: none;
