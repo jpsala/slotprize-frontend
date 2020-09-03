@@ -77,10 +77,10 @@
         </q-list>
       </q-card-section>
     </q-card>
-    <q-page-sticky position="top-left" :offset="[358, 18]">
+    <q-page-sticky position="top-left" :offset="[308, 18]">
       <q-btn :disable="thereIsANewItem" fab icon="add" color="red" @click="addRow"/>
     </q-page-sticky>
-    <q-page-sticky position="top-left" :offset="[288, 18]">
+    <q-page-sticky position="top-left" :offset="[248, 18]">
       <q-btn :disable="!tableIsValid" fab icon="save" color="green-8" @click="save"/>
     </q-page-sticky>
     <SymbolSelect @close="symbolSelect" :symbols="symbols" :active="symbolSelectActive" />
