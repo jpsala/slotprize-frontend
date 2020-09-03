@@ -25,11 +25,7 @@ const useGlobal = () => {
   })
   watch(() => state.spinner, (value) => {
     if (value) Loading.show({ spinner: QSpinnerDots })
-    else {
-      setTimeout(() => {
-        Loading.hide()
-      }, 1000)
-    }
+    else Loading.hide()
   })
   return { startLoading, stopLoading, loading, showSpinner, hideSpinner }
 }

@@ -41,6 +41,9 @@ import playerDialog from '../components/PlayerDialog'
 import useSession from 'src/services/useSession'
 import axios from '../services/axios'
 import { debounce } from 'quasar'
+import useGlobal from '../services/useGlobal'
+
+const { showSpinner, hideSpinner } = useGlobal()
 
 export default {
   components: { playerDialog },
@@ -66,7 +69,9 @@ export default {
     watch(
       () => loggedIn,
       async () => {
+        showSpinner()
         const response = await axios({ url: '/slot/support_admin_for_crud', method: 'get' })
+        hideSpinner()
         state.email = response.data.email
         state.requests = response.data.requests
       },

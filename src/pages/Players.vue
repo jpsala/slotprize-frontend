@@ -27,6 +27,10 @@ import axios from '../services/axios'
 import { format } from 'date-fns'
 import { debounce } from 'quasar'
 import Player from '../components/Player'
+import useGlobal from '../services/useGlobal'
+
+const { showSpinner, hideSpinner } = useGlobal()
+
 export default {
   components: { Player },
   setup () {
@@ -50,6 +54,7 @@ export default {
       state.selected = state.items.find(item => item.device_id === row['device Id'])
     }
     const getItemsFromDB = async () => {
+      showSpinner()
       const resp = await axios({
         url: '/slot/playersForFront',
         params: {
@@ -59,6 +64,7 @@ export default {
         }
       })
       state.items = resp.data
+      hideSpinner()
     }
     const itemsForTable = computed(() => {
       return state.items.map(player => {

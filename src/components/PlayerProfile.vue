@@ -22,6 +22,7 @@ import {
   toRefs
 } from '@vue/composition-api'
 import { format } from 'date-fns/esm'
+
 export default {
   props: {
     player: {

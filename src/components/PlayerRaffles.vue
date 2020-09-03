@@ -17,6 +17,9 @@ import {
 } from '@vue/composition-api'
 import axios from '../services/axios'
 import { format } from 'date-fns'
+import useGlobal from '../services/useGlobal'
+
+const { showSpinner, hideSpinner } = useGlobal()
 
 export default {
   props: {
@@ -37,7 +40,9 @@ export default {
       }
     })
     onMounted(async () => {
+      showSpinner()
       const resp = await axios.get(`/slot/raffle_purchase_history?deviceId=${props.player.device_id}`)
+      hideSpinner()
       state.items = resp.data.map(item => {
         return {
           Raffle: item.name,

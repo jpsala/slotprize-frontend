@@ -29,6 +29,10 @@ import {
 } from '@vue/composition-api'
 import axios from '../services/axios'
 import { format } from 'date-fns'
+import useGlobal from '../services/useGlobal'
+
+const { showSpinner, hideSpinner } = useGlobal()
+
 export default {
   props: {
     player: {
@@ -42,7 +46,9 @@ export default {
       lastLogin: undefined
     })
     onMounted(async () => {
+      showSpinner()
       const resp = await axios.get(`/slot/get_login_data?userId=${props.player.id}`)
+      hideSpinner()
       state.count = resp.data.count
       state.lastLogin = format(new Date(resp.data.lastLogin), 'yyyy/dd/MM')
     })
