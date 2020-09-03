@@ -106,6 +106,7 @@ export default {
         }
         hideSpinner()
       } catch (error) {
+        hideSpinner()
         await alerta('Error submiting language', error)
       } finally {
         hideSpinner()

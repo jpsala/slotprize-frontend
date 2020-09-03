@@ -214,6 +214,7 @@ export default {
         if (resp.data.status === 'ok') alerta('Saved')
         else alerta('Error saving ' + resp.data)
       } catch (error) {
+        hideSpinner()
         alerta('Error saving data ' + error)
       } finally {
         hideSpinner()
