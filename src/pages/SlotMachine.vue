@@ -4,7 +4,7 @@
       <Symbols @remove="removeSymbol" :payTable=paytable  @saveSymbol="saveSymbol" :items="symbols" :wrap="true"
                :show-menu="false" direction="column" :show-url="false" :show-paymant-type="false" symbol-size="50px"/>
     </div>
-    <q-card class="table">
+    <q-card v-show="paytable.length" class="table">
       <q-card-section>
       <div class="text-h6 text-center">Pay Table</div>
       </q-card-section>
@@ -77,13 +77,14 @@
         </q-list>
       </q-card-section>
     </q-card>
-    <q-page-sticky position="top-left" :offset="[308, 18]">
+    <q-page-sticky v-show="paytable.length" position="top-left" :offset="[308, 18]">
       <q-btn :disable="thereIsANewItem" fab icon="add" color="red" @click="addRow"/>
     </q-page-sticky>
-    <q-page-sticky position="top-left" :offset="[248, 18]">
+    <q-page-sticky v-show="paytable.length" position="top-left" :offset="[248, 18]">
       <q-btn :disable="!tableIsValid" fab icon="save" color="green-8" @click="save"/>
     </q-page-sticky>
     <SymbolSelect @close="symbolSelect" :symbols="symbols" :active="symbolSelectActive" />
+    <h4 v-show="!paytable.length" class="q-ma-xl">Loading...</h4>
   </q-page>
 </template>
 
