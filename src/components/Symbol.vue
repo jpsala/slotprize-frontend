@@ -4,8 +4,14 @@
           id="output_image" :src="symbol.textureUrl ? symbol.textureUrl : missingImage">
     <input autofocus ref='imgInput' type="file" accept="image/*" @change="imgChange($event)" class="hidden">
     <q-card-section class="q-mb-lg" style="text-align: center;">
-      <div class="text-h6">
-        <q-input v-model="symbol.paymentType" label="Payment Type" />
+      <div class="row">
+      <div class="text-h6 col">
+        <q-input v-model="symbol.symbolName" label="Symbol NAme" />
+      </div>
+      <div class="text-h6 col-5">
+        <q-select label="Payment Type"
+          stack-label v-model="symbol.paymentType" :options="paymentOptions"/>
+      </div>
       </div>
     </q-card-section>
     <q-card-actions class="q-mt-lg" align="right">
@@ -36,7 +42,8 @@ export default {
       img: undefined,
       imgInput: undefined,
       reader: new FileReader(),
-      missingImage: 'http://wopidom.homelinux.com/public/assets/img/missing.png'
+      paymentOptions: ['coin', 'spin', 'ticket', 'jackpot'],
+      missingImage: 'http://wopi.homelinux.com/public/assets/img/missing.png'
     })
     const imgChange = (event) => {
       state.reader.onload = function () {

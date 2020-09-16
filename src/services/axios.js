@@ -6,13 +6,13 @@ import useGlobal from '../services/useGlobal'
 import { setApiToken, getApiToken } from './useSession'
 // import router from '../router';
 const local = document.location.hostname === 'localhost'
-// || document.location.hostname === 'front.wopidom.homelinux.com';
+// || document.location.hostname === 'front.wopi.homelinux.com';
 let apiToken
 const getAxios = () => {
   const { startLoading, stopLoading } = useGlobal()
   console.log('Axios, solo una vez!')
   axios.defaults.baseURL = local ? 'http://localhost:8888/api'
-    : 'http://wopidom.homelinux.com:8888/api'
+    : 'http://wopi.homelinux.com:8888/api'
   axios.interceptors.response.use((response) => {
     setTimeout(() => {
       stopLoading()

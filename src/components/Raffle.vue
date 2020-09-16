@@ -84,7 +84,7 @@ export default {
       inputImgRef: undefined,
       imgRef: undefined,
       tab: 'info',
-      missingImage: 'http://wopidom.homelinux.com/public/assets/img/missing.png'
+      missingImage: 'http://wopi.homelinux.com/public/assets/img/missing.png'
     })
     const cancel = () => {
       emit('close')

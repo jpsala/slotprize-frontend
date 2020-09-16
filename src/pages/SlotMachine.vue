@@ -194,7 +194,7 @@ export default {
       let isDuplicated = false
       state.tableData
         .filter(tdRow =>
-          tdRow.symbol.paymentType === tdRowBeenChecked.symbol.paymentType &&
+          tdRow.symbol.symbolName === tdRowBeenChecked.symbol.symbolName &&
             tdRow.symbolAmount === tdRowBeenChecked.symbolAmount &&
             tdRow.id !== tdRowBeenChecked.id)
         .forEach(dup => {

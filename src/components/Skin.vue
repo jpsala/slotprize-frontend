@@ -39,7 +39,7 @@ export default {
       fileForUpload: props.model.machineSkinTextureUrl ?? 'Select a JSON file',
       img: undefined,
       reader: new FileReader(),
-      missingImage: 'http://wopidom.homelinux.com/public/assets/img/missing.png'
+      missingImage: 'http://wopi.homelinux.com/public/assets/img/missing.png'
     })
     state.reader.onload = function () {
       state.img.src = state.reader.result

@@ -48,7 +48,7 @@ export default {
       fileForUpload: props.language.localizationUrl ?? 'Select a JSON file',
       img: undefined,
       reader: new FileReader(),
-      missingImage: 'http://wopidom.homelinux.com/public/assets/img/missing.png'
+      missingImage: 'http://wopi.homelinux.com/public/assets/img/missing.png'
     })
     const fileChange = (event) => {
       state.fileForUpload = state.fileInput.files[0].name

@@ -1,4 +1,4 @@
-host=wopidom.homelinux.com
+host=wopi.homelinux.com
 chmod 755 dist -R
 rm -f dist.bz2
 echo compress

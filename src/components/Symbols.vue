@@ -18,7 +18,7 @@
         <q-item-section avatar>
           <q-img color="teal" :src="item.textureUrl" />
         </q-item-section>
-        <q-item-section>{{item.paymentType}}</q-item-section>
+        <q-item-section>{{item.symbolName}} ({{item.paymentType}})</q-item-section>
       </q-item>
   </q-list>
 </div>
@@ -52,7 +52,7 @@ export default {
       selectedItem: undefined,
       menuVisible: true,
       selected: undefined,
-      symbolNew: { textureUrl: '', paymentType: '', id: -1 }
+      symbolNew: { textureUrl: '', paymentType: '', symbolName: '', id: -1 }
     })
     const hover = (item, e) => {
       const isEnter = e.type === 'mouseenter'
@@ -85,6 +85,7 @@ export default {
       var fd = new FormData()
       fd.append('id', symbol.id)
       fd.append('payment_type', symbol.paymentType)
+      fd.append('symbol_name', symbol.symbolName)
       fd.append('texture_url', symbol.textureUrl)
       if (files.length > 0) { fd.append('image', files[0]) }
       const axiosAnt = axios.defaults.headers.post['Content-Type']
@@ -113,8 +114,8 @@ export default {
     const sortedItems = computed(() => {
       if (!props.items) return []
       function compare (a, b) {
-        if (a.paymentType < b.paymentType) { return -1 }
-        if (a.paymentType > b.paymentType) { return 1 }
+        if (a.symbolName < b.symbolName) { return -1 }
+        if (a.symbolName > b.symbolName) { return 1 }
         return 0
       }
 
