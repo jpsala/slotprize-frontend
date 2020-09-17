@@ -12,7 +12,7 @@ const getAxios = () => {
   const { startLoading, stopLoading } = useGlobal()
   console.log('Axios, solo una vez!')
   axios.defaults.baseURL = local ? 'https://localhost:8888/api'
-    : 'https://wopi.homelinux.com:8888/api'
+    : 'https://wopi.homelinux.com:3000/api'
   axios.interceptors.response.use((response) => {
     setTimeout(() => {
       stopLoading()
