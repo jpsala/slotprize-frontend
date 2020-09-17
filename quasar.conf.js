@@ -120,9 +120,9 @@ module.exports = function (/* ctx */) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: 'Wopidom Front',
-        short_name: 'Wopidom Front',
-        description: 'Wopidom Frontend',
+        name: 'Wopidom backoffice',
+        short_name: 'Wopidom backoffice',
+        description: 'Wopidom backoffice',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
@@ -187,7 +187,7 @@ module.exports = function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'wopi.front'
+        appId: 'wopi.backoffice'
       },
 
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration

@@ -1,8 +1,8 @@
 {
-  "name": "wopi.front",
+  "name": "wopi.backoffice",
   "version": "0.0.1",
-  "description": "Wopidom Frontend",
-  "productName": "Wopidom Front",
+  "description": "Wopidom backoffice",
+  "productName": "Wopidom backoffice",
   "author": "JP <jpsala@gmail.com>",
   "private": true,
   "scripts": {
