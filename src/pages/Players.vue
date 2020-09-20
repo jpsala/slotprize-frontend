@@ -69,6 +69,7 @@ export default {
     const itemsForTable = computed(() => {
       return state.items.map(player => {
         return {
+          ID: player.id,
           'first Name': player.first_name,
           'last Name': player.last_name,
           email: player.email,

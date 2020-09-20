@@ -164,14 +164,14 @@ para preguntar si solo puede haber una linea en el paytable de ticket
 
 ------------------
 
-Iron Source callback endpoints and mechanics
-IronSource (the ads provider) requires a few endpoints to report stuff, and in time we need to do our things with the info received from them.
+x Iron Source callback endpoints and mechanics
+x IronSource (the ads provider) requires a few endpoints to report stuff, and in time we  need to do our things with the info received from them.
 
-Client request and watches an Ad -> IronSource sends success or error data to our backend -> the backend credits (or not) the player, and comunicates to the client.
+x Client request and watches an Ad -> IronSource sends success or error data to our backend -> the backend credits (or not) the player, and comunicates to the client.
 
-This is just a stub, we need to elaborate on meetings.
+x This is just a stub, we need to elaborate on meetings.
 
-la integración con un solo SDK que hace de puente
+x la integración con un solo SDK que hace de puente
 el cliente se comunica con el proveedor y pide un video, el preveedor avisa cuando el cliente terminó de ver, se comunica con el backend, 2 endpoints, success y error
 success le acredito las ganancias que manda el proveedor y mando evento
 

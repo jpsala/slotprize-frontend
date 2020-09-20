@@ -11,6 +11,17 @@
       <q-separator class="q-mb-sm" />
       <q-card-section class="items-section small-scrollbars">
         <q-list separator>
+            <q-item style="width: 100%;">
+              <div class="row">
+                <q-input class="col" outlined  @input="winInputChange" dense label="Win" v-model="win">
+                </q-input>
+                <q-input class="col" readonly outlined label="Lose" dense :value="lose">
+                </q-input>
+                <q-btn color="primary" icon="check" label="OK" @click="saveWinLose"
+                       :disable="(Number(win) < 1 || Number(win) > 100 ||
+                                  Number(lose) < 1  || Number(lose) > 100) || !winLoseDirty" />
+              </div>
+            </q-item>
             <q-item v-for="(item, index) of paytable" :key="index" clickable :class="{error: item.withError}"
                     @click="paytableRowClick(item, $event)" @mouseenter="hovered = item" @mouseleave="hovered = undefined">
                 <q-item-section avatar>
@@ -102,7 +113,6 @@ export default {
 
   setup (_, { root }) {
     const { showSpinner, hideSpinner } = useGlobal()
-
     const state = reactive({
       symbols: [],
       tableData: [],
@@ -113,7 +123,10 @@ export default {
       hovered: undefined,
       thereIsANewItem: false,
       withError: false,
-      totalProbability: 0
+      totalProbability: 0,
+      win: 0,
+      lose: 0,
+      winLoseDirty: false
     })
     const saveSymbol = (symbol) => {
       const idx = state.symbols.findIndex(_symbol => _symbol.id === Number(symbol.id))
@@ -237,6 +250,15 @@ export default {
         }
       )
     }
+    const winInputChange = () => {
+      console.log('win', state.win)
+      state.lose = 100 - Number(state.win)
+      state.winLoseDirty = true
+    }
+    const saveWinLose = async () => {
+      await axios.post('/slot/win_lose_for_tombola_crud', { win: Number(state.win), lose: Number(state.lose) })
+      state.winLoseDirty = false
+    }
     watch(() => state.tableData, () => {
       state.thereIsANewItem = false
       state.withError = false
@@ -290,6 +312,8 @@ export default {
       })
       listObserver.observe(listEl)
       state.symbols = tombolaData.symbols
+      state.win = 100 - tombolaData.spinLosePercent
+      state.lose = tombolaData.spinLosePercent
       state.tableData = tombolaData.paytable/* .map(ptRow => Object.assign(ptRow, { withError: true })) */
       hideSpinner()
     })
@@ -309,7 +333,9 @@ export default {
       removeItemFromPaytable,
       save,
       tableIsValid,
-      paytableResize
+      paytableResize,
+      winInputChange,
+      saveWinLose
     }
   }
 }
