@@ -43,7 +43,7 @@ export default {
       imgInput: undefined,
       reader: new FileReader(),
       paymentOptions: ['coin', 'spin', 'ticket', 'jackpot'],
-      missingImage: 'https://wopi.homelinux.com/public/assets/img/missing.png'
+      missingImage: 'https://slotoprizes.tagadagames.com/public/assets/img/missing.png'
     })
     const imgChange = (event) => {
       state.reader.onload = function () {

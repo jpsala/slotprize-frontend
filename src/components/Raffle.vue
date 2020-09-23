@@ -84,7 +84,7 @@ export default {
       inputImgRef: undefined,
       imgRef: undefined,
       tab: 'info',
-      missingImage: 'https://wopi.homelinux.com/public/assets/img/missing.png'
+      missingImage: 'https://slotoprizes.tagadagames.com/public/assets/img/missing.png'
     })
     const cancel = () => {
       emit('close')

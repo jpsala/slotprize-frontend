@@ -1,4 +1,4 @@
-host=wopi.homelinux.com
+host=slotoprizes.tagadagames.com
 chmod 755 dist -R
 rm -f dist.bz2
 echo compress

@@ -6,17 +6,14 @@ import useGlobal from '../services/useGlobal'
 import { setApiToken, getApiToken } from './useSession'
 // import router from '../router';
 const local = document.location.hostname === 'localhost'
-// || document.location.hostname === 'front.wopi.homelinux.com';
 let apiToken
 const getAxios = () => {
   const { startLoading, stopLoading, isDev } = useGlobal()
   console.log('Axios, solo una vez!')
-  console.log('isDev', isDev.value)
-  if (isDev.value) axios.defaults.baseURL = 'http://wopi.homelinux.com:8888/api'
-  else {
-    axios.defaults.baseURL = local ? 'http://localhost:8888/api'
-      : 'https://slotoprizes.tagadagames.com:3000/api'
-  }
+  console.log('isDev', isDev, typeof (isDev))
+  if (isDev) axios.defaults.baseURL = 'https://dev.slotoprizes.tagadagames.com:3000/api'
+  else axios.defaults.baseURL = local ? 'http://localhost:8888/api' : 'https://slotoprizes.tagadagames.com:3000/api'
+  console.log('axios.defaults.baseURL', axios.defaults.baseURL)
   axios.interceptors.response.use((response) => {
     setTimeout(() => {
       stopLoading()

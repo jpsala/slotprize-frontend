@@ -9,7 +9,9 @@ const state = reactive({
   isDev: (localStorage.getItem('isDev') === 'true')
 })
 let isDevInterval
+console.log('ants state.isDev', state.isDev)
 const useGlobal = () => {
+  console.log('useGlobal state.isDev', state.isDev, typeof state.isDev)
   clearInterval(isDevInterval)
   isDevInterval = setInterval(() => {
     state.isDev = (localStorage.getItem('isDev') === 'true')
