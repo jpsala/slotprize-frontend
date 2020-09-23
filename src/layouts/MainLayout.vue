@@ -11,7 +11,7 @@
           </q-avatar>
           <div class="col" />
         </q-toolbar-title>
-
+        <span v-show="isDev" style="color:white; background-color: red">Dev</span>
         <q-btn
           v-if="$route.path !== '/login' && !loggedIn"
           flat
@@ -104,7 +104,7 @@ export default {
   components: { myDrawerContent },
 
   setup () {
-    const { loading } = useGlobal()
+    const { loading, isDev } = useGlobal()
     const items = ref(
       setItemsDefaults([
         {
@@ -148,7 +148,7 @@ export default {
       }
     })
     return {
-      logout, left, items, loggedIn, Screen, user, loading
+      logout, left, items, loggedIn, Screen, user, loading, isDev
     }
   }
 }

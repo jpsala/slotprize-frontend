@@ -5,9 +5,16 @@ import {
 } from 'quasar'
 const state = reactive({
   loading: false,
-  spinner: false
+  spinner: false,
+  isDev: (localStorage.getItem('isDev') === 'true')
 })
+let isDevInterval
 const useGlobal = () => {
+  clearInterval(isDevInterval)
+  isDevInterval = setInterval(() => {
+    state.isDev = (localStorage.getItem('isDev') === 'true')
+  }, 2000)
+  // const isDev = computed(() => state.isDev)
   const startLoading = () => {
     state.loading = true
   }
@@ -27,6 +34,6 @@ const useGlobal = () => {
     if (value) Loading.show({ spinner: QSpinnerDots })
     else Loading.hide()
   })
-  return { startLoading, stopLoading, loading, showSpinner, hideSpinner }
+  return { startLoading, stopLoading, loading, showSpinner, hideSpinner, isDev: state.isDev }
 }
 export default useGlobal

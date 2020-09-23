@@ -9,10 +9,14 @@ const local = document.location.hostname === 'localhost'
 // || document.location.hostname === 'front.wopi.homelinux.com';
 let apiToken
 const getAxios = () => {
-  const { startLoading, stopLoading } = useGlobal()
+  const { startLoading, stopLoading, isDev } = useGlobal()
   console.log('Axios, solo una vez!')
-  axios.defaults.baseURL = local ? 'http://localhost:8888/api'
-    : 'https://slotoprizes.tagadagames.com:3000/api'
+  console.log('isDev', isDev.value)
+  if (isDev.value) axios.defaults.baseURL = 'http://wopi.homelinux.com:8888/api'
+  else {
+    axios.defaults.baseURL = local ? 'http://localhost:8888/api'
+      : 'https://slotoprizes.tagadagames.com:3000/api'
+  }
   axios.interceptors.response.use((response) => {
     setTimeout(() => {
       stopLoading()
