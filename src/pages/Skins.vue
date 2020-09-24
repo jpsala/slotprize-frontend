@@ -101,6 +101,7 @@ export default {
         }
         hideSpinner()
       } catch (error) {
+        hideSpinner()
         await alerta('Error submiting skin', error)
       } finally {
         hideSpinner()

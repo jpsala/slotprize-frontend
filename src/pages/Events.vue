@@ -26,6 +26,7 @@ import Event from 'src/components/Event'
 import useSession from '../services/useSession'
 import axios from '../services/axios'
 import clone from 'rfdc'
+import { alerta } from 'src/helpers'
 export default {
   components: {
     Event
@@ -50,23 +51,28 @@ export default {
       for (var key in event) formData.append(key, event[key])
       const axiosAnt = axios.defaults.headers.post['Content-Type']
       axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
-      const response = await axios({
-        method: 'post',
-        url: 'slot/event',
-        data: formData,
-        headers: { 'Content-Type': 'multipart/form-data' }
-      })
-      axios.defaults.headers.post['Content-Type'] = axiosAnt
-      state.editingEvent = undefined
-      const eventRef = response.data.isNew ? eventRefNew.value : eventsRef.value.find(ref => ref.event.id === event.id)
-      eventRef.setDataAfterSave(response.data)
-      if (response.popupFile) event.popupTextureUrl = response.popupFile
-      if (response.notificationFile) event.notificationUrl = response.notificationFile
-      if (response.data.isNew) {
-        state.newEvent = undefined
-        state.events.push(event)
+      try {
+        const response = await axios({
+          method: 'post',
+          url: 'slot/event',
+          data: formData,
+          headers: { 'Content-Type': 'multipart/form-data' }
+        })
+        const eventRef = response.data.isNew ? eventRefNew.value : eventsRef.value.find(ref => ref.event.id === event.id)
+        eventRef.setDataAfterSave(response.data)
+        if (response.popupFile) event.popupTextureUrl = response.popupFile
+        if (response.notificationFile) event.notificationUrl = response.notificationFile
+        if (response.data.isNew) {
+          eventRefNew.close()
+          state.newEvent = undefined
+          state.events.push(event)
+        } else eventRef.close()
+        state.editingEvent = undefined
+      } catch (err) {
+        await alerta(err)
+      } finally {
+        axios.defaults.headers.post['Content-Type'] = axiosAnt
       }
-      return response
     }
 
     const getEvents = async () => {

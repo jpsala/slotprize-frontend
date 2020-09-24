@@ -123,6 +123,9 @@ export default {
             { label: 'Raffles', to: '/raffles' },
             { label: 'Languages', to: '/languages' },
             { label: 'Skins', to: '/skins' },
+            { label: 'Tickets', to: '/tickets' },
+            { label: 'Spins', to: '/spins' },
+            { label: 'Ads Settings', to: '/adsSettings' },
             { label: 'Support Admin', to: '/supportAdmin' },
             { label: 'Slot Machine', to: '/slotMachine' }
           ]

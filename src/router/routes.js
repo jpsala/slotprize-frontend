@@ -10,6 +10,9 @@ import Languages from 'src/pages/Languages'
 import Countries from 'src/pages/Countries'
 import SupportAdmin from 'src/pages/SupportAdmin'
 import Players from 'src/pages/Players'
+import Tickets from 'src/pages/Tickets'
+import Spins from 'src/pages/SpinSettings'
+import AdsSettings from 'src/pages/AdsSettings'
 import Error404 from 'src/pages/Error404'
 import MainLayout from 'src/layouts/MainLayout'
 const routes = [
@@ -23,9 +26,12 @@ const routes = [
       { path: 'jackpot', component: Jackpot },
       { path: 'slotMachine', component: SlotMachine },
       { path: 'raffles', component: Raffles },
+      { path: 'spins', component: Spins },
       { path: 'languages', component: Languages },
       { path: 'skins', component: Skins },
+      { path: 'tickets', component: Tickets },
       { path: 'countries', component: Countries },
+      { path: 'adsSettings', component: AdsSettings },
       { path: 'supportAdmin', component: SupportAdmin },
       { path: 'players', component: Players }
     ]

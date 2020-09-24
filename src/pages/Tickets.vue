@@ -1,8 +1,8 @@
 <template>
   <div class="q-pa-md q-gutter-md justify-center">
-    <h3 class="q-ml-xl q-pl-xl">Ads Settings</h3>
+    <h3 class="q-ml-xl q-pl-xl">Tickets Settings</h3>
     <div class="row">
-      <q-input class="q-mx-lg" autofocus v-model="interstitialsRatio" hint="interstitial ads to spins ratio" label="Interstitials Ratio"/>
+      <q-input class="q-mx-lg" autofocus v-model="ticketValue" label="Value in coins"/>
       <q-btn color="primary" @click="submit">Submit</q-btn>
     </div>
   </div>
@@ -16,20 +16,20 @@ export default {
   setup () {
     const { loggedIn } = useSession()
     const state = reactive({
-      interstitialsRatio: undefined
+      ticketValue: undefined
     })
     const submit = async () => {
       await axios.post(
-        '/slot/ads_settings_for_crud',
-        { interstitialsRatio: state.interstitialsRatio }
+        '/slot/tickets_settings_for_crud',
+        { ticketValue: state.ticketValue }
       )
     }
     watch(() => loggedIn, async () => {
       const response = await axios({
-        url: '/slot/ads_settings_for_crud',
+        url: '/slot/tickets_settings_for_crud',
         method: 'get'
       })
-      state.interstitialsRatio = response.data
+      state.ticketValue = response.data
       console.log('response', response)
     }, { immediate: true })
     return { ...toRefs(state), submit }

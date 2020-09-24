@@ -119,8 +119,9 @@ export default {
       key: 1
     })
     const save = event => {
-      state.editMode = false
-      state.eventClone.skinId = state.eventClone.skin.id
+      // state.editMode = false
+      state.eventClone.skinId = state.eventClone?.skin?.id
+      console.log('ev', state.eventClone)
       emit('change', state.eventClone)
     }
     const edit = event => {
@@ -130,6 +131,10 @@ export default {
       state.eventClone.notificationFile = null
       state.editMode = true
       emit('editing', event)
+    }
+    const close = async () => {
+      console.log('close')
+      state.editMode = false
     }
     const cancel = event => {
       if (!props.new) {
@@ -181,7 +186,8 @@ export default {
       edit,
       cancel,
       setDataAfterSave,
-      selectChange
+      selectChange,
+      close
     }
   }
 }
