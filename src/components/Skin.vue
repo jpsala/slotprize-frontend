@@ -42,46 +42,46 @@
 </template>
 
 <script>
-import { reactive, toRefs, watch, onMounted } from "@vue/composition-api";
-import clone from "rfdc";
+import { reactive, toRefs, watch, onMounted } from '@vue/composition-api'
+import clone from 'rfdc'
 
 export default {
   props: {
-    model: { type: Object },
+    model: { type: Object }
   },
-  setup(props, { emit }) {
+  setup (props, { emit }) {
     const state = reactive({
       modelCopy: undefined,
       imgInput: undefined,
-      fileForUpload: props.model.machineSkinTextureUrl ?? "Select a JSON file",
+      fileForUpload: props.model.machineSkinTextureUrl ?? 'Select a JSON file',
       img: undefined,
       reader: new FileReader(),
       missingImage:
-        "https://slotoprizes.tagadagames.com/public/assets/img/missing.png",
-    });
+        'https://slotoprizes.tagadagames.com/public/assets/img/missing.png'
+    })
     state.reader.onload = function () {
-      state.img.src = state.reader.result;
-    };
+      state.img.src = state.reader.result
+    }
     const imgChange = (event) => {
-      state.reader.readAsDataURL(event.target.files[0]);
-    };
+      state.reader.readAsDataURL(event.target.files[0])
+    }
     const submit = () => {
-      var files = state.imgInput.files;
-      emit("close", { skin: state.modelCopy, files });
-    };
+      var files = state.imgInput.files
+      emit('close', { skin: state.modelCopy, files })
+    }
     onMounted(() => {
-      state.modelCopy = clone()(props.model);
-    });
+      state.modelCopy = clone()(props.model)
+    })
     watch(
       () => props.model,
       () => {
-        state.modelCopy = clone()(props.model);
+        state.modelCopy = clone()(props.model)
       },
       { inmediate: true }
-    );
-    return { ...toRefs(state), imgChange, submit };
-  },
-};
+    )
+    return { ...toRefs(state), imgChange, submit }
+  }
+}
 </script>
 
 <style>
