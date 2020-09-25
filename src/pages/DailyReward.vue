@@ -1,11 +1,11 @@
 
 <template>
     <div class="q-pa-md row q-gutter-md justify-center">
-      <Jackpot ref="jackpotRef" :item="selected" :show="Boolean(selected)"
+      <DailyReward ref="jackpotRef" :item="selected" :show="Boolean(selected)"
       @oncancel="cancel" @onsubmit="submit" />
       <q-card bordered class="my-card">
         <q-card-section class="bg-primary text-white" style="width: 400px">
-          <div class="text-h6">Jackpot Data</div>
+          <div class="text-h6">Dayly Rewards</div>
         </q-card-section>
 
         <q-separator dark inset />
@@ -13,21 +13,19 @@
           <q-markup-table flat square>
             <thead>
               <tr>
-                <th class="text-left">Cycle</th>
-                <th class="text-right">Prize</th>
-                <th class="text-left">State</th>
-                <th class="text-right">Spin Count</th>
-                <th class="text-left">Confirmed</th>
+                <th class="text-left">Type</th>
+                <th class="text-right">Amount</th>
+                <th class="text-right remove-item"></th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="item of items" :key="item.id" :class="itemClass(item)"
-                  class="cursor-pointer" @click="select(item)">
-                <td class="text-left">{{item.cycle}}</td>
-                <td class="text-right">{{item.prize}}</td>
-                <td class="text-left">{{item.state}}</td>
-                <td class="text-right">{{item.spinCount}}</td>
-                <td class="text-right"><q-icon v-if="item.confirmed" color="green-9" size="42px" name="done"/></td>
+                  class="cursor-pointer" @click="select(item, $event)">
+                <td class="text-left">{{item.type}}</td>
+                <td class="text-right">{{item.amount}}</td>
+                <td class="text-right remove-item">
+                  <q-icon @click="removeItem(item)" size="22px" name="clear"/>
+                </td>
               </tr>
             </tbody>
           </q-markup-table>
@@ -44,11 +42,11 @@
 import { reactive, toRefs, watch, computed } from '@vue/composition-api'
 import useSession from 'src/services/useSession'
 import axios from '../services/axios'
-import Jackpot from '../components/Jackpot'
-import { alerta } from 'src/helpers'
+import DailyReward from '../components/DailyReward'
+import { alerta, confirma } from 'src/helpers'
 // import { alerta } from 'src/helpers'
 export default {
-  components: { Jackpot },
+  components: { DailyReward },
   setup () {
     const { loggedIn } = useSession()
     const state = reactive({
@@ -60,12 +58,8 @@ export default {
     const addNew = async () => {
       const newCycle = {
         id: -1,
-        cycle: 0,
-        prize: 0,
-        state: 'next',
-        repeated: 0,
-        spinCount: 0,
-        confirmed: 0
+        type: '',
+        amount: 0
       }
       state.selected = newCycle
     }
@@ -73,20 +67,17 @@ export default {
       return state.items.find(_item => _item.id === -1)
     })
     const submit = async (data) => {
-      if (data.state !== 'next') {
-        state.selected = undefined
-        return
-      }
       try {
         const resp = await axios({
           method: 'post',
-          url: '/slot/spin_data',
+          url: '/slot/daily_reward_for_crud',
           data
         })
-        console.log('new', isNew.value)
-        if (isNew.value) {
-          data.id = resp
-          state.items.push(data)
+        if (data.id === -1) {
+          console.log('respre', resp)
+          data.id = resp.data
+          console.log('detalle', 1)
+          state.items.push(Object.assign({}, data))
         } else {
           const idxItem = state.items.findIndex(_item => _item.id === data.id)
           state.items[idxItem] = data
@@ -108,23 +99,35 @@ export default {
       console.log('items', item.state)
       return item.state
     }
-    const select = async (item) => {
-      // if (item.state === 'past') {
-      //   await alerta('A past cycle can not be modified')
-      //   return
-      // }
+    const select = async (item, event) => {
+      if (event.target.tagName === 'I') return
       state.selected = item
+      console.log('item', item)
+    }
+    const removeItem = async (item) => {
+      const ok = await confirma('Are you sure?')
+      if (ok) {
+        const resp = await axios({
+          method: 'delete',
+          url: '/slot/daily_reward_for_crud',
+          params: { id: item.id }
+        })
+        console.log('resp', resp)
+        const itemForDelete = state.items.findIndex(_item => _item.id === item.id)
+        state.items.splice(itemForDelete, 1)
+        await alerta('Item removed')
+      }
       console.log('item', item)
     }
     watch(() => loggedIn, async () => {
       const response = await axios({
-        url: '/slot/spin_data',
+        url: '/slot/daily_reward_for_crud',
         method: 'get',
         params: {}
       })
       state.items = response.data
     }, { immediate: true })
-    return { ...toRefs(state), submit, itemClass, select, isNew, addNew, cancel }
+    return { ...toRefs(state), submit, itemClass, select, isNew, addNew, cancel, removeItem }
   }
 }
 </script>
@@ -144,5 +147,19 @@ export default {
 }
 .q-table{
   height: unset !important;
+}
+.q-table tr{
+  .remove-item {
+    width: 40px!important;
+    max-width: 40px!important;
+    .q-icon{
+      display: none;
+      color: red;
+    }
+  }
+  &:hover .q-icon{
+    display: block;
+    cursor: pointer;
+  }
 }
 </style>
