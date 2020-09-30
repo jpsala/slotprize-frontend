@@ -5,7 +5,7 @@
       @oncancel="cancel" @onsubmit="submit" />
       <q-card bordered class="my-card">
         <q-card-section class="bg-primary text-white" style="width: 400px">
-          <div class="text-h6">Dayly Rewards</div>
+          <div class="text-h6">Daily Rewards</div>
         </q-card-section>
 
         <q-separator dark inset />

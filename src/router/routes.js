@@ -10,8 +10,10 @@ import Languages from 'src/pages/Languages'
 import Countries from 'src/pages/Countries'
 import SupportAdmin from 'src/pages/SupportAdmin'
 import Players from 'src/pages/Players'
+import Player from 'src/components/Player'
 import Tickets from 'src/pages/Tickets'
 import Spins from 'src/pages/SpinSettings'
+import Winners from 'src/pages/Winners'
 import DailyReward from 'src/pages/DailyReward'
 import AdsSettings from 'src/pages/AdsSettings'
 import Error404 from 'src/pages/Error404'
@@ -30,12 +32,14 @@ const routes = [
       { path: 'spins', component: Spins },
       { path: 'languages', component: Languages },
       { path: 'skins', component: Skins },
+      { path: 'winners', component: Winners },
       { path: 'dailyreward', component: DailyReward },
       { path: 'tickets', component: Tickets },
       { path: 'countries', component: Countries },
       { path: 'adsSettings', component: AdsSettings },
       { path: 'supportAdmin', component: SupportAdmin },
-      { path: 'players', component: Players }
+      { path: 'players', component: Players },
+      { path: 'player', component: Player }
     ]
   },
 

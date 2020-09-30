@@ -35,6 +35,10 @@ export default {
       playerEntries: undefined
     })
     onMounted(() => {
+      console.log('player', props.player)
+      console.log('player', props.player.value)
+      console.dir(props.player)
+      if (!props.player) return
       props.player.createdAt = format(new Date(props.player.created_at), 'yyyy-MM-dd')
       delete props.player.modified_at
       delete props.player.password

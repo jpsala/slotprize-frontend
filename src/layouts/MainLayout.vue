@@ -123,6 +123,7 @@ export default {
             { label: 'Raffles', to: '/raffles' },
             { label: 'Languages', to: '/languages' },
             { label: 'Skins', to: '/skins' },
+            { label: 'Winners', to: '/winners' },
             { label: 'Daily Rewards', to: '/dailyreward' },
             { label: 'Tickets', to: '/tickets' },
             { label: 'Spins', to: '/spins' },

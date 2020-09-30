@@ -1,9 +1,9 @@
 <template>
   <div class="q-pa-md">
-    <div @click="$emit('back')" style="font-size: 16px" class="q-mb-lg cursor-pointer">
+    <div @click="goBack" style="font-size: 16px" class="q-mb-lg cursor-pointer">
       <q-icon name="keyboard_backspace" /> Back
     </div>
-    <div class="q-gutter-y-md" style="max-width: 950px">
+    <div v-if="item != undefined" class="q-gutter-y-md" style="max-width: 950px">
       <q-card>
         <q-tabs
           v-model="tab"
@@ -19,27 +19,31 @@
           <q-tab name="SupportMessages" label="Support messages" />
           <q-tab name="Wallet" label="Wallet" />
           <q-tab name="LoginInfo" label="Login Info" />
+          <q-tab name="VideoAdsViewCount" label="Ads" />
         </q-tabs>
 
         <q-separator />
 
         <q-tab-panels v-model="tab" animated>
           <q-tab-panel name="profile">
-            <PlayerProfile :player="player" />
+            <PlayerProfile v-if="item !== undefined" :player="item" />
           </q-tab-panel>
 
           <q-tab-panel name="raffleHistory">
-            <PlayerRaffles :player="player" />
+            <PlayerRaffles :player="item" />
           </q-tab-panel>
 
           <q-tab-panel name="SupportMessages">
-            <PlayerSupportMessages :player="player" />
+            <PlayerSupportMessages :player="item" />
           </q-tab-panel>
           <q-tab-panel name="Wallet">
-            <PlayerWallet :player="player" />
+            <PlayerWallet :player="item" />
           </q-tab-panel>
           <q-tab-panel name="LoginInfo">
-            <PlayerLoginHistory :player="player" />
+            <PlayerLoginHistory :player="item" />
+          </q-tab-panel>
+          <q-tab-panel name="VideoAdsViewCount">
+            <VideoAdsViewCount :player="item" />
           </q-tab-panel>
         </q-tab-panels>
       </q-card>
@@ -47,24 +51,46 @@
   </div>
 </template>
 <script>
-import { reactive, toRefs } from '@vue/composition-api'
+import { reactive, toRefs, onMounted, watch } from '@vue/composition-api'
 import PlayerProfile from '../components/PlayerProfile'
 import PlayerWallet from '../components/PlayerWallet'
 import PlayerRaffles from '../components/PlayerRaffles'
 import PlayerSupportMessages from '../components/PlayerSupportMessages'
 import PlayerLoginHistory from '../components/PlayerLoginHistory'
+import VideoAdsViewCount from '../components/VideoAdsViewCount'
+import axios from '../services/axios'
 export default {
-  components: { PlayerProfile, PlayerRaffles, PlayerSupportMessages, PlayerWallet, PlayerLoginHistory },
+  components: { VideoAdsViewCount, PlayerProfile, PlayerRaffles, PlayerSupportMessages, PlayerWallet, PlayerLoginHistory },
   props: {
     player: {
-      type: Object,
-      required: true
+      type: [Object, undefined],
+      required: false
     }
   },
   setup (props, ctx) {
     const state = reactive({
-      tab: 'profile'
+      tab: 'profile',
+      item: undefined,
+      backRoute: undefined,
+      goBack () {
+        if (state.backRoute) ctx.root.$router.push(state.backRoute)
+        else ctx.emit('back')
+      }
     })
+    onMounted(async () => {
+      console.log('dis')
+      console.dir(props.player)
+      if (ctx.root.$route.query.player) {
+        const resp = await axios.get('/slot/playerForFront?id=' + ctx.root.$route.query.player)
+        state.item = resp.data
+        state.backRoute = 'winners'
+      }
+      if (props.player) state.item = props.player
+    })
+    watch(() => props.player, (v) => {
+      console.log('v', v, props.player)
+      state.item = Object.assign({}, v)
+    }, { inmediate: true })
     return { ...toRefs(state) }
   }
 }
