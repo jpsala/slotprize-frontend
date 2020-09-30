@@ -34,7 +34,7 @@
       </q-card-section>
     </q-card>
       <q-page-sticky position="top-left" :offset="[18, 18]">
-        <q-btn :disable="isNew !== undefined" @click="addNew"
+        <q-btn :disable="isNew || isNext !== undefined" @click="addNew"
                 fab icon="add" color="red-6" />
     </q-page-sticky>
   </div>
@@ -70,7 +70,13 @@ export default {
       state.selected = newCycle
     }
     const isNew = computed(() => {
-      return state.items.find(_item => _item.id === -1)
+      return state.selected && state.selected.id === -1
+    })
+    const isNext = computed(() => {
+      const _isNext = state.items.find(_item => {
+        return _item.state === 'next'
+      })
+      return _isNext
     })
     const submit = async (data) => {
       if (data.state !== 'next') {
@@ -83,16 +89,14 @@ export default {
           url: '/slot/spin_data',
           data
         })
-        console.log('new', isNew.value)
         if (isNew.value) {
-          data.id = resp
+          data.id = resp.data
           state.items.push(data)
         } else {
           const idxItem = state.items.findIndex(_item => _item.id === data.id)
           state.items[idxItem] = data
         }
         state.selected = undefined
-        console.log('detalle', resp.data)
       } catch (err) {
         await alerta(err)
       }
@@ -100,12 +104,11 @@ export default {
     const cancel = async (data) => {
       if (data.id === -1) {
         const idxNew = state.items.findIndex(_item => _item.id === -1)
-        state.items.splice(idxNew, 1)
+        if (idxNew !== -1) state.items.splice(idxNew, 1)
       }
       state.selected = undefined
     }
     const itemClass = (item) => {
-      console.log('items', item.state)
       return item.state
     }
     const select = async (item) => {
@@ -114,7 +117,6 @@ export default {
       //   return
       // }
       state.selected = item
-      console.log('item', item)
     }
     watch(() => loggedIn, async () => {
       const response = await axios({
@@ -124,7 +126,7 @@ export default {
       })
       state.items = response.data
     }, { immediate: true })
-    return { ...toRefs(state), submit, itemClass, select, isNew, addNew, cancel }
+    return { ...toRefs(state), submit, itemClass, select, isNew, addNew, cancel, isNext }
   }
 }
 </script>
