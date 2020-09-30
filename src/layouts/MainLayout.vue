@@ -2,7 +2,7 @@
   <q-layout view="hHh lpR fFf">
     <q-ajax-bar size="2px" />
 
-    <q-header elevated class="bg-primary text-white">
+    <q-header elevated :class="isDev ? 'bg-secondary text-subtitle1':''">
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click.stop="left = !left" />
         <q-toolbar-title>
@@ -11,7 +11,7 @@
           </q-avatar>
           <div class="col" />
         </q-toolbar-title>
-        <span v-show="isDev" style="color:white; background-color: red">Dev</span>
+        <span v-show="isDev" style="color:red; font-size: 140%">DevMode!</span>
         <q-btn
           v-if="$route.path !== '/login' && !loggedIn"
           flat

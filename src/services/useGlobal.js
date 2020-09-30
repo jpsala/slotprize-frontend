@@ -6,15 +6,18 @@ import {
 const state = reactive({
   loading: false,
   spinner: false,
-  isDev: (localStorage.getItem('isDev') === 'true')
+  isDev: false
 })
+const url = new URL(location.href)
+console.log('url', url)
 let isDevInterval
 console.log('ants state.isDev', state.isDev)
 const useGlobal = () => {
-  console.log('useGlobal state.isDev', state.isDev, typeof state.isDev)
   clearInterval(isDevInterval)
   isDevInterval = setInterval(() => {
-    state.isDev = (localStorage.getItem('isDev') === 'true')
+    const url = document.location.hostname
+    const devBoxes = ['dev.slotoprizes.tagadagames.com', 'localhost']
+    state.isDev = devBoxes.includes(url)
   }, 2000)
   // const isDev = computed(() => state.isDev)
   const startLoading = () => {
@@ -32,10 +35,13 @@ const useGlobal = () => {
   const loading = computed(() => {
     return state.loading
   })
+  const isDev = computed(() => {
+    return state.isDev
+  })
   watch(() => state.spinner, (value) => {
     if (value) Loading.show({ spinner: QSpinnerDots })
     else Loading.hide()
   })
-  return { startLoading, stopLoading, loading, showSpinner, hideSpinner, isDev: state.isDev }
+  return { startLoading, stopLoading, loading, showSpinner, hideSpinner, isDev }
 }
 export default useGlobal
