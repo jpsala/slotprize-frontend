@@ -48,7 +48,7 @@
                   <div class="row on-right">
                         <q-input dense flat :borderless="false" class="col self-end"
                           @change="paytableInputChange(item, 'p', $event)" :value="item.points"
-                          style="width: 75px" suffix="Points">
+                          style="width: 75px" :suffix="item.paymentType+'s'">
                         </q-input>
                         <q-input dense flat :borderless="false" class="col q-ml-sm self-end" suffix="%"
                           @change="paytableInputChange(item, 'r', $event)" :value="item.probability"
@@ -185,6 +185,7 @@ export default {
     }
     const paytableInputChange = (item, property, event) => {
       const tableDataItem = state.tableData.find(tdRow => tdRow.id === item.id)
+      console.log('item', item)
       tableDataItem.url = ''
       tableDataItem[property === 'p' ? 'points' : 'probability'] = event.target.value
     }
@@ -264,6 +265,7 @@ export default {
       state.withError = false
       state.totalProbability = 0
       for (const row of state.tableData) {
+        console.log('row', row)
         const isNewRow = row.symbolId === -1
         const isProbabilityZeroRow = Number(row.probability) === 0
         const isZeroPointsRow = Number(row.points) === 0
@@ -289,7 +291,8 @@ export default {
             withError: pt.withError,
             probability: pt.probability,
             url: pt.symbol.textureUrl,
-            jackpot: pt.symbol.paymentType === 'jackpot'
+            jackpot: pt.symbol.paymentType === 'jackpot',
+            paymentType: pt.symbol.paymentType
           }
         }).sort((a, b) => {
           if (Number(a.probability) < Number(b.probability)) { return -1 }
