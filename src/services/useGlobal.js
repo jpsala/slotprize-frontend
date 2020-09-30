@@ -16,7 +16,7 @@ const useGlobal = () => {
   clearInterval(isDevInterval)
   isDevInterval = setInterval(() => {
     const url = document.location.hostname
-    const devBoxes = ['dev.slotoprizes.tagadagames.com', 'localhost']
+    const devBoxes = ['dev.slotoprizes.tagadagames.com', 'localhost', 'bo.dev.slotoprizes.tagadagames.com']
     state.isDev = devBoxes.includes(url)
   }, 2000)
   // const isDev = computed(() => state.isDev)
