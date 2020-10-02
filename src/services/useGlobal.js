@@ -3,21 +3,19 @@ import {
   Loading,
   QSpinnerDots
 } from 'quasar'
+import { whichBox } from 'src/helpers'
 const state = reactive({
   loading: false,
   spinner: false,
-  isDev: false
+  isDev: whichBox().isDev
 })
 const url = new URL(location.href)
 console.log('url', url)
 let isDevInterval
-console.log('ants state.isDev', state.isDev)
 const useGlobal = () => {
   clearInterval(isDevInterval)
   isDevInterval = setInterval(() => {
-    const url = document.location.hostname
-    const devBoxes = ['dev.slotoprizes.tagadagames.com', 'localhost', 'bo.dev.slotoprizes.tagadagames.com']
-    state.isDev = devBoxes.includes(url)
+    state.isDev = whichBox().isDev
   }, 2000)
   // const isDev = computed(() => state.isDev)
   const startLoading = () => {

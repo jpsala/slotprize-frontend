@@ -6,21 +6,21 @@
     <h3 class="q-ml-xl q-pl-xl">Raffles</h3>
     <q-tabs v-model="tab" class="text-grey" active-color="primary" align="justify"
             indicator-color="primary">
-      <q-tab name="ready" label="Ready" />
+      <q-tab name="news" label="news" />
       <q-tab name="live" label="Live" />
-      <q-tab name="waiting" label="Waiting" />
+      <q-tab name="won" label="Won" />
       <q-tab name="history" label="History" />
     </q-tabs>
     <q-separator />
     <q-tab-panels v-model="tab" animated>
-      <q-tab-panel name="ready">
-        <raffles-table :raffles="readyRaffles" @select-raffle="selectRaffle" @removeRaffle="removeRaffle"  type="ready"/>
+      <q-tab-panel name="news">
+        <raffles-table :raffles="newRaffles" @select-raffle="selectRaffle" @removeRaffle="removeRaffle"  type="new"/>
       </q-tab-panel>
       <q-tab-panel name="live">
         <raffles-table :raffles="liveRaffles" @select-raffle="selectRaffle" type="live"/>
       </q-tab-panel>
-      <q-tab-panel name="waiting">
-        <raffles-table @show-player="showPlayer" :raffles="waitingRaffles" @select-raffle="selectRaffle" type="waiting"/>
+      <q-tab-panel name="won">
+        <raffles-table @show-player="showPlayer" :raffles="wonRaffles" @select-raffle="selectRaffle" type="won"/>
       </q-tab-panel>
       <q-tab-panel name="history">
         <raffles-table @show-player="showPlayer" :raffles="pastRaffles" @select-raffle="selectRaffle" @remove-raffle="removeRaffle"  type="history"/>
@@ -50,7 +50,7 @@ export default {
       raffles: [],
       selected: undefined,
       languages: [],
-      tab: 'ready',
+      tab: 'new',
       playerForShowing: undefined
     })
     const closeRaffleDlg = async (data) => {
@@ -110,14 +110,14 @@ export default {
       state.playerForShowing = response.data
     }
     const addRaffle = () => { state.selected = newRaffle }
-    const readyRaffles = computed(() => state.raffles.filter((raffle) => raffle.state === 'ready' && !raffle.isLive))
-    const liveRaffles = computed(() => state.raffles.filter((raffle) => raffle.state === 'ready' && raffle.isLive))
-    const waitingRaffles = computed(() => state.raffles.filter((raffle) => {
-      return ['waiting', 'delivered', 'nopurchase'].includes(raffle.state) ||
+    const newRaffles = computed(() => state.raffles.filter((raffle) => raffle.state === 'new' && !raffle.isLive))
+    const liveRaffles = computed(() => state.raffles.filter((raffle) => raffle.state === 'new' && raffle.isLive))
+    const wonRaffles = computed(() => state.raffles.filter((raffle) => {
+      return ['won', 'delivered', 'nopurchase'].includes(raffle.state) ||
              (raffle.isPast && raffle.sold === 0)
     }))
     const pastRaffles = computed(() => state.raffles.filter((raffle) => {
-      if (!readyRaffles.value.includes(raffle) && !liveRaffles.value.includes(raffle) && !waitingRaffles.value.includes(raffle)) { return raffle }
+      if (!newRaffles.value.includes(raffle) && !liveRaffles.value.includes(raffle) && !wonRaffles.value.includes(raffle)) { return raffle }
     }))
 
     watch(() => loggedIn, async () => {
@@ -126,7 +126,7 @@ export default {
       state.languages = response.data.languages
       newRaffle = response.data.newRaffle
     }, { immediate: true })
-    return { ...toRefs(state), showPlayer, addRaffle, closeRaffleDlg, readyRaffles, pastRaffles, removeRaffle, selectRaffle, waitingRaffles, liveRaffles }
+    return { ...toRefs(state), showPlayer, addRaffle, closeRaffleDlg, newRaffles, pastRaffles, removeRaffle, selectRaffle, wonRaffles, liveRaffles }
   }
 }
 </script>

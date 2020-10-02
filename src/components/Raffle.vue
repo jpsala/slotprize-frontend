@@ -30,9 +30,9 @@
                   <date-picker v-model="raffleCopy.closingDate" label="Closing Date"/>
                   <q-input v-model="raffleCopy.price" label="Number Price" />
                   <q-select class="col-6" label="Status"
-                            stack-label v-model="raffleCopy.state" :options="['waiting', 'delivered', 'closed']"
+                            stack-label v-model="raffleCopy.state" :options="['won', 'delivered', 'closed']"
                             option-value="id" option-label="name"
-                            :disable="!['waiting', 'delivered', 'closed', 'nopurchase'].includes(raffleCopy.state)"/>
+                            :disable="!['won', 'delivered', 'closed', 'nopurchase'].includes(raffleCopy.state)"/>
                 </div>
             </div>
             </div>

@@ -1,18 +1,20 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable no-underscore-dangle */
 import axios from 'axios'
+import { whichBox } from 'src/helpers'
 
 import useGlobal from '../services/useGlobal'
 import { setApiToken, getApiToken } from './useSession'
 // import router from '../router';
-const local = document.location.hostname === 'localhost'
+const { isDev, isLocal } = whichBox()
 let apiToken
 const getAxios = () => {
-  const { startLoading, stopLoading, isDev } = useGlobal()
+  const { startLoading, stopLoading } = useGlobal()
   console.log('Axios, solo una vez!')
   console.log('isDev', isDev, typeof (isDev))
-  if (isDev) axios.defaults.baseURL = 'https://dev.slotoprizes.tagadagames.com:3000/api'
-  else axios.defaults.baseURL = local ? 'http://localhost:8888/api' : 'https://slotoprizes.tagadagames.com:3000/api'
+  if (isLocal) axios.defaults.baseURL = 'http://localhost:8888/api'
+  else if (isDev) axios.defaults.baseURL = 'https://dev.slotoprizes.tagadagames.com:3000/api'
+  else axios.defaults.baseURL = 'https://slotoprizes.tagadagames.com:3000/api'
   console.log('axios.defaults.baseURL', axios.defaults.baseURL)
   axios.interceptors.response.use((response) => {
     setTimeout(() => {

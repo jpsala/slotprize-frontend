@@ -1,5 +1,12 @@
 import { Dialog, Notify } from 'quasar'
 
+function whichBox () {
+  const isLocal = document.location.hostname === 'localhost'
+  const url = document.location.hostname
+  const devBoxes = ['dev.slotoprizes.tagadagames.com', 'localhost', 'bo.dev.slotoprizes.tagadagames.com']
+  const isDev = devBoxes.includes(url)
+  return { isDev, isLocal }
+}
 const debounce = (func, wait, immediate) => {
   let timeout; let args; let context; let timestamp; let
     result
@@ -139,7 +146,7 @@ const resizeObserver = (el, cb) => new ResizeObserver((el) => {
 })
 export {
   rand, notify, soloEnDevMode, handleAxiosError, elIsVisible, alerta,
-  debounce, throttle, resizeObserver, confirma
+  debounce, throttle, resizeObserver, confirma, whichBox
 }
 export const isNotebook = () => {
   return location.hostname === 'localhost'
