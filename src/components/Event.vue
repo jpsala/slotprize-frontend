@@ -58,7 +58,7 @@
                 </q-avatar>
               </template>
             </q-file>
-            <q-input :borderless="!editMode" :disable='!editMode' label='Rule' v-model.number='eventClone.rule' />
+            <q-input :borderless="!editMode" :disable='!editMode' label='Rule' v-model='eventClone.rule' />
           </div>
           <!-- <div class="text-subtitle2 q-pt-sm"><q-chip icon="event">{{eventClone.type}}</q-chip></div> -->
         </q-form>
