@@ -46,7 +46,8 @@ export default {
   },
   setup (props, { emit }) {
     const state = reactive({
-      model: format(new Date(), 'yyyy-MM-dd')
+      // state.model = props.showTime ? value : format(new Date(value), 'yyyy-mm-dd')
+      model: props.showTime ? props.value : format(new Date(), 'yyyy-MM-dd')
     })
     watch(() => props.value, () => {
       state.model = props.value

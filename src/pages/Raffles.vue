@@ -6,7 +6,7 @@
     <h3 class="q-ml-xl q-pl-xl">Raffles</h3>
     <q-tabs v-model="tab" class="text-grey" active-color="primary" align="justify"
             indicator-color="primary">
-      <q-tab name="news" label="news" />
+      <q-tab name="news" label="New" />
       <q-tab name="live" label="Live" />
       <q-tab name="won" label="Won" />
       <q-tab name="history" label="History" />
@@ -66,6 +66,7 @@ export default {
             data: formData,
             headers: { 'Content-Type': 'multipart/form-data' }
           })
+          console.log('response', response)
           if (!response?.data?.id) {
             await alerta('Error submiting the data')
             return
@@ -75,8 +76,9 @@ export default {
         }
         state.selected = undefined
       } catch (error) {
-        console.dir(error.response.data.message)
-        await alerta('Error submiting the data', error.response.data.message)
+        console.log('errorrrr', error)
+        console.dir(error?.response?.data?.message)
+        await alerta('Error submiting the data', error)
       }
       function createFormData (formData, key, data) {
         if (data === Object(data) || Array.isArray(data)) {
