@@ -18,11 +18,10 @@
           <div class='text-h6'>
             <q-input autofocus class="col" :disable="!editMode" v-model='eventClone.name' label='Name'/>
 
-            <q-input :disable="!editMode" v-model='eventClone.description' label='Description' autofocus="" />
+            <q-input :disable="!editMode" v-model='eventClone.description' label='Producer Notes' />
             <div class="row">
                 <q-input :borderless="!editMode" class="col" :disable="!editMode" label='Multiplier' v-model.number='eventClone.multiplier' type='number' />
-                <q-input :borderless="!editMode" class="col" :disable="!editMode" label='Bet Price' v-model.number='eventClone.betPrice' type='number' />
-                <q-input :borderless="!editMode" class="col" :disable="!editMode" label='Duration in seconds' v-model.number='eventClone.duration' />
+                <q-input :borderless="!editMode" class="col" :disable="!editMode" label='Duration in minutes' v-model.number='eventClone.duration' />
             </div>
 
             <div class="row justify-between">
@@ -58,11 +57,16 @@
                 </q-avatar>
               </template>
             </q-file>
-            <q-input :borderless="!editMode" :disable='!editMode' label='Rule' v-model='eventClone.rule' />
+            <!-- <q-input :borderless="!editMode" :disable='!editMode' label='Rule' v-model='eventClone.rule' /> -->
           </div>
           <!-- <div class="text-subtitle2 q-pt-sm"><q-chip icon="event">{{eventClone.type}}</q-chip></div> -->
         </q-form>
       </div>
+    </q-card-section>
+      <q-separator />
+    <q-card-section>
+      <div style="font-size: small; color: gray">Rule</div>
+      <Rules :rules="rules" :rule="eventClone.rule" :editing="editMode"/>
     </q-card-section>
     <q-separator />
 
@@ -78,6 +82,7 @@
 
 <script>
 /* eslint-disable vue/no-unused-components */
+import Rules from './Rules'
 import {
   reactive,
   toRefs,
@@ -88,6 +93,7 @@ import {
 import clone from 'rfdc'
 
 export default {
+  components: { Rules },
   name: 'Event',
   props: {
     event: {
@@ -113,10 +119,31 @@ export default {
     emit
   }) {
     const state = reactive({
-      editMode: false,
+      editMode: true,
       eventClone: ref(undefined),
       eventBackup: undefined,
-      key: 1
+      key: 1,
+      rules: [
+        { type: 'cron', rule: '0 */1 * * * * *' },
+        { type: 'unique', start: '2020-10-03 11:00:00', end: '2020-11-03 11:00:10' },
+        {
+          type: 'daily',
+          hours: [
+            { start: '08:00:00' }
+          ]
+        },
+        {
+          type: 'weekly',
+          days: [
+            {
+              day: 2,
+              hours: [
+                { start: '08:00:00', duration: 60 }
+              ]
+            }
+          ]
+        }
+      ]
     })
     const save = event => {
       // state.editMode = false
@@ -169,6 +196,12 @@ export default {
         state.eventClone.popupFile = undefined
         state.eventClone.popupFile = undefined
         state.eventClone.notificationFile = undefined
+        console.log('rule', typeof state.eventClone.rule)
+        try {
+          state.eventClone.rule = JSON.parse(state.eventClone.rule)
+        } catch (error) {
+          state.eventClone.rule = { type: 'unique', start: '2020-01-02', end: '2020-02-02' }
+        }
         // if (state.eventClone.popupTextureUrl) state.eventClone.popupTextureUrl += '?version=' + rand(1, 1000)
         // if (state.eventClone.notificationTextureUrl) state.eventClone.notificationTextureUrl += '?version=' + rand(1, 1000)
         state.key += 1

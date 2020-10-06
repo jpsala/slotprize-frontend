@@ -15,6 +15,7 @@ import Tickets from 'src/pages/Tickets'
 import Spins from 'src/pages/SpinSettings'
 import Winners from 'src/pages/Winners'
 import DailyReward from 'src/pages/DailyReward'
+import TestRules from 'src/pages/TestRules'
 import AdsSettings from 'src/pages/AdsSettings'
 import Error404 from 'src/pages/Error404'
 import MainLayout from 'src/layouts/MainLayout'
@@ -33,6 +34,7 @@ const routes = [
       { path: 'languages', component: Languages },
       { path: 'skins', component: Skins },
       { path: 'winners', component: Winners },
+      { path: 'testRules', component: TestRules },
       { path: 'dailyreward', component: DailyReward },
       { path: 'tickets', component: Tickets },
       { path: 'countries', component: Countries },

@@ -118,8 +118,8 @@ export default {
     watch(() => loggedIn, async () => {
       const response = await axios.get('/slot/winners_for_crud')
       response.data.forEach((i, idx) => {
-        if (idx === 0) state.dateFrom = format(parse(i.date, 'yyyy-MM-dd', new Date()), 'yyyy-MM-dd')
-        if (idx === response.data.length - 1) state.dateTo = format(parse(i.date, 'yyyy-MM-dd', new Date()), 'yyyy-MM-dd')
+        if (idx === response.data.length - 1) state.dateFrom = format(parse(i.date, 'yyyy-MM-dd', new Date()), 'yyyy-MM-dd')
+        if (idx === 0) state.dateTo = format(parse(i.date, 'yyyy-MM-dd', new Date()), 'yyyy-MM-dd')
         i.checked = false
       })
       state.items = response.data

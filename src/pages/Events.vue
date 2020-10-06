@@ -2,11 +2,11 @@
   <div class="q-pa-md q-gutter-md justify-center">
     <h3 class="q-ml-xl q-pl-xl">Events</h3>
     <div class="row">
-      <Event ref='eventsRef' @change="eventSave" @remove="removeEvent" :skins="skins" @cancel="cancel"
+      <Event ref='eventsRef' @change="submit" @remove="removeEvent" :skins="skins" @cancel="cancel"
              :event="event" v-for="(event, index) in events" :key="index" @editing="editing"
              :disabled="editingEvent && editingEvent.id !== event.id"/>
-      <Event ref="eventRefNew" v-if="newEvent" @cancel="cancel" @change="eventSave" @remove="removeEvent"
-             :skins="skins" :event="newEvent" :new="true"  />
+      <Event ref="eventRefNew" v-if="newEvent" @cancel="cancel" @change="submit" @remove="removeEvent"
+             :skins="skins" :event="newEvent" :new="true"/>
     </div>
     <q-page-sticky position="top-left" :offset="[18, 18]">
       <q-btn :disable="editingEvent !== undefined" @click="addEvent"
@@ -46,9 +46,13 @@ export default {
     const eventsRef = ref(undefined)
     const eventRefNew = ref(undefined)
 
-    const eventSave = async (event) => {
+    const submit = async (event) => {
       const formData = new FormData()
-      for (var key in event) formData.append(key, event[key])
+      for (var key in event) {
+        const value = key === 'duration' ? event[key] * 60 : event[key]
+        formData.append(key, value)
+      }
+
       const axiosAnt = axios.defaults.headers.post['Content-Type']
       axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
       try {
@@ -62,14 +66,15 @@ export default {
         eventRef.setDataAfterSave(response.data)
         if (response.popupFile) event.popupTextureUrl = response.popupFile
         if (response.notificationFile) event.notificationUrl = response.notificationFile
+        console.log('eventRef', eventRef, eventRefNew)
         if (response.data.isNew) {
-          eventRefNew.close()
+          eventRef.close()
           state.newEvent = undefined
           state.events.push(event)
         } else eventRef.close()
         state.editingEvent = undefined
       } catch (err) {
-        await alerta(err)
+        await alerta(err ?? 'no message', 'ehhhhh')
       } finally {
         axios.defaults.headers.post['Content-Type'] = axiosAnt
       }
@@ -79,6 +84,9 @@ export default {
       if (!loggedIn.value) return
       const respEvents = await axios.get('slot/events')
       const respSkins = await axios.get('slot/skins')
+      for (const event of respEvents.data.events) {
+        event.duration = Math.abs(event.duration / 60)
+      }
       state.events = respEvents.data.events
       state.skins = respSkins.data
       state.newEventOriginal = respEvents.data.newEvent
@@ -88,7 +96,15 @@ export default {
       state.editingEvent = event
     }
 
-    const removeEvent = (event) => {
+    const removeEvent = async (event) => {
+      const resp = await axios.delete(`/slot/event?id=${event.id}`)
+      console.log('resp delete event', resp.data)
+      if (resp.data) {
+        const eventIdx = state.events.findIndex(_event => _event.id === event.id)
+        console.log('eventIdx', eventIdx, state.events)
+        if (eventIdx > -1) state.events.splice(eventIdx, 1)
+        await alerta('Event has been deleted')
+      }
       state.editingEvent = undefined
     }
     const addEvent = () => {
@@ -104,7 +120,7 @@ export default {
     })
     return {
       ...toRefs(state),
-      eventSave,
+      submit,
       removeEvent,
       addEvent,
       cancel,

@@ -9,9 +9,9 @@
           <q-avatar style="width: 70px; height: 45px">
             <div class="text-subtitle1">Wopidom</div>
           </q-avatar>
-          <div class="col" />
         </q-toolbar-title>
-        <span v-show="isDev" style="color:red; font-size: 140%">DevMode!</span>
+        <span v-show="isDev" class="q-mr-md" style="color:red; font-size: 100%">DevMode!</span>
+        <span class="q-mr-md" style="color:white; font-size: 110%">UTC Date {{utcDate}}</span>
         <q-btn
           v-if="$route.path !== '/login' && !loggedIn"
           flat
@@ -104,7 +104,7 @@ export default {
   components: { myDrawerContent },
 
   setup () {
-    const { loading, isDev } = useGlobal()
+    const { loading, isDev, utcDate } = useGlobal()
     const items = ref(
       setItemsDefaults([
         {
@@ -153,7 +153,7 @@ export default {
       }
     })
     return {
-      logout, left, items, loggedIn, Screen, user, loading, isDev
+      logout, left, items, loggedIn, Screen, user, loading, isDev, utcDate
     }
   }
 }

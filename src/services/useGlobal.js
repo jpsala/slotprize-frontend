@@ -1,4 +1,5 @@
-import { computed, reactive, watch } from '@vue/composition-api'
+import { computed, reactive, watch, toRefs } from '@vue/composition-api'
+// import { zonedTimeToUtc } from 'date-fns-tz'
 import {
   Loading,
   QSpinnerDots
@@ -7,16 +8,19 @@ import { whichBox } from 'src/helpers'
 const state = reactive({
   loading: false,
   spinner: false,
+  utcDate: new Date(),
   isDev: whichBox().isDev
 })
 const url = new URL(location.href)
-console.log('url', url)
-let isDevInterval
+// const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+console.log('url', url.origin)
+console.log('timeZone', Intl.DateTimeFormat().resolvedOptions().timeZone)
+setInterval(() => {
+  state.isDev = whichBox().isDev
+  const utcDate = new Date().toUTCString()
+  state.utcDate = utcDate// zonedTimeToUtc(utcDate, timeZone)
+}, 1000)
 const useGlobal = () => {
-  clearInterval(isDevInterval)
-  isDevInterval = setInterval(() => {
-    state.isDev = whichBox().isDev
-  }, 2000)
   // const isDev = computed(() => state.isDev)
   const startLoading = () => {
     state.loading = true
@@ -30,6 +34,9 @@ const useGlobal = () => {
   const hideSpinner = () => {
     state.spinner = false
   }
+  // const utcDate = computed(() => {
+
+  // })
   const loading = computed(() => {
     return state.loading
   })
@@ -40,6 +47,6 @@ const useGlobal = () => {
     if (value) Loading.show({ spinner: QSpinnerDots })
     else Loading.hide()
   })
-  return { startLoading, stopLoading, loading, showSpinner, hideSpinner, isDev }
+  return { ...toRefs(state), startLoading, stopLoading, loading, showSpinner, hideSpinner, isDev }
 }
 export default useGlobal
