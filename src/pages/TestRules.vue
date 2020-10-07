@@ -1,7 +1,9 @@
 <template>
   <div class="q-pa-md q-gutter-md justify-center">
-    <h3 class="q-ml-xl q-pl-xl">Jackpot</h3>
-      <Rules :rules="rules"/>
+    <h3 class="q-ml-xl q-pl-xl">
+      Jackpot
+    </h3>
+    <Rules :rules="rules" />
   </div>
 </template>
 

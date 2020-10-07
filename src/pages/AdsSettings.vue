@@ -1,9 +1,22 @@
 <template>
   <div class="q-pa-md q-gutter-md justify-center">
-    <h3 class="q-ml-xl q-pl-xl">Ads Settings</h3>
+    <h3 class="q-ml-xl q-pl-xl">
+      Ads Settings
+    </h3>
     <div class="row">
-      <q-input class="q-mx-lg" autofocus v-model="interstitialsRatio" hint="interstitial ads to spins ratio" label="Interstitials Ratio"/>
-      <q-btn color="primary" @click="submit">Submit</q-btn>
+      <q-input
+        class="q-mx-lg"
+        autofocus
+        v-model="interstitialsRatio"
+        hint="interstitial ads to spins ratio"
+        label="Interstitials Ratio"
+      />
+      <q-btn
+        color="primary"
+        @click="submit"
+      >
+        Submit
+      </q-btn>
     </div>
   </div>
 </template>

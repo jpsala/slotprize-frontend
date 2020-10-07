@@ -1,31 +1,67 @@
 <template>
   <div class="q-pa-md q-gutter-md justify-center">
-    <h3 class="q-ml-xl q-pl-xl">Languages</h3>
+    <h3 class="q-ml-xl q-pl-xl">
+      Languages
+    </h3>
     <q-markup-table>
       <thead>
         <tr>
-          <th class="text-left">Language Code</th>
-          <th class="text-left">Json File</th>
-          <th class="text-center">Image</th>
-          <th class="text-left"></th>
+          <th class="text-left">
+            Language Code
+          </th>
+          <th class="text-left">
+            Json File
+          </th>
+          <th class="text-center">
+            Image
+          </th>
+          <th class="text-left" />
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(row) in rows" :key="row.id" @click="selectRow(row, $event)" class="cursor-pointer">
-          <td class="text-left">{{row.languageCode}}</td>
-          <td class="text-left">{{row.localizationUrl}}</td>
-          <td class="text-center  img-td"><img :src="row.textureUrl" /></td>
+        <tr
+          v-for="(row) in rows"
+          :key="row.id"
+          @click="selectRow(row, $event)"
+          class="cursor-pointer"
+        >
+          <td class="text-left">
+            {{ row.languageCode }}
+          </td>
+          <td class="text-left">
+            {{ row.localizationUrl }}
+          </td>
+          <td class="text-center  img-td">
+            <img :src="row.textureUrl">
+          </td>
           <td class="text-right">
-            <q-icon @click="delLanguage(row.id)" class="remove" name="remove_circle_outline"
-                    size="30px" color="red-5" />
+            <q-icon
+              @click="delLanguage(row.id)"
+              class="remove"
+              name="remove_circle_outline"
+              size="30px"
+              color="red-5"
+            />
           </td>
         </tr>
       </tbody>
     </q-markup-table>
-  <LanguageDialog :language="selected" @close="languageCloseDialog" @cancel="languageCancel"/>
-    <q-page-sticky position="top-left" :offset="[18, 18]">
-      <q-btn :disable="selected !== undefined" @click="addLanguage"
-              fab icon="add" color="red-6" />
+    <LanguageDialog
+      :language="selected"
+      @close="languageCloseDialog"
+      @cancel="languageCancel"
+    />
+    <q-page-sticky
+      position="top-left"
+      :offset="[18, 18]"
+    >
+      <q-btn
+        :disable="selected !== undefined"
+        @click="addLanguage"
+        fab
+        icon="add"
+        color="red-6"
+      />
     </q-page-sticky>
   </div>
 </template>

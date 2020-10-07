@@ -1,11 +1,20 @@
 <template>
-<q-dialog :value="player !== undefined" v-bind="$attrs" transition-show="scale" transition-hide="scale">
-  <q-card class="raffle-card">
-    <q-card-section>
-      <Player @back="$emit('close')" v-if="player" :player="player"/>
-    </q-card-section>
-  </q-card>
-</q-dialog>
+  <q-dialog
+    :value="player !== undefined"
+    v-bind="$attrs"
+    transition-show="scale"
+    transition-hide="scale"
+  >
+    <q-card class="raffle-card">
+      <q-card-section>
+        <Player
+          @back="$emit('close')"
+          v-if="player"
+          :player="player"
+        />
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script>

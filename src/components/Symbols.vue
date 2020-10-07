@@ -1,27 +1,57 @@
 <template>
-<div class="items small-scrollbar relative-position small-scrollbars">
-  <SymbolDialog :symbol="selected" @close="symbolClose" @cancel="symbolCancel"/>
-  <q-list bordered>
-      <q-item @click="selected = symbolNew" clickable v-ripple>
+  <div class="items small-scrollbar relative-position small-scrollbars">
+    <SymbolDialog
+      :symbol="selected"
+      @close="symbolClose"
+      @cancel="symbolCancel"
+    />
+    <q-list bordered>
+      <q-item
+        @click="selected = symbolNew"
+        clickable
+        v-ripple
+      >
         <q-item-section avatar>
-          <q-icon color="primary" size="40px" name="add" />
+          <q-icon
+            color="primary"
+            size="40px"
+            name="add"
+          />
         </q-item-section>
         <q-item-section avatar>
-          <span  class="bg-primary text-white" style="padding: 4px 20px; border-radius: 5px">
+          <span
+            class="bg-primary text-white"
+            style="padding: 4px 20px; border-radius: 5px"
+          >
             New
           </span>
         </q-item-section>
       </q-item>
-      <q-item @click="setSelected(item, $event)" v-for="item in sortedItems" :key="item.id" clickable v-ripple>
-        <q-icon v-show="showRemove(item)" @click="$emit('remove', item)" class="remove" name="remove_circle_outline"
-                size="30px" color="red-5" />
+      <q-item
+        @click="setSelected(item, $event)"
+        v-for="item in sortedItems"
+        :key="item.id"
+        clickable
+        v-ripple
+      >
+        <q-icon
+          v-show="showRemove(item)"
+          @click="$emit('remove', item)"
+          class="remove"
+          name="remove_circle_outline"
+          size="30px"
+          color="red-5"
+        />
         <q-item-section avatar>
-          <q-img color="teal" :src="item.textureUrl" />
+          <q-img
+            color="teal"
+            :src="item.textureUrl"
+          />
         </q-item-section>
-        <q-item-section>{{item.symbolName}} ({{item.paymentType}})</q-item-section>
+        <q-item-section>{{ item.symbolName }} ({{ item.paymentType }})</q-item-section>
       </q-item>
-  </q-list>
-</div>
+    </q-list>
+  </div>
 </template>
 
 <script>
@@ -97,7 +127,7 @@ export default {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
       axios.defaults.headers.post['Content-Type'] = axiosAnt
-      emit('saveSymbol', response.data)
+      emit('save-symbol', response.data)
       state.selected = undefined
     }
     const setSelected = (item, event) => {
@@ -119,6 +149,7 @@ export default {
         return 0
       }
 
+      // eslint-disable-next-line vue/no-mutating-props
       return props.items.sort(compare)
     })
     // watch(() => props.items, setItemsStyle)

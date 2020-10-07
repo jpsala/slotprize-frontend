@@ -1,34 +1,80 @@
 <template>
   <div class="q-pa-md q-gutter-md justify-center">
-    <h3 class="q-ml-xl q-pl-xl">Countries</h3>
+    <h3 class="q-ml-xl q-pl-xl">
+      Countries
+    </h3>
     <q-markup-table>
       <thead>
         <tr>
-          <th class="text-left">Name</th>
-          <th class="text-left">Currency</th>
-          <th class="text-left">Phone Prefix</th>
-          <th class="text-left">Language</th>
-          <th class="text-center">Image</th>
-          <th class="text-center"></th>
+          <th class="text-left">
+            Name
+          </th>
+          <th class="text-left">
+            Currency
+          </th>
+          <th class="text-left">
+            Phone Prefix
+          </th>
+          <th class="text-left">
+            Language
+          </th>
+          <th class="text-center">
+            Image
+          </th>
+          <th class="text-center" />
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(row) in rows" :key="row.id" @click="selectRow(row, $event)" class="cursor-pointer">
-          <td class="text-left">{{row.name}}</td>
-          <td class="text-left">{{row.currency}}</td>
-          <td class="text-left">{{row.phonePrefix}}</td>
-          <td class="text-left">{{row.languageCode}}</td>
-          <td class="text-right img-td"><img :src="row.textureUrl" /></td>
+        <tr
+          v-for="(row) in rows"
+          :key="row.id"
+          @click="selectRow(row, $event)"
+          class="cursor-pointer"
+        >
+          <td class="text-left">
+            {{ row.name }}
+          </td>
+          <td class="text-left">
+            {{ row.currency }}
+          </td>
+          <td class="text-left">
+            {{ row.phonePrefix }}
+          </td>
+          <td class="text-left">
+            {{ row.languageCode }}
+          </td>
+          <td class="text-right img-td">
+            <img :src="row.textureUrl">
+          </td>
           <td class="text-right remove-td">
-            <q-icon @click="delCountry(row.id)" class="remove" name="remove_circle_outline"
-                    size="30px" color="red-5" />
+            <q-icon
+              @click="delCountry(row.id)"
+              class="remove"
+              name="remove_circle_outline"
+              size="30px"
+              color="red-5"
+            />
           </td>
         </tr>
       </tbody>
     </q-markup-table>
-    <CountryDialog :country="selected" :languages="languages" @close="countryClose" @cancel="countryCancel"/>
-    <q-page-sticky position="top-left" :offset="[18, 18]">
-      <q-btn :disable="selected !== undefined" @click="addCountry" fab icon="add" color="red-6" />
+    <CountryDialog
+      :country="selected"
+      :languages="languages"
+      @close="countryClose"
+      @cancel="countryCancel"
+    />
+    <q-page-sticky
+      position="top-left"
+      :offset="[18, 18]"
+    >
+      <q-btn
+        :disable="selected !== undefined"
+        @click="addCountry"
+        fab
+        icon="add"
+        color="red-6"
+      />
     </q-page-sticky>
   </div>
 </template>

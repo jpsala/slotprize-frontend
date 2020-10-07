@@ -1,41 +1,98 @@
 
 <template>
-    <div class="q-pa-md row q-gutter-md justify-center">
-      <Jackpot ref="jackpotRef" :item="selected" :show="Boolean(selected)"
-      @oncancel="cancel" @onsubmit="submit" />
-      <q-card bordered class="my-card">
-        <q-card-section class="bg-primary text-white" style="width: 400px">
-          <div class="text-h6">Jackpot Data</div>
-        </q-card-section>
+  <div class="q-pa-md row q-gutter-md justify-center">
+    <Jackpot
+      ref="jackpotRef"
+      :item="selected"
+      :show="Boolean(selected)"
+      @oncancel="cancel"
+      @onsubmit="submit"
+    />
+    <q-card
+      bordered
+      class="my-card"
+    >
+      <q-card-section
+        class="bg-primary text-white"
+        style="width: 400px"
+      >
+        <div class="text-h6">
+          Jackpot Data
+        </div>
+      </q-card-section>
 
-        <q-separator dark inset />
-        <q-card-section>
-          <q-markup-table flat square>
-            <thead>
-              <tr>
-                <th class="text-left">Cycle</th>
-                <th class="text-right">Prize</th>
-                <th class="text-left">State</th>
-                <th class="text-right">Spin Count</th>
-                <th class="text-left">Confirmed</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item of items" :key="item.id" :class="itemClass(item)"
-                  class="cursor-pointer" @click="select(item)">
-                <td class="text-left">{{item.cycle}}</td>
-                <td class="text-right">{{item.prize}}</td>
-                <td class="text-left">{{item.state}}</td>
-                <td class="text-right">{{item.spinCount}}</td>
-                <td class="text-right"><q-icon v-if="item.confirmed" color="green-9" size="42px" name="done"/></td>
-              </tr>
-            </tbody>
-          </q-markup-table>
+      <q-separator
+        dark
+        inset
+      />
+      <q-card-section>
+        <q-markup-table
+          flat
+          square
+        >
+          <thead>
+            <tr>
+              <th class="text-left">
+                Cycle
+              </th>
+              <th class="text-right">
+                Prize
+              </th>
+              <th class="text-left">
+                State
+              </th>
+              <th class="text-right">
+                Spin Count
+              </th>
+              <th class="text-left">
+                Confirmed
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="item of items"
+              :key="item.id"
+              :class="itemClass(item)"
+              class="cursor-pointer"
+              @click="select(item)"
+            >
+              <td class="text-left">
+                {{ item.cycle }}
+              </td>
+              <td class="text-right">
+                {{ item.prize }}
+              </td>
+              <td class="text-left">
+                {{ item.state }}
+              </td>
+              <td class="text-right">
+                {{ item.spinCount }}
+              </td>
+              <td class="text-right">
+                <q-icon
+                  v-if="item.confirmed"
+                  color="green-9"
+                  size="42px"
+                  name="done"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </q-markup-table>
       </q-card-section>
     </q-card>
-      <q-page-sticky position="top-left" :offset="[18, 18]">
-        <q-btn :disable="isNew || isNext !== undefined" @click="addNew"
-                fab icon="add" color="red-6" />
+    <q-page-sticky
+      position="top-left"
+      :offset="[18, 18]"
+    >
+      <q-btn
+        :disable="isNew || isNext !== undefined"
+        @click="addNew"
+        fab
+        icon="add"
+        color="red-6"
+      />
     </q-page-sticky>
   </div>
 </template>

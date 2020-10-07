@@ -1,30 +1,67 @@
 <template>
   <div class="q-pa-md q-gutter-md justify-center">
-    <h3 class="q-ml-xl q-pl-xl">Skins</h3>
+    <h3 class="q-ml-xl q-pl-xl">
+      Skins
+    </h3>
     <q-markup-table>
       <thead>
         <tr>
-          <th class="text-left">Name</th>
-          <th class="text-left">Background Color</th>
-          <th class="text-center">Image</th>
-          <th class="text-center"></th>
+          <th class="text-left">
+            Name
+          </th>
+          <th class="text-left">
+            Background Color
+          </th>
+          <th class="text-center">
+            Image
+          </th>
+          <th class="text-center" />
         </tr>
       </thead>
       <tbody>
-        <tr v-for="row in rows" :key="row.id" @click="selectRow(row, $event)" class="cursor-pointer">
-          <td class="text-left">{{row.name}}</td>
-          <td class="text-left">{{row.machineBgColor}}</td>
-          <td class="text-right img-td"><img :src="row.machineSkinTextureUrl" /></td>
+        <tr
+          v-for="row in rows"
+          :key="row.id"
+          @click="selectRow(row, $event)"
+          class="cursor-pointer"
+        >
+          <td class="text-left">
+            {{ row.name }}
+          </td>
+          <td class="text-left">
+            {{ row.machineBgColor }}
+          </td>
+          <td class="text-right img-td">
+            <img :src="row.machineSkinTextureUrl">
+          </td>
           <td class="text-right remove-td">
-            <q-icon @click="delSkin(row.id)" class="remove" name="remove_circle_outline"
-                    size="30px" color="red-5" />
+            <q-icon
+              @click="delSkin(row.id)"
+              class="remove"
+              name="remove_circle_outline"
+              size="30px"
+              color="red-5"
+            />
           </td>
         </tr>
       </tbody>
     </q-markup-table>
-    <SkinDialog :model="selected" @close="skinCloseDlg" @cancel="skinCancel"/>
-    <q-page-sticky position="top-left" :offset="[18, 18]">
-      <q-btn :disable="selected !== undefined" @click="addSkin" fab icon="add" color="red-6" />
+    <SkinDialog
+      :model="selected"
+      @close="skinCloseDlg"
+      @cancel="skinCancel"
+    />
+    <q-page-sticky
+      position="top-left"
+      :offset="[18, 18]"
+    >
+      <q-btn
+        :disable="selected !== undefined"
+        @click="addSkin"
+        fab
+        icon="add"
+        color="red-6"
+      />
     </q-page-sticky>
   </div>
 </template>

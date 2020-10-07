@@ -2,18 +2,37 @@
   <div class="q-pa-md row q-gutter-md justify-center">
     <q-card class="my-card">
       <q-card-section class="seccion-ingreso">
-        <div class="text-h5">Login</div>
+        <div class="text-h5">
+          Login
+        </div>
       </q-card-section>
       <q-separator />
-      <q-form class="q-gutter-md" @submit="onSubmit">
+      <q-form
+        class="q-gutter-md"
+        @submit="onSubmit"
+      >
         <q-card-section>
-          <q-input v-model="user.email" label="Email *" lazy-rules
-                   :rules="[ val => val && val.length > 0 || 'Enter your Email']" type="email" />
-          <q-input v-model="user.password" type="password" label="Password *" lazy-rules
-                   :rules="[val => val !== null && val !== '' || 'Enter your Password']" />
+          <q-input
+            v-model="user.email"
+            label="Email *"
+            lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Enter your Email']"
+            type="email"
+          />
+          <q-input
+            v-model="user.password"
+            type="password"
+            label="Password *"
+            lazy-rules
+            :rules="[val => val !== null && val !== '' || 'Enter your Password']"
+          />
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn label="Ingresar" type="submit" color="primary" />
+          <q-btn
+            label="Ingresar"
+            type="submit"
+            color="primary"
+          />
         </q-card-actions>
       </q-form>
     </q-card>

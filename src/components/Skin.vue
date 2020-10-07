@@ -1,16 +1,26 @@
 <template>
-  <q-card class="my-card" v-if="modelCopy">
+  <q-card
+    class="my-card"
+    v-if="modelCopy"
+  >
     <input
       ref="imgInput"
       type="file"
       accept="image/*"
       @change="imgChange($event)"
       class="hidden"
-    />
-    <q-card-section class="q-mb-lg" style="text-align: center">
+    >
+    <q-card-section
+      class="q-mb-lg"
+      style="text-align: center"
+    >
       <div class="row">
         <div class="text-h6">
-          <q-input autofocus v-model="modelCopy.name" label="Name" />
+          <q-input
+            autofocus
+            v-model="modelCopy.name"
+            label="Name"
+          />
           <div class="row">
             <q-input
               class="col-6"
@@ -29,14 +39,32 @@
                 ? modelCopy.machineSkinTextureUrl
                 : missingImage
             "
-          />
+          >
         </div>
       </div>
     </q-card-section>
-    <q-card-actions class="q-mt-lg" align="right">
-      <q-btn flat @click="$refs.imgInput.click()">Select Image</q-btn>
-      <q-btn flat @click="$emit('cancel')">Cancel</q-btn>
-      <q-btn flat @click="submit">Submit</q-btn>
+    <q-card-actions
+      class="q-mt-lg"
+      align="right"
+    >
+      <q-btn
+        flat
+        @click="$refs.imgInput.click()"
+      >
+        Select Image
+      </q-btn>
+      <q-btn
+        flat
+        @click="$emit('cancel')"
+      >
+        Cancel
+      </q-btn>
+      <q-btn
+        flat
+        @click="submit"
+      >
+        Submit
+      </q-btn>
     </q-card-actions>
   </q-card>
 </template>

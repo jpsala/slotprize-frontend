@@ -12,29 +12,29 @@
     "deploy-dev": "quasar build && ./deploy-dev.sh"
   },
   "dependencies": {
-    "@quasar/extras": "^1.9.3",
-    "@vue/composition-api": "^1.0.0-beta.8",
-    "axios": "^0.19.2",
+    "@quasar/extras": "^1.9.7",
+    "@vue/composition-api": "^1.0.0-beta.15",
+    "axios": "^0.20.0",
     "camelcase-keys": "^6.2.2",
     "core-js": "^3.6.5",
     "date-fns": "^2.16.1",
     "date-fns-tz": "^1.0.11",
     "defer-to-connect": "^2.0.0",
-    "klona": "^2.0.1",
-    "quasar": "^1.12.13",
+    "klona": "^2.0.4",
+    "quasar": "^1.14.1",
     "rfdc": "^1.1.4"
   },
   "devDependencies": {
-    "@quasar/app": "^2.0.6",
+    "@quasar/app": "^2.1.1",
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.6.0",
+    "eslint": "^7.10.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-loader": "^4.0.2",
-    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "eslint-plugin-vue": "^6.2.2"
+    "eslint-plugin-vue": "^7.0.1"
   },
   "browserslist": [
     "last 10 Chrome versions",

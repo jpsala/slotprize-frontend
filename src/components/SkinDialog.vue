@@ -1,10 +1,19 @@
 <template>
-<div>
-<q-dialog v-model="showDialog" persistent transition-show="scale" transition-hide="scale">
-    <SkinEdit @cancel="$emit('cancel')" :model="model" :languages="languages"
-                 @close="function(formData){ $emit('close', formData) }"/>
-</q-dialog>
-</div>
+  <div>
+    <q-dialog
+      v-model="showDialog"
+      persistent
+      transition-show="scale"
+      transition-hide="scale"
+    >
+      <SkinEdit
+        @cancel="$emit('cancel')"
+        :model="model"
+        :languages="languages"
+        @close="function(formData){ $emit('close', formData) }"
+      />
+    </q-dialog>
+  </div>
 </template>
 
 <script>

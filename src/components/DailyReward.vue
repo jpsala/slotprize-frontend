@@ -1,34 +1,70 @@
 <template>
-    <q-dialog v-model="show" persistent transition-show="scale" transition-hide="scale">
-      <q-card bordered class="my-card">
-        <q-card-section class="bg-primary text-white" style="width: 400px">
-          <div class="text-h6">Daily Reword</div>
-        </q-card-section>
+  <q-dialog
+    :value="show"
+    persistent
+    transition-show="scale"
+    transition-hide="scale"
+  >
+    <q-card
+      bordered
+      class="my-card"
+    >
+      <q-card-section
+        class="bg-primary text-white"
+        style="width: 400px"
+      >
+        <div class="text-h6">
+          Daily Reword
+        </div>
+      </q-card-section>
 
-        <q-separator dark inset />
+      <q-separator
+        dark
+        inset
+      />
 
-        <q-card-section>
-          <q-list bordered separator>
+      <q-card-section>
+        <q-list
+          bordered
+          separator
+        >
           <q-item>
             <q-item-section style="max-width: 120px">
-              <q-select label="Reword Type"
-                stack-label v-model="model.type" :options="['spin', 'coin', 'ticket']"/>
+              <q-select
+                label="Reword Type"
+                stack-label
+                v-model="model.type"
+                :options="['spin', 'coin', 'ticket']"
+              />
             </q-item-section>
           </q-item>
           <q-item>
             <q-item-section style="max-width: 120px">
-              <q-input  v-model="model.amount" label="Amount"  />
+              <q-input
+                v-model="model.amount"
+                label="Amount"
+              />
             </q-item-section>
           </q-item>
         </q-list>
       </q-card-section>
       <q-card-actions align="right">
         <!-- <q-btn flat>Action 1</q-btn> -->
-        <q-btn @click="submit" flat>Submit</q-btn>
-        <q-btn @click="cancel" flat>Cancel</q-btn>
+        <q-btn
+          @click="submit"
+          flat
+        >
+          Submit
+        </q-btn>
+        <q-btn
+          @click="cancel"
+          flat
+        >
+          Cancel
+        </q-btn>
       </q-card-actions>
     </q-card>
-    </q-dialog>
+  </q-dialog>
 </template>
 
 <script>

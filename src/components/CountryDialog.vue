@@ -1,10 +1,19 @@
 <template>
-<div>
-<q-dialog v-model="showDialog" persistent transition-show="scale" transition-hide="scale">
-    <CountryEdit @cancel="$emit('cancel')" :country="country" :languages="languages"
-                 @close="function(formData){ $emit('close', formData) }"/>
-</q-dialog>
-</div>
+  <div>
+    <q-dialog
+      v-model="showDialog"
+      persistent
+      transition-show="scale"
+      transition-hide="scale"
+    >
+      <CountryEdit
+        @cancel="$emit('cancel')"
+        :country="country"
+        :languages="languages"
+        @close="function(formData){ $emit('close', formData) }"
+      />
+    </q-dialog>
+  </div>
 </template>
 
 <script>

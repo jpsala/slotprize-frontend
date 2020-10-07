@@ -1,39 +1,83 @@
 
 <template>
-    <div class="q-pa-md row q-gutter-md justify-center">
-      <DailyReward ref="jackpotRef" :item="selected" :show="Boolean(selected)"
-      @oncancel="cancel" @onsubmit="submit" />
-      <q-card bordered class="my-card">
-        <q-card-section class="bg-primary text-white" style="width: 400px">
-          <div class="text-h6">Daily Rewards</div>
-        </q-card-section>
+  <div class="q-pa-md row q-gutter-md justify-center">
+    <DailyReward
+      ref="jackpotRef"
+      :item="selected"
+      :show="Boolean(selected)"
+      @oncancel="cancel"
+      @onsubmit="submit"
+    />
+    <q-card
+      bordered
+      class="my-card"
+    >
+      <q-card-section
+        class="bg-primary text-white"
+        style="width: 400px"
+      >
+        <div class="text-h6">
+          Daily Rewards
+        </div>
+      </q-card-section>
 
-        <q-separator dark inset />
-        <q-card-section>
-          <q-markup-table flat square>
-            <thead>
-              <tr>
-                <th class="text-left">Type</th>
-                <th class="text-right">Amount</th>
-                <th class="text-right remove-item"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item of items" :key="item.id" :class="itemClass(item)"
-                  class="cursor-pointer" @click="select(item, $event)">
-                <td class="text-left">{{item.type}}</td>
-                <td class="text-right">{{item.amount}}</td>
-                <td class="text-right remove-item">
-                  <q-icon @click="removeItem(item)" size="22px" name="clear"/>
-                </td>
-              </tr>
-            </tbody>
-          </q-markup-table>
+      <q-separator
+        dark
+        inset
+      />
+      <q-card-section>
+        <q-markup-table
+          flat
+          square
+        >
+          <thead>
+            <tr>
+              <th class="text-left">
+                Type
+              </th>
+              <th class="text-right">
+                Amount
+              </th>
+              <th class="text-right remove-item" />
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="item of items"
+              :key="item.id"
+              :class="itemClass(item)"
+              class="cursor-pointer"
+              @click="select(item, $event)"
+            >
+              <td class="text-left">
+                {{ item.type }}
+              </td>
+              <td class="text-right">
+                {{ item.amount }}
+              </td>
+              <td class="text-right remove-item">
+                <q-icon
+                  @click="removeItem(item)"
+                  size="22px"
+                  name="clear"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </q-markup-table>
       </q-card-section>
     </q-card>
-      <q-page-sticky position="top-left" :offset="[18, 18]">
-        <q-btn :disable="isNew !== undefined" @click="addNew"
-                fab icon="add" color="red-6" />
+    <q-page-sticky
+      position="top-left"
+      :offset="[18, 18]"
+    >
+      <q-btn
+        :disable="isNew !== undefined"
+        @click="addNew"
+        fab
+        icon="add"
+        color="red-6"
+      />
     </q-page-sticky>
   </div>
 </template>

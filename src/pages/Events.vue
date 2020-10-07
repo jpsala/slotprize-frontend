@@ -1,16 +1,43 @@
 <template>
   <div class="q-pa-md q-gutter-md justify-center">
-    <h3 class="q-ml-xl q-pl-xl">Events</h3>
+    <h3 class="q-ml-xl q-pl-xl">
+      Events
+    </h3>
     <div class="row">
-      <Event ref='eventsRef' @change="submit" @remove="removeEvent" :skins="skins" @cancel="cancel"
-             :event="event" v-for="(event, index) in events" :key="index" @editing="editing"
-             :disabled="editingEvent && editingEvent.id !== event.id"/>
-      <Event ref="eventRefNew" v-if="newEvent" @cancel="cancel" @change="submit" @remove="removeEvent"
-             :skins="skins" :event="newEvent" :new="true"/>
+      <Event
+        ref="eventsRef"
+        @change="submit"
+        @remove="removeEvent"
+        :skins="skins"
+        @cancel="cancel"
+        :event="event"
+        v-for="(event, index) in events"
+        :key="index"
+        @editing="editing"
+        :disabled="editingEvent && editingEvent.id !== event.id"
+      />
+      <Event
+        ref="eventRefNew"
+        v-if="newEvent"
+        @cancel="cancel"
+        @change="submit"
+        @remove="removeEvent"
+        :skins="skins"
+        :event="newEvent"
+        :new="true"
+      />
     </div>
-    <q-page-sticky position="top-left" :offset="[18, 18]">
-      <q-btn :disable="editingEvent !== undefined" @click="addEvent"
-              fab icon="add" :color="editingEvent ? 'red-3':'red-6'" />
+    <q-page-sticky
+      position="top-left"
+      :offset="[18, 18]"
+    >
+      <q-btn
+        :disable="editingEvent !== undefined"
+        @click="addEvent"
+        fab
+        icon="add"
+        :color="editingEvent ? 'red-3':'red-6'"
+      />
     </q-page-sticky>
   </div>
 </template>
@@ -50,7 +77,7 @@ export default {
       const formData = new FormData()
       for (var key in event) {
         const value = key === 'duration' ? event[key] * 60 : event[key]
-        formData.append(key, value)
+        formData.append(key, key === 'rule' ? JSON.stringify(value) : value)
       }
 
       const axiosAnt = axios.defaults.headers.post['Content-Type']

@@ -1,31 +1,85 @@
 <template>
-  <q-card class="my-card" v-if="languageCopy">
-    <input autofocus ref='fileInput' type="file" accept="application/JSON" @change="fileChange($event)" class="hidden">
-    <q-card-section class="q-mb-lg" style="text-align: center;">
+  <q-card
+    class="my-card"
+    v-if="languageCopy"
+  >
+    <input
+      autofocus
+      ref="fileInput"
+      type="file"
+      accept="application/JSON"
+      @change="fileChange($event)"
+      class="hidden"
+    >
+    <q-card-section
+      class="q-mb-lg"
+      style="text-align: center;"
+    >
       <div class="row">
         <div class="text-h6">
-          <q-input v-model="languageCopy.languageCode" label="Language Code" />
+          <q-input
+            v-model="languageCopy.languageCode"
+            label="Language Code"
+          />
         </div>
       </div>
       <div class="row">
         <div class="text-h6">
-          <q-input readonly v-model="fileForUpload" @click="$refs.fileInput.click()"
-                   label="JSON file" />
+          <q-input
+            readonly
+            v-model="fileForUpload"
+            @click="$refs.fileInput.click()"
+            label="JSON file"
+          />
         </div>
       </div>
-      <input autofocus ref='imgInput' type="file" accept="image/*" @change="imgChange($event)" class="hidden">
-          <img ref="img" class="cursor-pointer" @click="$refs.imgInput.click()" style="border-radius: 20%"
-               id="output_image" :src="languageCopy.textureUrl ? languageCopy.textureUrl : missingImage">
+      <input
+        autofocus
+        ref="imgInput"
+        type="file"
+        accept="image/*"
+        @change="imgChange($event)"
+        class="hidden"
+      >
+      <img
+        ref="img"
+        class="cursor-pointer"
+        @click="$refs.imgInput.click()"
+        style="border-radius: 20%"
+        id="output_image"
+        :src="languageCopy.textureUrl ? languageCopy.textureUrl : missingImage"
+      >
     </q-card-section>
-    <q-card-actions class="q-mt-lg" align="right">
-      <q-btn flat @click="$refs.fileInput.click()" >Select JSON file</q-btn>
-      <q-btn flat @click="$refs.imgInput.click()" >Select Image</q-btn>
-      <q-btn flat @click="$emit('cancel')">Cancel</q-btn>
-      <q-btn flat @click="submit">Submit</q-btn>
+    <q-card-actions
+      class="q-mt-lg"
+      align="right"
+    >
+      <q-btn
+        flat
+        @click="$refs.fileInput.click()"
+      >
+        Select JSON file
+      </q-btn>
+      <q-btn
+        flat
+        @click="$refs.imgInput.click()"
+      >
+        Select Image
+      </q-btn>
+      <q-btn
+        flat
+        @click="$emit('cancel')"
+      >
+        Cancel
+      </q-btn>
+      <q-btn
+        flat
+        @click="submit"
+      >
+        Submit
+      </q-btn>
     </q-card-actions>
-
   </q-card>
-
 </template>
 
 <script>

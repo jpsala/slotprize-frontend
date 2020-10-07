@@ -1,59 +1,175 @@
 <template>
-  <q-card v-if="eventClone" :class="{'disabled': disabled, 'editing': editMode}" class='bg-grey-1 event'>
-    <q-btn :disable="editMode || disabled" class='dot-menu' color='grey-7' round flat icon='more_vert'>
-      <q-menu cover auto-close>
+  <q-card
+    v-if="eventClone"
+    :class="{'disabled': disabled, 'editing': editMode}"
+    class="bg-grey-1 event"
+  >
+    <q-btn
+      :disable="editMode || disabled"
+      class="dot-menu"
+      color="grey-7"
+      round
+      flat
+      icon="more_vert"
+    >
+      <q-menu
+        cover
+        auto-close
+      >
         <q-list>
-          <q-item clickable :disable="editMode || disabled">
-            <q-item-section @click="()=> $emit('remove', event)">Remove Event</q-item-section>
+          <q-item
+            clickable
+            :disable="editMode || disabled"
+          >
+            <q-item-section @click="()=> $emit('remove', event)">
+              Remove Event
+            </q-item-section>
           </q-item>
-          <q-item clickable :disable="editMode || disabled">
-            <q-item-section @click='edit(eventClone)'>Edit Event</q-item-section>
+          <q-item
+            clickable
+            :disable="editMode || disabled"
+          >
+            <q-item-section @click="edit(eventClone)">
+              Edit Event
+            </q-item-section>
           </q-item>
         </q-list>
       </q-menu>
     </q-btn>
     <q-card-section>
-      <div  class='row items-center no-wrap'>
-        <q-form class='col' enctype="multipart/form-data">
-          <div class='text-h6'>
-            <q-input autofocus class="col" :disable="!editMode" v-model='eventClone.name' label='Name'/>
+      <div class="row items-center no-wrap">
+        <q-form
+          class="col"
+          enctype="multipart/form-data"
+        >
+          <div class="text-h6">
+            <q-input
+              autofocus
+              class="col"
+              :disable="!editMode"
+              v-model="eventClone.name"
+              label="Name"
+            />
 
-            <q-input :disable="!editMode" v-model='eventClone.description' label='Producer Notes' />
+            <q-input
+              :disable="!editMode"
+              v-model="eventClone.description"
+              label="Producer Notes"
+            />
             <div class="row">
-                <q-input :borderless="!editMode" class="col" :disable="!editMode" label='Multiplier' v-model.number='eventClone.multiplier' type='number' />
-                <q-input :borderless="!editMode" class="col" :disable="!editMode" label='Duration in minutes' v-model.number='eventClone.duration' />
+              <q-input
+                :borderless="!editMode"
+                class="col"
+                :disable="!editMode"
+                label="Multiplier"
+                v-model.number="eventClone.multiplier"
+                type="number"
+              />
+              <q-input
+                :borderless="!editMode"
+                class="col"
+                :disable="!editMode"
+                label="Duration in minutes"
+                v-model.number="eventClone.duration"
+              />
             </div>
 
             <div class="row justify-between">
-            <q-select class="col-6" @input="selectChange" :borderless="!editMode" :disable="!editMode" label="Skin"
-                      stack-label :value="eventClone.skin" :options="skins"
-                      option-value="id" option-label="name" :key="key"/>
-            <q-checkbox class="col-2 q-ml-sm justify-end" size="sm" color="" :disable="!editMode" v-model="eventClone.devOnly" :true-value="1" :false-value="0" label="DevOnly" />
-            <q-checkbox class="col-2 q-ml-sm justify-end" size="sm" color="" :disable="!editMode" v-model="eventClone.active" :true-value="1" :false-value="0" label="Active" />
+              <q-select
+                class="col-6"
+                @input="selectChange"
+                :borderless="!editMode"
+                :disable="!editMode"
+                label="Skin"
+                stack-label
+                :value="eventClone.skin"
+                :options="skins"
+                option-value="id"
+                option-label="name"
+                :key="key"
+              />
+              <q-checkbox
+                class="col-2 q-ml-sm justify-end"
+                size="sm"
+                color=""
+                :disable="!editMode"
+                v-model="eventClone.devOnly"
+                :true-value="1"
+                :false-value="0"
+                label="DevOnly"
+              />
+              <q-checkbox
+                class="col-2 q-ml-sm justify-end"
+                size="sm"
+                color=""
+                :disable="!editMode"
+                v-model="eventClone.active"
+                :true-value="1"
+                :false-value="0"
+                label="Active"
+              />
             </div>
 
-            <q-separator v-if="!editMode"/>
-            <div style="font-size: small; color: gray">Popup</div>
-            <q-input :borderless="!editMode" :disable="!editMode" class="q-pl-md" label='Message'
-                     v-model.number='eventClone.popupMessage' />
-            <q-file :borderless="!editMode" :disable="!editMode" class="q-pl-md" label="Texture URL"
-                     v-model="eventClone.popupFile">
-              <template v-slot:before>
+            <q-separator v-if="!editMode" />
+            <div style="font-size: small; color: gray">
+              Popup
+            </div>
+            <q-input
+              :borderless="!editMode"
+              :disable="!editMode"
+              class="q-pl-md"
+              label="Message"
+              v-model.number="eventClone.popupMessage"
+            />
+            <q-file
+              :borderless="!editMode"
+              :disable="!editMode"
+              class="q-pl-md"
+              label="Texture URL"
+              v-model="eventClone.popupFile"
+            >
+              <template #before>
                 <q-avatar>
-                  <img  v-if="eventClone.popupTextureUrl" :src="eventClone.popupTextureUrl">
-                  <q-icon v-else name="attach_file" />
+                  <img
+                    v-if="eventClone.popupTextureUrl"
+                    :src="eventClone.popupTextureUrl"
+                  >
+                  <q-icon
+                    v-else
+                    name="attach_file"
+                  />
                 </q-avatar>
               </template>
             </q-file>
-            <q-separator v-if="!editMode"/>
-            <div style="font-size: small; color: gray">Notification</div>
-            <q-input :borderless="!editMode" :disable="!editMode" class="q-pl-md" label='Message' v-model.number='eventClone.notificationMessage' />
-            <q-file :borderless="!editMode" :disable="!editMode" class="col q-pl-md" label="Texture URL" v-model="eventClone.notificationFile">
-              <template v-slot:before>
+            <q-separator v-if="!editMode" />
+            <div style="font-size: small; color: gray">
+              Notification
+            </div>
+            <q-input
+              :borderless="!editMode"
+              :disable="!editMode"
+              class="q-pl-md"
+              label="Message"
+              v-model.number="eventClone.notificationMessage"
+            />
+            <q-file
+              :borderless="!editMode"
+              :disable="!editMode"
+              class="col q-pl-md"
+              label="Texture URL"
+              v-model="eventClone.notificationFile"
+            >
+              <template #before>
                 <q-avatar>
-                  <img :key="key" v-if="eventClone.notificationTextureUrl"
-                       :src="eventClone.notificationTextureUrl">
-                  <q-icon v-else name="attach_file" />
+                  <img
+                    :key="key"
+                    v-if="eventClone.notificationTextureUrl"
+                    :src="eventClone.notificationTextureUrl"
+                  >
+                  <q-icon
+                    v-else
+                    name="attach_file"
+                  />
                 </q-avatar>
               </template>
             </q-file>
@@ -63,19 +179,48 @@
         </q-form>
       </div>
     </q-card-section>
-      <q-separator />
+    <q-separator />
     <q-card-section>
-      <div style="font-size: small; color: gray">Rule</div>
-      <Rules :rules="rules" :rule="eventClone.rule" :editing="editMode"/>
+      <div style="font-size: small; color: gray">
+        Rule
+      </div>
+      <Rules
+        @change="ruleChanged"
+        :rules="rules"
+        :rule="eventClone.rule"
+        :editing="editMode"
+      />
     </q-card-section>
     <q-separator />
 
-    <q-card-actions v-if='editMode' align='right'>
-      <q-btn flat @click='cancel(eventClone)'>Cancel</q-btn>
-      <q-btn flat @click='save(eventClone)'>Ok</q-btn>
+    <q-card-actions
+      v-if="editMode"
+      align="right"
+    >
+      <q-btn
+        flat
+        @click="cancel(eventClone)"
+      >
+        Cancel
+      </q-btn>
+      <q-btn
+        flat
+        @click="save(eventClone)"
+      >
+        Ok
+      </q-btn>
     </q-card-actions>
-    <q-card-actions v-else align='right'>
-      <q-btn :disable="disabled" flat @click='edit(eventClone)'>Edit</q-btn>
+    <q-card-actions
+      v-else
+      align="right"
+    >
+      <q-btn
+        :disable="disabled"
+        flat
+        @click="edit(eventClone)"
+      >
+        Edit
+      </q-btn>
     </q-card-actions>
   </q-card>
 </template>
@@ -119,7 +264,7 @@ export default {
     emit
   }) {
     const state = reactive({
-      editMode: true,
+      editMode: false,
       eventClone: ref(undefined),
       eventBackup: undefined,
       key: 1,
@@ -183,6 +328,9 @@ export default {
         state.eventClone.popupTextureUrl = `${data.popupFile}?key=${state.key}`
       }
     }
+    const ruleChanged = (value) => {
+      state.eventClone.rule = value
+    }
     const selectChange = (value) => {
       state.eventClone.skin = value
       state.key += 1
@@ -220,7 +368,8 @@ export default {
       cancel,
       setDataAfterSave,
       selectChange,
-      close
+      close,
+      ruleChanged
     }
   }
 }
@@ -229,7 +378,7 @@ export default {
 <style lang="stylus">
   .event *{
       // color: black !important;
-      font-size: 1rem;
+      // font-size: 1rem;
   }
   .event {
     max-width: 450px;

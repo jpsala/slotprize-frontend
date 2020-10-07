@@ -1,9 +1,18 @@
 <template>
-<div>
-<q-dialog v-model="showDialog" persistent transition-show="scale" transition-hide="scale">
-    <SymbolEdit @cancel="$emit('cancel')" :symbol="symbol" @close="function(formData){ $emit('close', formData) }"/>
-</q-dialog>
-</div>
+  <div>
+    <q-dialog
+      v-model="showDialog"
+      persistent
+      transition-show="scale"
+      transition-hide="scale"
+    >
+      <SymbolEdit
+        @cancel="$emit('cancel')"
+        :symbol="symbol"
+        @close="function(formData){ $emit('close', formData) }"
+      />
+    </q-dialog>
+  </div>
 </template>
 
 <script>

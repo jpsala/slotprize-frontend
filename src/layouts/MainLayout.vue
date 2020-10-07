@@ -2,16 +2,34 @@
   <q-layout view="hHh lpR fFf">
     <q-ajax-bar size="2px" />
 
-    <q-header elevated :class="isDev ? 'bg-secondary text-subtitle1':''">
+    <q-header
+      elevated
+      :class="isDev ? 'bg-secondary text-subtitle1':''"
+    >
       <q-toolbar>
-        <q-btn dense flat round icon="menu" @click.stop="left = !left" />
+        <q-btn
+          dense
+          flat
+          round
+          icon="menu"
+          @click.stop="left = !left"
+        />
         <q-toolbar-title>
           <q-avatar style="width: 70px; height: 45px">
-            <div class="text-subtitle1">Wopidom</div>
+            <div class="text-subtitle1">
+              Wopidom
+            </div>
           </q-avatar>
         </q-toolbar-title>
-        <span v-show="isDev" class="q-mr-md" style="color:red; font-size: 100%">DevMode!</span>
-        <span class="q-mr-md" style="color:white; font-size: 110%">UTC Date {{utcDate}}</span>
+        <span
+          v-show="isDev"
+          class="q-mr-md"
+          style="color:#ffeb3bcf; font-size: 100%"
+        >DevMode!</span>
+        <span
+          class="q-mr-md"
+          style="color:white; font-size: 110%"
+        >UTC Date {{ utcDate }}</span>
         <q-btn
           v-if="$route.path !== '/login' && !loggedIn"
           flat
@@ -20,7 +38,8 @@
           <span>Ingreso/Registro</span>
         </q-btn>
         <!-- profile menu , ya ingresó-->
-        <q-spinner-tail v-show="loading"
+        <q-spinner-tail
+          v-show="loading"
           color="white"
           size="2em"
         />
@@ -35,11 +54,17 @@
           :label="user.name"
         >
           <q-list style="width: 180px">
-            <q-item v-close-popup v-ripple clickable>
+            <q-item
+              v-close-popup
+              v-ripple
+              clickable
+            >
               <q-item-section side>
                 <q-icon name="exit_to_app" />
               </q-item-section>
-              <q-item-section @click="logout" >Cerrar Sesión</q-item-section>
+              <q-item-section @click="logout">
+                Cerrar Sesión
+              </q-item-section>
             </q-item>
           </q-list>
         </q-btn-dropdown>
@@ -56,7 +81,10 @@
       no-swipe-close
     >
       <q-list class="rounded-borders">
-        <my-drawer-content v-if="loggedIn" :items="items" />
+        <my-drawer-content
+          v-if="loggedIn"
+          :items="items"
+        />
         <!-- <q-item
           v-if="loggedIn"
           exact

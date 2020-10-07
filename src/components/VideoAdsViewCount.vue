@@ -1,54 +1,95 @@
 <template>
-<div class="q-pa-md row q-gutter-md justify-center">
-      <q-card bordered class="ads-card">
-        <!-- <q-card-section class="bg-primary text-white" style="width: 400px">
+  <div class="q-pa-md row q-gutter-md justify-center">
+    <q-card
+      bordered
+      class="ads-card"
+    >
+      <!-- <q-card-section class="bg-primary text-white" style="width: 400px">
           <div class="text-h6">Providers</div>
         </q-card-section> -->
 
-        <q-separator dark inset />
-        <q-card-section>
-          <q-markup-table flat square>
-            <thead>
-              <tr>
-                <th class="text-left">Provider</th>
-                <th class="text-right">Count</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item of adProviderData" :key="item.id"
-                  class="cursor-pointer">
-                <td class="text-left">{{item.adProvider}}</td>
-                <td class="text-right">{{item.count}}</td>
-              </tr>
-            </tbody>
-          </q-markup-table>
-      </q-card-section>
-        <q-card-section>
-          <q-markup-table flat square>
-            <thead>
-              <tr>
-                <th class="text-left">Delivery Type</th>
-                <th class="text-right">Count</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item of deliveryTypeData" :key="item.id"
-                  class="cursor-pointer">
-                <td class="text-left">{{item.deliveryType}}</td>
-                <td class="text-right">{{item.count}}</td>
-              </tr>
-            </tbody>
-          </q-markup-table>
+      <q-separator
+        dark
+        inset
+      />
+      <q-card-section>
+        <q-markup-table
+          flat
+          square
+        >
+          <thead>
+            <tr>
+              <th class="text-left">
+                Provider
+              </th>
+              <th class="text-right">
+                Count
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="item of adProviderData"
+              :key="item.id"
+              class="cursor-pointer"
+            >
+              <td class="text-left">
+                {{ item.adProvider }}
+              </td>
+              <td class="text-right">
+                {{ item.count }}
+              </td>
+            </tr>
+          </tbody>
+        </q-markup-table>
       </q-card-section>
       <q-card-section>
-        <q-markup-table flat square>
-            <thead>
-              <tr>
-                <th class="text-left">Total</th>
-                <th class="text-right">{{total}}</th>
-              </tr>
-            </thead>
-          </q-markup-table>
+        <q-markup-table
+          flat
+          square
+        >
+          <thead>
+            <tr>
+              <th class="text-left">
+                Delivery Type
+              </th>
+              <th class="text-right">
+                Count
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="item of deliveryTypeData"
+              :key="item.id"
+              class="cursor-pointer"
+            >
+              <td class="text-left">
+                {{ item.deliveryType }}
+              </td>
+              <td class="text-right">
+                {{ item.count }}
+              </td>
+            </tr>
+          </tbody>
+        </q-markup-table>
+      </q-card-section>
+      <q-card-section>
+        <q-markup-table
+          flat
+          square
+        >
+          <thead>
+            <tr>
+              <th class="text-left">
+                Total
+              </th>
+              <th class="text-right">
+                {{ total }}
+              </th>
+            </tr>
+          </thead>
+        </q-markup-table>
       </q-card-section>
     </q-card>
   </div>

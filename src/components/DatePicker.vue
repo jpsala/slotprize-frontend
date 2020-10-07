@@ -1,10 +1,25 @@
 <template>
-  <q-input v-bind="$attrs" v-model="model" @change="updateDate($event.target.value, $event)">
-    <template v-slot:prepend>
-      <q-icon name="event" class="cursor-pointer">
-        <q-popup-proxy ref='date' transition-show="scale" transition-hide="scale">
-          <q-date flat :value="model" :mask="showTime ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD'"
-                  @input="$refs.date.hide() ; updateDate($event)">
+  <q-input
+    v-bind="$attrs"
+    v-model="model"
+    @change="updateDate($event.target.value, $event)"
+  >
+    <template #prepend>
+      <q-icon
+        name="event"
+        class="cursor-pointer"
+      >
+        <q-popup-proxy
+          ref="date"
+          transition-show="scale"
+          transition-hide="scale"
+        >
+          <q-date
+            flat
+            :value="model"
+            :mask="showTime ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD'"
+            @input="$refs.date.hide() ; updateDate($event)"
+          >
             <!-- <div class="row items-center justify-end q-gutter-sm">
               <q-btn label="Cancel" color="primary" flat v-close-popup />
               <q-btn label="OK" color="primary" flat v-close-popup />
@@ -13,11 +28,25 @@
         </q-popup-proxy>
       </q-icon>
     </template>
-    <template v-slot:append v-if="showTime">
-      <q-icon name="access_time" class="cursor-pointer">
-        <q-popup-proxy ref="time" transition-show="scale" transition-hide="scale">
-          <q-time :value="model" mask="YYYY-MM-DD HH:mm:ss" format24h
-                  @input="$refs.time.hide() ; updateDate($event)">
+    <template
+      #append
+      v-if="showTime"
+    >
+      <q-icon
+        name="access_time"
+        class="cursor-pointer"
+      >
+        <q-popup-proxy
+          ref="time"
+          transition-show="scale"
+          transition-hide="scale"
+        >
+          <q-time
+            :value="model"
+            mask="YYYY-MM-DD HH:mm:ss"
+            format24h
+            @input="$refs.time.hide() ; updateDate($event)"
+          >
             <!-- <div class="row items-center justify-end q-gutter-sm">
               <q-btn label="Cancel" color="primary" flat v-close-popup />
               <q-btn label="OK" color="primary" flat v-close-popup />

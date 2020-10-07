@@ -1,6 +1,9 @@
 <template>
   <div>
-    <q-list bordered separator>
+    <q-list
+      bordered
+      separator
+    >
       <q-item>
         <q-item-section style="max-width: 120px">
           Tickets

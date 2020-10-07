@@ -1,12 +1,15 @@
 <template>
   <div>
-    <q-list bordered separator>
+    <q-list
+      bordered
+      separator
+    >
       <q-item>
         <q-item-section style="max-width: 120px">
           Number of logins:
         </q-item-section>
         <q-item-section>
-          {{count}}
+          {{ count }}
         </q-item-section>
       </q-item>
       <q-item>

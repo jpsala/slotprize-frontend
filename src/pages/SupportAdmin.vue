@@ -1,37 +1,78 @@
 <template>
   <div class="q-pa-md q-gutter-md justify-center">
-    <h3 class="q-ml-xl q-pl-xl">Support Admin</h3>
+    <h3 class="q-ml-xl q-pl-xl">
+      Support Admin
+    </h3>
     <q-form class="q-gutter-md">
       <div class="row">
-        <q-input autofocus v-model="email" label="Email for support *" type="email"  @input="requestChange()"/>
+        <q-input
+          autofocus
+          v-model="email"
+          label="Email for support *"
+          type="email"
+          @input="requestChange()"
+        />
       </div>
     </q-form>
     <q-markup-table class="q-mt-xl">
       <thead>
         <tr>
-          <th class="text-left">DeviceID</th>
-          <th class="text-left">Email</th>
-          <th class="text-left">Name</th>
-          <th class="text-left">Message</th>
-          <th class="text-right">Created At</th>
+          <th class="text-left">
+            DeviceID
+          </th>
+          <th class="text-left">
+            Email
+          </th>
+          <th class="text-left">
+            Name
+          </th>
+          <th class="text-left">
+            Message
+          </th>
+          <th class="text-right">
+            Created At
+          </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="request of requests" :key="request.id" :class="request.state"
-            @click="showPlayer(request.userId, $event)" class="cursor-pointer">
-          <td class="text-left">{{request.deviceId}}</td>
-          <td class="text-left">{{request.email}}</td>
-          <td class="text-left">{{request.name}}</td>
-          <td class="text-left">{{request.message}}</td>
-          <td class="text-right">{{request.createdAt}}</td>
+        <tr
+          v-for="request of requests"
+          :key="request.id"
+          :class="request.state"
+          @click="showPlayer(request.userId, $event)"
+          class="cursor-pointer"
+        >
+          <td class="text-left">
+            {{ request.deviceId }}
+          </td>
+          <td class="text-left">
+            {{ request.email }}
+          </td>
+          <td class="text-left">
+            {{ request.name }}
+          </td>
+          <td class="text-left">
+            {{ request.message }}
+          </td>
+          <td class="text-right">
+            {{ request.createdAt }}
+          </td>
           <td>
-            <q-select dense v-model="request.state" :options="['New', 'Open', 'Closed']"
-                      @input="requestChange(request)" />
+            <q-select
+              dense
+              v-model="request.state"
+              :options="['New', 'Open', 'Closed']"
+              @input="requestChange(request)"
+            />
           </td>
         </tr>
       </tbody>
     </q-markup-table>
-    <player-dialog persistent :player='playerForShowing' @close='playerForShowing = undefined'/>
+    <player-dialog
+      persistent
+      :player="playerForShowing"
+      @close="playerForShowing = undefined"
+    />
   </div>
 </template>
 

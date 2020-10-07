@@ -1,16 +1,34 @@
 <template>
-<Player @back="selected = undefined" v-if="selected" :player="selected" @change="playerChange"/>
-  <div v-else class="players q-pa-md">
-    <q-input style="width:400px" bottom-slots v-model="filter" label="Filter">
-      <template v-slot:prepend>
+  <Player
+    @back="selected = undefined"
+    v-if="selected"
+    :player="selected"
+    @change="playerChange"
+  />
+  <div
+    v-else
+    class="players q-pa-md"
+  >
+    <q-input
+      style="width:400px"
+      bottom-slots
+      v-model="filter"
+      label="Filter"
+    >
+      <template #prepend>
         <q-icon name="search" />
       </template>
-      <template v-slot:append>
-        <q-icon name="close" @click="filter = ''" class="cursor-pointer" />
+      <template #append>
+        <q-icon
+          name="close"
+          @click="filter = ''"
+          class="cursor-pointer"
+        />
       </template>
     </q-input>
-    <q-separator inset/>
-    <q-table @row-click="rowClick"
+    <q-separator inset />
+    <q-table
+      @row-click="rowClick"
       class="q-mt-lg"
       title="Players"
       :data="itemsForTable"

@@ -1,9 +1,17 @@
 <template>
   <div class="q-pa-md">
-    <div @click="goBack" style="font-size: 16px" class="q-mb-lg cursor-pointer">
+    <div
+      @click="goBack"
+      style="font-size: 16px"
+      class="q-mb-lg cursor-pointer"
+    >
       <q-icon name="keyboard_backspace" /> Back
     </div>
-    <div v-if="item != undefined" class="q-gutter-y-md" style="max-width: 950px">
+    <div
+      v-if="item != undefined"
+      class="q-gutter-y-md"
+      style="max-width: 950px"
+    >
       <q-card>
         <q-tabs
           v-model="tab"
@@ -14,19 +22,43 @@
           align="justify"
           narrow-indicator
         >
-          <q-tab name="profile" label="Profile" />
-          <q-tab name="raffleHistory" label="Raffle History" />
-          <q-tab name="SupportMessages" label="Support messages" />
-          <q-tab name="Wallet" label="Wallet" />
-          <q-tab name="LoginInfo" label="Login Info" />
-          <q-tab name="VideoAdsViewCount" label="Ads" />
+          <q-tab
+            name="profile"
+            label="Profile"
+          />
+          <q-tab
+            name="raffleHistory"
+            label="Raffle History"
+          />
+          <q-tab
+            name="SupportMessages"
+            label="Support messages"
+          />
+          <q-tab
+            name="Wallet"
+            label="Wallet"
+          />
+          <q-tab
+            name="LoginInfo"
+            label="Login Info"
+          />
+          <q-tab
+            name="VideoAdsViewCount"
+            label="Ads"
+          />
         </q-tabs>
 
         <q-separator />
 
-        <q-tab-panels v-model="tab" animated>
+        <q-tab-panels
+          v-model="tab"
+          animated
+        >
           <q-tab-panel name="profile">
-            <PlayerProfile v-if="item !== undefined" :player="item" />
+            <PlayerProfile
+              v-if="item !== undefined"
+              :player="item"
+            />
           </q-tab-panel>
 
           <q-tab-panel name="raffleHistory">

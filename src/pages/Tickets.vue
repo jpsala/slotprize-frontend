@@ -1,9 +1,21 @@
 <template>
   <div class="q-pa-md q-gutter-md justify-center">
-    <h3 class="q-ml-xl q-pl-xl">Tickets Settings</h3>
+    <h3 class="q-ml-xl q-pl-xl">
+      Tickets Settings
+    </h3>
     <div class="row">
-      <q-input class="q-mx-lg" autofocus v-model="ticketValue" label="Value in coins"/>
-      <q-btn color="primary" @click="submit">Submit</q-btn>
+      <q-input
+        class="q-mx-lg"
+        autofocus
+        v-model="ticketValue"
+        label="Value in coins"
+      />
+      <q-btn
+        color="primary"
+        @click="submit"
+      >
+        Submit
+      </q-btn>
     </div>
   </div>
 </template>

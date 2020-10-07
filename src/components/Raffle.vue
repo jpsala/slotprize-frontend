@@ -1,65 +1,139 @@
 <template>
-<q-dialog :value="raffleCopy && raffleCopy !== undefined" persistent transition-show="scale" transition-hide="scale">
-  <q-card class="raffle-card"  v-if="raffleCopy">
-          <q-tabs
-          v-model="tab"
-          dense
-          class="text-grey"
-          active-color="primary"
-          indicator-color="primary"
-          align="justify"
-          narrow-indicator
-        >
-          <q-tab name="info" label="Information" />
-          <q-tab name="raffleHistory" label="Raffle History" />
+  <q-dialog
+    :value="raffleCopy && raffleCopy !== undefined"
+    persistent
+    transition-show="scale"
+    transition-hide="scale"
+  >
+    <q-card
+      class="raffle-card"
+      v-if="raffleCopy"
+    >
+      <q-tabs
+        v-model="tab"
+        dense
+        class="text-grey"
+        active-color="primary"
+        indicator-color="primary"
+        align="justify"
+        narrow-indicator
+      >
+        <q-tab
+          name="info"
+          label="Information"
+        />
+        <q-tab
+          name="raffleHistory"
+          label="Raffle History"
+        />
+      </q-tabs>
+      <q-separator />
 
-        </q-tabs>
-        <q-separator />
-
-        <q-tab-panels v-model="tab" animated>
-          <q-tab-panel name="info">
-            <div class="row raffle-top">
-              <img ref="imgRef" class="cursor-pointer col raffle-img" @click="$refs.inputImgRef.click()"
-                   :src="raffleCopy.textureUrl ? raffleCopy.textureUrl : missingImage"/>
-              <input ref='inputImgRef' type="file" accept="image/*" @change="imgChange($event)" class="hidden">
+      <q-tab-panels
+        v-model="tab"
+        animated
+      >
+        <q-tab-panel name="info">
+          <div class="row raffle-top">
+            <img
+              ref="imgRef"
+              class="cursor-pointer col raffle-img"
+              @click="$refs.inputImgRef.click()"
+              :src="raffleCopy.textureUrl ? raffleCopy.textureUrl : missingImage"
+            >
+            <input
+              ref="inputImgRef"
+              type="file"
+              accept="image/*"
+              @change="imgChange($event)"
+              class="hidden"
+            >
             <div class="col col-right">
               <!-- <h4 class="raffle-title">Raffle</h4> -->
-                <div class="q-pa-md" style="max-width: 300px">
-                  <!-- {{raffleCopy.closingDate}} -->
-                  <date-picker v-model="raffleCopy.liveDate" label="Live Date" />
-                  <date-picker v-model="raffleCopy.closingDate" label="Closing Date"/>
-                  <q-input v-model="raffleCopy.price" label="Number Price" />
-                  <q-select class="col-6" label="Status"
-                            stack-label v-model="raffleCopy.state" :options="['won', 'delivered', 'closed']"
-                            option-value="id" option-label="name"
-                            :disable="!['won', 'delivered', 'closed', 'nopurchase'].includes(raffleCopy.state)"/>
+              <div
+                class="q-pa-md"
+                style="max-width: 300px"
+              >
+                <!-- {{raffleCopy.closingDate}} -->
+                <date-picker
+                  v-model="raffleCopy.liveDate"
+                  label="Live Date"
+                />
+                <date-picker
+                  v-model="raffleCopy.closingDate"
+                  label="Closing Date"
+                />
+                <q-input
+                  v-model="raffleCopy.price"
+                  label="Number Price"
+                />
+                <q-select
+                  class="col-6"
+                  label="Status"
+                  stack-label
+                  v-model="raffleCopy.state"
+                  :options="['won', 'delivered', 'closed']"
+                  option-value="id"
+                  option-label="name"
+                  :disable="!['won', 'delivered', 'closed', 'nopurchase'].includes(raffleCopy.state)"
+                />
+              </div>
+            </div>
+          </div>
+          <q-card-section
+            class="q-mb-lg"
+            style="text-align: center;"
+          >
+            <div
+              v-for="language in raffleCopy.localization"
+              :key="language.id"
+            >
+              <div class="row">
+                <div class="col lang-title">
+                  <span>{{ language.language_code }}</span>
                 </div>
-            </div>
-            </div>
-            <q-card-section class="q-mb-lg" style="text-align: center;">
-              <div v-for="language in raffleCopy.localization" :key="language.id">
-                <div class="row">
-                    <div class='col lang-title'>
-                      <span>{{language.language_code}}</span>
-                    </div>
-                  <div class="col lang-input">
-                    <q-input v-model="language.name" label="Title" />
-                  </div>
-                  <div class="col">
-                    <q-input v-model="language.description" label="description" />
-                  </div>
+                <div class="col lang-input">
+                  <q-input
+                    v-model="language.name"
+                    label="Title"
+                  />
+                </div>
+                <div class="col">
+                  <q-input
+                    v-model="language.description"
+                    label="description"
+                  />
                 </div>
               </div>
-            </q-card-section>
-            <q-card-actions class="q-mt-lg" align="right">
-              <q-btn flat @click="$refs.inputImgRef.click()" >Select Image</q-btn>
-              <q-btn flat @click="cancel">Cancel</q-btn>
-              <q-btn flat @click="submit">Submit</q-btn>
-            </q-card-actions>
-          </q-tab-panel>
-        </q-tab-panels>
-  </q-card>
-</q-dialog>
+            </div>
+          </q-card-section>
+          <q-card-actions
+            class="q-mt-lg"
+            align="right"
+          >
+            <q-btn
+              flat
+              @click="$refs.inputImgRef.click()"
+            >
+              Select Image
+            </q-btn>
+            <q-btn
+              flat
+              @click="cancel"
+            >
+              Cancel
+            </q-btn>
+            <q-btn
+              flat
+              @click="submit"
+            >
+              Submit
+            </q-btn>
+          </q-card-actions>
+        </q-tab-panel>
+      </q-tab-panels>
+    </q-card>
+  </q-dialog>
 </template>
 <script>
 import { reactive, toRefs, watch } from '@vue/composition-api'
