@@ -1,19 +1,31 @@
 <template>
   <div>
-    <q-select
-      :disable="!editing" v-if="activeRule" class="q-ml-md" style="width:150px"
-      v-model="activeRule.type" :options="types"
-    />
-    <div v-for="(rule, index) of clonedRules" :key="index" >
-      <Rule v-if="rule.type === activeRule.type" @change="(rule)=>$emit('change', rule)"
-            :rule="rule" :editing="editing"
+
+    <!-- <q-toggle v-show="!editing" :value="editing" @input="$emit('edit', value)" label="Expanded" class="q-mb-md" /> -->
+    <q-list class="rounded-borders">
+      <q-expansion-item
+        icon="schedule"
+        v-model="expanded"
+        label="Rules"
+      >
+      <q-select
+        :disable="!editing" v-if="activeRule" class="q-ml-md" style="width:150px"
+        :value="activeType" @input="ruleTypeChange" :options="types"
       />
-    </div>
+      <Rule ref="ruleRef" v-show="expanded" @change="ruleChanged"
+            :rule="activeRule" :editing="editing" :viewalt="expanded"
+      />
+      </q-expansion-item>
+    </q-list>
+    <!-- <Rule v-show="!expanded" @change="ruleChanged"
+          :rule="activeRule" :editing="editing" :viewalt="expanded"
+    /> -->
+      <!-- <pre>{{clonedRules}}</pre> -->
   </div>
 </template>
 
 <script>
-import { reactive, toRefs } from '@vue/composition-api'
+import { reactive, toRefs, watch } from '@vue/composition-api'
 import clone from 'rfdc'
 import Rule from '../components/Rule'
 // import useSession from 'src/services/useSession'
@@ -29,18 +41,39 @@ export default {
       default: false
     }
   },
-  setup (props) {
+  setup (props, { emit }) {
     const state = reactive({
       types: ['cron', 'unique', 'daily', 'weekly'],
       activeRule: clone()(props.rule),
-      clonedRules: clone()(props.rules)
+      clonedRules: clone()(props.rules),
+      activeType: undefined,
+      expanded: false,
+      ruleRef: undefined,
+      ruleTypeChange (value) {
+        emit('rule-type-change', props.rule)
+        state.activeType = value
+      },
+      cancelEdition (oldRule) {
+        console.log('cancel', oldRule)
+        state.activeType = oldRule.type
+        state.activeRule = clone()(oldRule)
+      },
+      ruleChanged (rule) {
+        emit('change', rule)
+        const idxAnt = state.clonedRules.findIndex(_rule => _rule.type === state.activeRule.type)
+        state.clonedRules[idxAnt] = rule
+      }
     })
-    let idx = 0
-    console.log('state.activeRule', state.activeRule)
-    for (const rule of state.clonedRules) {
-      if (rule.type === state.activeRule.type) { state.clonedRules[idx] = state.activeRule }
-      idx++
-    }
+    state.activeType = state.activeRule.type
+    watch(() => state.activeType, (type) => {
+      console.log('changed', type)
+      const rule = state.clonedRules.find(_rule => _rule.type === type)
+      state.activeRule = rule
+      // for (const rule of state.clonedRules) {
+      //   if (rule.type === type) {
+      //   }
+      // }
+    }, { immediate: false })
     return { ...toRefs(state) }
   }
 }
