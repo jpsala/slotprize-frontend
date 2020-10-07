@@ -36,29 +36,57 @@
 
             <q-separator v-if="!editMode" />
             <div style="font-size: small; color: gray;">Popup</div>
-            <q-input :borderless="!editMode" :disable="!editMode" class="q-pl-md" label="Message" v-model.number="eventClone.popupMessage" />
-            <q-file :borderless="!editMode" :disable="!editMode" class="q-pl-md" label="Texture URL" v-model="eventClone.popupFile">
+            <q-input :borderless="!editMode" :disable="!editMode" class="q-pl-md"
+                     label="Message" v-model.number="eventClone.popupMessage" />
+            <div class="row">
+              <q-file :borderless="!editMode" :disable="!editMode" class="q-pl-md col-10"
+                      label="Texture URL" v-model="eventClone.popupFile">
               <template #before>
                 <q-avatar>
                   <img v-if="eventClone.popupTextureUrl" :src="eventClone.popupTextureUrl" />
                   <q-icon v-else name="attach_file" />
                 </q-avatar>
               </template>
-            </q-file>
+              </q-file>
+              <q-btn rounded color="red-5" style="width: 30px; height: 30px" @click="removeImage('popup')"
+                     size="sm" icon="remove" class="q-mt-md col-2" :disable="!editMode"
+              />
+            </div>
             <q-separator v-if="!editMode" />
             <div style="font-size: small; color: gray;">Notification</div>
-            <q-input :borderless="!editMode" :disable="!editMode" class="q-pl-md" label="Message" v-model.number="eventClone.notificationMessage" />
-            <q-file :borderless="!editMode" :disable="!editMode" class="col q-pl-md" label="Texture URL" v-model="eventClone.notificationFile">
-              <template #before>
-                <q-avatar>
-                  <img :key="key" v-if="eventClone.notificationTextureUrl" :src="eventClone.notificationTextureUrl" />
-                  <q-icon v-else name="attach_file" />
-                </q-avatar>
-              </template>
-            </q-file>
-            <!-- <q-input :borderless="!editMode" :disable='!editMode' label='Rule' v-model='eventClone.rule' /> -->
+            <q-input :borderless="!editMode" :disable="!editMode" class="q-pl-md" label="Message"
+                     v-model.number="eventClone.notificationMessage" />
+            <div class="row">
+              <q-file :borderless="!editMode" :disable="!editMode" class="col q-pl-md col-10"
+                      label="Texture URL" v-model="eventClone.notificationFile">
+                <template #before>
+                  <q-avatar>
+                    <img :key="key" v-if="eventClone.notificationTextureUrl" :src="eventClone.notificationTextureUrl" />
+                    <q-icon v-else name="attach_file" />
+                  </q-avatar>
+                </template>
+              </q-file>
+              <q-btn
+                rounded color="red-5" style="width: 30px; height: 30px" @click="removeImage('notification')"
+                size="sm" icon="remove" class="q-mt-md col-2" :disable="!editMode"
+              />
+            </div>
+            <div class="row">
+              <q-file :borderless="!editMode" :disable="!editMode" class="col q-pl-md col-10"
+                      label="Particles Texture URL" v-model="eventClone.particlesFile">
+                <template #before>
+                  <q-avatar>
+                    <img :key="key" v-if="eventClone.particlesTextureUrl" :src="eventClone.particlesTextureUrl" />
+                    <q-icon v-else name="attach_file" />
+                  </q-avatar>
+                </template>
+              </q-file>
+              <q-btn
+                rounded color="red-5" style="width: 30px; height: 30px" @click="removeImage('particles')"
+                size="sm" icon="remove" class="q-mt-md col-2" :disable="!editMode"
+              />
+            </div>
           </div>
-          <!-- <div class="text-subtitle2 q-pt-sm"><q-chip icon="event">{{eventClone.type}}</q-chip></div> -->
         </q-form>
       </div>
     </q-card-section>
@@ -153,8 +181,8 @@ export default {
     }
     const edit = (event) => {
       state.eventBackup = clone()(event)
-      state.eventBackup = clone()(event)
       state.eventClone = clone()(event)
+      state.eventClone.particlesFile = null
       state.eventClone.popupFile = null
       state.eventClone.notificationFile = null
       state.editMode = true
@@ -170,6 +198,7 @@ export default {
         state.eventClone = clone()(state.eventBackup)
         state.eventClone.popupFile = null
         state.eventClone.notificationFile = null
+        state.eventClone.particlesFile = null
         state.editMode = false
       }
       emit('cancel', { rule: props.rule })
@@ -184,9 +213,30 @@ export default {
         state.key += 1
         state.eventClone.popupTextureUrl = `${data.popupFile}?key=${state.key}`
       }
+      if (data.particlesFile) {
+        state.key += 1
+        state.eventClone.particlesTextureUrl = `${data.particlesFile}?key=${state.key}`
+      }
     }
     const ruleChanged = (value) => {
       state.eventClone.rule = value
+    }
+    const removeImage = (value) => {
+      console.log('value', value)
+      if (value === 'notification') {
+        state.eventClone.notificationFile = undefined
+        state.eventClone.notificationMessage = undefined
+        state.eventClone.notificationTextureUrl = undefined
+      }
+      if (value === 'popup') {
+        state.eventClone.popupFile = undefined
+        state.eventClone.popupMessage = undefined
+        state.eventClone.popupTextureUrl = undefined
+      }
+      if (value === 'particles') {
+        state.eventClone.particlesFile = undefined
+        state.eventClone.particlesTextureUrl = undefined
+      }
     }
     const selectChange = (value) => {
       state.eventClone.skin = value
@@ -201,7 +251,7 @@ export default {
         state.eventClone.skin = props.skins.find(
           (skin) => skin.id === state.eventClone.skinId
         )
-        state.eventClone.popupFile = undefined
+        state.eventClone.particlesFile = undefined
         state.eventClone.popupFile = undefined
         state.eventClone.notificationFile = undefined
         console.log('rule', typeof state.eventClone.rule)
@@ -235,7 +285,8 @@ export default {
       setDataAfterSave,
       selectChange,
       close,
-      ruleChanged
+      ruleChanged,
+      removeImage
     }
   }
 }

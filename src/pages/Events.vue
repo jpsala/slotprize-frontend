@@ -30,16 +30,9 @@
         :new="true"
       />
     </div>
-    <q-page-sticky
-      position="top-left"
-      :offset="[18, 18]"
-    >
-      <q-btn
-        :disable="editingEvent !== undefined"
-        @click="addEvent"
-        fab
-        icon="add"
-        :color="editingEvent ? 'red-3':'red-6'"
+    <q-page-sticky position="top-left" :offset="[18, 18]" >
+      <q-btn :disable="editingEvent !== undefined" @click="addEvent"  fab  icon="add"
+             :color="editingEvent ? 'red-3':'red-6'"
       />
     </q-page-sticky>
   </div>
@@ -88,6 +81,7 @@ export default {
         _eventRef.setDataAfterSave(response.data)
         if (response.popupFile) event.popupTextureUrl = response.popupFile
         if (response.notificationFile) event.notificationUrl = response.notificationFile
+        if (response.particlesFile) event.particlesUrl = response.particlesFile
         if (response.data.isNew) {
           _eventRef.close()
           state.newEvent = undefined

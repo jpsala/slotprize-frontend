@@ -3,24 +3,13 @@
 
     <!-- <q-toggle v-show="!editing" :value="editing" @input="$emit('edit', value)" label="Expanded" class="q-mb-md" /> -->
     <q-list class="rounded-borders">
-      <q-expansion-item
-        icon="schedule"
-        v-model="expanded"
-        label="Rules"
-      >
-      <q-select
-        :disable="!editing" v-if="activeRule" class="q-ml-md" style="width:150px"
-        :value="activeType" @input="ruleTypeChange" :options="types"
-      />
-      <Rule ref="ruleRef" v-show="expanded" @change="ruleChanged"
-            :rule="activeRule" :editing="editing" :viewalt="expanded"
-      />
+      <q-expansion-item icon="schedule" v-model="expanded" label="Rules">
+        <q-select :disable="!editing" v-if="activeRule" class="q-ml-md" style="width:150px"
+                  :value="activeType" @input="ruleTypeChange" :options="types" />
+        <Rule ref="ruleRef" v-show="expanded" @change="ruleChanged" :rule="activeRule"
+              :editing="editing" :viewalt="expanded" />
       </q-expansion-item>
     </q-list>
-    <!-- <Rule v-show="!expanded" @change="ruleChanged"
-          :rule="activeRule" :editing="editing" :viewalt="expanded"
-    /> -->
-      <!-- <pre>{{clonedRules}}</pre> -->
   </div>
 </template>
 
@@ -69,10 +58,6 @@ export default {
       console.log('changed', type)
       const rule = state.clonedRules.find(_rule => _rule.type === type)
       state.activeRule = rule
-      // for (const rule of state.clonedRules) {
-      //   if (rule.type === type) {
-      //   }
-      // }
     }, { immediate: false })
     return { ...toRefs(state) }
   }
