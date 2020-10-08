@@ -420,8 +420,15 @@ export default {
             paymentType: pt.symbol.paymentType
           }
         }).sort((a, b) => {
-          if (Number(a.probability) < Number(b.probability)) { return -1 }
-          if (Number(a.probability) > Number(b.probability)) { return 1 }
+          let aSortValue = a.probability
+          if (a.jackpot) aSortValue = -10
+          else if (a.paymentType.toUpperCase() === 'TICKET') aSortValue = -10
+          let bSortValue = b.probability
+          if (b.jackpot) bSortValue = -10
+          else if (b.paymentType.toUpperCase() === 'TICKET') bSortValue = -10
+
+          if (Number(aSortValue) < Number(bSortValue)) { return -1 }
+          if (Number(aSortValue) > Number(bSortValue)) { return 1 }
           return 0
         })
     }, { deep: true, inmediate: true })

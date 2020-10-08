@@ -9,6 +9,18 @@
     v-else
     class="players q-pa-md"
   >
+    <div class="row q-mb-xl">
+      <q-input
+        class="q-mx-lg col-4"
+        autofocus
+        v-model="maxAllowedBirthYear"
+        label="Max Allowed Birth Year"
+        :hint="hintForMaxAllowedBirthYear"
+      />
+      <q-btn dense color="primary" @click="submitMaxAllowedBirthYear" >
+        Submit
+      </q-btn>
+    </div>
     <q-input
       style="width:400px"
       bottom-slots
@@ -66,10 +78,19 @@ export default {
         rowsPerPage: 10
         // rowsNumber: xx if getting data from a server
       },
-      selected: undefined
+      selected: undefined,
+      maxAllowedBirthYear: 2002,
+      hintForMaxAllowedBirthYear: computed(() => {
+        return `Minimun Age ${diffYears(state.maxAllowedBirthYear)}`
+      })
     })
     const rowClick = (_, row) => {
       state.selected = state.items.find(item => item.device_id === row['device Id'])
+    }
+    function diffYears (year) {
+      const now = new Date()
+      const yearNow = now.getFullYear()
+      return yearNow - Number(year)
     }
     const getItemsFromDB = async () => {
       showSpinner()
@@ -81,7 +102,8 @@ export default {
           filter: state.filter
         }
       })
-      state.items = resp.data
+      state.items = resp.data.players
+      state.maxAllowedBirthYear = resp.data.maxAllowedBirthYear
       hideSpinner()
     }
     const itemsForTable = computed(() => {
@@ -99,9 +121,15 @@ export default {
     const playerChange = () => {
       state.selected = undefined
     }
+    const submitMaxAllowedBirthYear = async () => {
+      await axios.post(
+        '/slot/max_allowed_birth_year',
+        { maxAllowedBirthYear: state.maxAllowedBirthYear }
+      )
+    }
     watch(() => loggedIn, getItemsFromDB, { immediate: true })
     watch(() => state.filter, debounce(async () => await getItemsFromDB(), 500))
-    return { ...toRefs(state), loggedIn, rowClick, playerChange, itemsForTable }
+    return { ...toRefs(state), loggedIn, rowClick, playerChange, itemsForTable, submitMaxAllowedBirthYear }
   }
 }
 </script>

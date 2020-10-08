@@ -29,7 +29,7 @@
             </div>
 
             <div class="row justify-between">
-              <q-select class="col-6" @input="selectChange" :borderless="!editMode" :disable="!editMode" label="Skin" stack-label :value="eventClone.skin" :options="skins" option-value="id" option-label="name" :key="key" />
+              <q-select class="col-5" @input="selectChange" :borderless="!editMode" :disable="!editMode" label="Skin" stack-label :value="eventClone.skin" :options="skinsPlusEmpty" option-value="id" option-label="name" :key="key" />
               <q-checkbox class="col-2 q-ml-sm justify-end" size="sm" color="" :disable="!editMode" v-model="eventClone.devOnly" :true-value="1" :false-value="0" label="DevOnly" />
               <q-checkbox class="col-2 q-ml-sm justify-end" size="sm" color="" :disable="!editMode" v-model="eventClone.active" :true-value="1" :false-value="0" label="Active" />
             </div>
@@ -71,6 +71,8 @@
                 size="sm" icon="remove" class="q-mt-md col-2" :disable="!editMode"
               />
             </div>
+            <q-separator v-if="!editMode" class="q-mt-md"/>
+            <div style="font-size: small; color: gray;">Particles</div>
             <div class="row">
               <q-file :borderless="!editMode" :disable="!editMode" class="col q-pl-md col-10"
                       label="Particles Texture URL" v-model="eventClone.particlesFile">
@@ -111,8 +113,9 @@
 <script>
 /* eslint-disable vue/no-unused-components */
 import Rules from './Rules'
-import { reactive, toRefs, watch, onMounted, ref } from '@vue/composition-api'
+import { reactive, toRefs, watch, onMounted, ref, computed } from '@vue/composition-api'
 import clone from 'rfdc'
+import { alerta } from 'src/helpers'
 
 export default {
   components: { Rules },
@@ -173,8 +176,14 @@ export default {
         emit('rule-type-change', v)
       }
     })
-    const save = (event) => {
+    const save = async (event) => {
       // state.editMode = false
+      if (Number(state.eventClone.duration) === 0) {
+        if (state.eventClone.rule && state.eventClone.rule.type !== 'unique') {
+          await alerta('Duration can not be 0 if the rule is not unique')
+          return
+        }
+      }
       state.eventClone.skinId = state.eventClone?.skin?.id
       console.log('type', event.rule.type)
       emit('change', state.eventClone)
@@ -242,6 +251,9 @@ export default {
       state.eventClone.skin = value
       state.key += 1
     }
+    const skinsPlusEmpty = computed(() => {
+      return [{ id: undefined, name: 'No Skin' }, ...props.skins]
+    })
     onMounted(() => {})
     watch(
       () => props.event,
@@ -286,7 +298,8 @@ export default {
       selectChange,
       close,
       ruleChanged,
-      removeImage
+      removeImage,
+      skinsPlusEmpty
     }
   }
 }

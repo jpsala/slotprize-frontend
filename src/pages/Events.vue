@@ -65,7 +65,7 @@ export default {
       const formData = new FormData()
       for (var key in event) {
         const value = key === 'duration' ? event[key] * 60 : event[key]
-        formData.append(key, key === 'rule' ? JSON.stringify(value) : value)
+        if (value && value !== 'undefined') formData.append(key, key === 'rule' ? JSON.stringify(value) : value)
       }
 
       const axiosAnt = axios.defaults.headers.post['Content-Type']

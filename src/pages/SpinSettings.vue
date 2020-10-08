@@ -5,12 +5,21 @@
     </h3>
     <div class="row">
       <q-input
-        class="q-mx-lg"
+        class="q-mx-lg col-4"
         autofocus
-        v-model="spinRegTime"
-        hint="spin regeneration time ratio"
-        label="Regeneration Time"
+        v-model="lapseForSpinRegeneration"
+        label="Regeneration Time in Minutes"
       />
+    </div>
+    <div class="row">
+      <q-input
+        class="q-mx-lg col-4 q-mt-lg"
+        autofocus
+        v-model="maxSpinsForSpinRegeneration"
+        label="Threshold for spin regeneration"
+      />
+    </div>
+    <div class="row">
       <q-btn
         color="primary"
         @click="submit"
@@ -29,12 +38,16 @@ export default {
   setup () {
     const { loggedIn } = useSession()
     const state = reactive({
-      spinRegTime: undefined
+      lapseForSpinRegeneration: undefined,
+      maxSpinsForSpinRegeneration: undefined
     })
     const submit = async () => {
       await axios.post(
         '/slot/spin_settings_for_crud',
-        { spinRegTime: state.spinRegTime }
+        {
+          lapseForSpinRegeneration: state.lapseForSpinRegeneration * 60,
+          maxSpinsForSpinRegeneration: state.maxSpinsForSpinRegeneration
+        }
       )
     }
     watch(() => loggedIn, async () => {
@@ -42,7 +55,8 @@ export default {
         url: '/slot/spin_settings_for_crud',
         method: 'get'
       })
-      state.spinRegTime = response.data
+      state.lapseForSpinRegeneration = response.data.lapseForSpinRegeneration
+      state.maxSpinsForSpinRegeneration = response.data.maxSpinsForSpinRegeneration
       console.log('response', response)
     }, { immediate: true })
     return { ...toRefs(state), submit }

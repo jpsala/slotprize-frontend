@@ -1,91 +1,34 @@
 <template>
   <div class="q-pa-md q-gutter-md justify-center">
-    <q-page-sticky
-      position="top-left"
-      :offset="[18, 18]"
-    >
-      <q-btn
-        :disable="thereIsNewItem"
-        fab
-        icon="add"
-        color="red"
-        @click="addRaffle"
-      />
+    <q-page-sticky position="top-left" :offset="[18, 18]">
+      <q-btn :disable="thereIsNewItem" fab icon="add" color="red" @click="addRaffle" />
     </q-page-sticky>
     <h3 class="q-ml-xl q-pl-xl">
       Raffles
     </h3>
-    <q-tabs
-      v-model="tab"
-      class="text-grey"
-      active-color="primary"
-      align="justify"
-      indicator-color="primary"
-    >
-      <q-tab
-        name="news"
-        label="New"
-      />
-      <q-tab
-        name="live"
-        label="Live"
-      />
-      <q-tab
-        name="won"
-        label="Won"
-      />
-      <q-tab
-        name="history"
-        label="History"
-      />
+    <q-tabs v-model="tab" class="text-grey" active-color="primary" align="justify" indicator-color="primary">
+      <q-tab name="news" label="New" />
+      <q-tab name="live" label="Live" />
+      <q-tab name="won" label="Won" />
+      <q-tab name="history" label="History" />
     </q-tabs>
     <q-separator />
-    <q-tab-panels
-      v-model="tab"
-      animated
-    >
+    <q-tab-panels v-model="tab" animated>
       <q-tab-panel name="news">
-        <raffles-table
-          :raffles="newRaffles"
-          @select-raffle="selectRaffle"
-          @removeRaffle="removeRaffle"
-          type="new"
-        />
+        <raffles-table :raffles="newRaffles" @select-raffle="selectRaffle" @removeRaffle="removeRaffle" type="new" />
       </q-tab-panel>
       <q-tab-panel name="live">
-        <raffles-table
-          :raffles="liveRaffles"
-          @select-raffle="selectRaffle"
-          type="live"
-        />
+        <raffles-table :raffles="liveRaffles" @select-raffle="selectRaffle" type="live" />
       </q-tab-panel>
       <q-tab-panel name="won">
-        <raffles-table
-          @show-player="showPlayer"
-          :raffles="wonRaffles"
-          @select-raffle="selectRaffle"
-          type="won"
-        />
+        <raffles-table @show-player="showPlayer" :raffles="wonRaffles" @select-raffle="selectRaffle" type="won" />
       </q-tab-panel>
       <q-tab-panel name="history">
-        <raffles-table
-          @show-player="showPlayer"
-          :raffles="pastRaffles"
-          @select-raffle="selectRaffle"
-          @remove-raffle="removeRaffle"
-          type="history"
-        />
+        <raffles-table @show-player="showPlayer" :raffles="pastRaffles" @select-raffle="selectRaffle" @remove-raffle="removeRaffle" type="history" />
       </q-tab-panel>
     </q-tab-panels>
-    <raffle
-      :raffle="selected"
-      @close="closeRaffleDlg"
-    />
-    <player-dialog
-      persistent
-      :player="playerForShowing"
-      @close="playerForShowing = undefined"
-    />
+    <raffle :raffle="selected" @close="closeRaffleDlg" />
+    <player-dialog persistent :player="playerForShowing" @close="playerForShowing = undefined" />
   </div>
 </template>
 
@@ -108,7 +51,7 @@ export default {
       raffles: [],
       selected: undefined,
       languages: [],
-      tab: 'new',
+      tab: 'live',
       playerForShowing: undefined
     })
     const closeRaffleDlg = async (data) => {
