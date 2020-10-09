@@ -422,10 +422,13 @@ export default {
         }).sort((a, b) => {
           let aSortValue = a.probability
           if (a.jackpot) aSortValue = -10
-          else if (a.paymentType.toUpperCase() === 'TICKET') aSortValue = -10
+          else if (a.paymentType.toUpperCase() === 'SPIN') aSortValue = -5
+          else if (a.paymentType.toUpperCase() === 'TICKET') aSortValue = -2
+
           let bSortValue = b.probability
           if (b.jackpot) bSortValue = -10
-          else if (b.paymentType.toUpperCase() === 'TICKET') bSortValue = -10
+          else if (b.paymentType.toUpperCase() === 'SPIN') bSortValue = -5
+          else if (b.paymentType.toUpperCase() === 'TICKET') bSortValue = -1
 
           if (Number(aSortValue) < Number(bSortValue)) { return -1 }
           if (Number(aSortValue) > Number(bSortValue)) { return 1 }
