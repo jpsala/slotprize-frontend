@@ -55,7 +55,7 @@ export default {
         url: '/slot/spin_settings_for_crud',
         method: 'get'
       })
-      state.lapseForSpinRegeneration = response.data.lapseForSpinRegeneration
+      state.lapseForSpinRegeneration = response.data.lapseForSpinRegeneration / 60
       state.maxSpinsForSpinRegeneration = response.data.maxSpinsForSpinRegeneration
       console.log('response', response)
     }, { immediate: true })
