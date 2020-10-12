@@ -27,7 +27,7 @@
           Distance
         </th>
         <th
-          v-if="type==='waiting' || type==='history'"
+          v-if="type==='waiting' || type==='history' || type==='won'"
           class="text-left"
         >
           Winner
@@ -84,7 +84,7 @@
           {{ raffle.distance }}
         </td>
         <td
-          v-if="(type==='waiting' || type==='history')"
+          v-if="(type==='waiting' || type==='history'  || type==='won')"
           class="text-left"
         >
           <q-btn
