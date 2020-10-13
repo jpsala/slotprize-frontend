@@ -1,6 +1,5 @@
 <template>
   <div class="q-mt-md">
-    {{debug}}
     <div v-if="model.type === 'cron' && isDev" class="row">
       <div class="col">
         <q-input :disable="!editing" v-model="model.rule" />
