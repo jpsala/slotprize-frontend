@@ -19,6 +19,7 @@ import TestRules from 'src/pages/TestRules'
 import AdsSettings from 'src/pages/AdsSettings'
 import Error404 from 'src/pages/Error404'
 import MainLayout from 'src/layouts/MainLayout'
+import MiscSettings from 'src/pages/MiscSettings'
 const routes = [
   {
     path: '/',
@@ -41,6 +42,7 @@ const routes = [
       { path: 'adsSettings', component: AdsSettings },
       { path: 'supportAdmin', component: SupportAdmin },
       { path: 'players', component: Players },
+      { path: 'miscSettings', component: MiscSettings },
       { path: 'player', component: Player }
     ]
   },

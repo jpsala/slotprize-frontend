@@ -17,6 +17,8 @@
 import { reactive, toRefs, watch } from '@vue/composition-api'
 import clone from 'rfdc'
 import Rule from '../components/Rule'
+import useSession from '../services/useSession'
+
 // import useSession from 'src/services/useSession'
 export default {
   components: { Rule },
@@ -31,8 +33,9 @@ export default {
     }
   },
   setup (props, { emit }) {
+    const { isDev } = useSession()
     const state = reactive({
-      types: ['cron', 'unique', 'daily', 'weekly'],
+      types: ['unique', 'daily', 'weekly'],
       activeRule: clone()(props.rule),
       clonedRules: clone()(props.rules),
       activeType: undefined,
@@ -53,13 +56,14 @@ export default {
         state.clonedRules[idxAnt] = rule
       }
     })
+    if (isDev) state.types.add('cron')
     state.activeType = state.activeRule.type
     watch(() => state.activeType, (type) => {
       console.log('changed', type)
       const rule = state.clonedRules.find(_rule => _rule.type === type)
       state.activeRule = rule
     }, { immediate: false })
-    return { ...toRefs(state) }
+    return { ...toRefs(state), isDev }
   }
 }
 </script>

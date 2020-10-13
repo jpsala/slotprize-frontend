@@ -116,6 +116,7 @@ import Rules from './Rules'
 import { reactive, toRefs, watch, onMounted, ref, computed } from '@vue/composition-api'
 import clone from 'rfdc'
 import { alerta } from 'src/helpers'
+import { format } from 'date-fns/fp'
 
 export default {
   components: { Rules },
@@ -272,8 +273,8 @@ export default {
         } catch (error) {
           state.eventClone.rule = {
             type: 'unique',
-            start: '2020-01-02',
-            end: '2020-02-02'
+            start: format(new Date(), 'yyyy/dd/MM HH:mm:ss'),
+            end: format(new Date(), 'yyyy/dd/MM HH:mm:ss')
           }
         }
         // if (state.eventClone.popupTextureUrl) state.eventClone.popupTextureUrl += '?version=' + rand(1, 1000)

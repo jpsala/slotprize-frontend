@@ -1,16 +1,16 @@
 <template>
   <div class="q-mt-md">
-    <div v-if="model.type === 'cron'" class="row">
+    <div v-if="model.type === 'cron' && isDev" class="row">
       <div class="col">
         <q-input :disable="!editing" v-model="model.rule" />
       </div>
     </div>
     <div v-if="model.type === 'unique'" class="row">
       <div class="col">
-         <date-picker v-model="model.start" label="Start" />
+         <date-picker :disable="!editing" v-model="model.start" label="Start" />
       </div>
       <div class="col">
-         <date-picker v-model="model.end" label="End" />
+         <date-picker :disable="!editing" v-model="model.end" label="End" />
       </div>
     </div>
     <div v-if="model.type === 'daily'">
@@ -76,6 +76,7 @@
 <script>
 import clone from 'rfdc'
 import DatePicker from '../components/DatePicker.vue'
+import useSession from '../services/useSession'
 import { reactive, toRefs, watch } from '@vue/composition-api'
 export default {
   components: { DatePicker },
@@ -85,6 +86,7 @@ export default {
     viewalt: { type: Boolean, default: false }
   },
   setup (props, { emit }) {
+    const { isDev } = useSession()
     const state = reactive({
       model: clone()(props.rule),
       days: [
@@ -138,7 +140,7 @@ export default {
       emit('change', state.model)
     }, { deep: true })
     return {
-      ...toRefs(state)
+      ...toRefs(state), isDev
     }
   }
 }

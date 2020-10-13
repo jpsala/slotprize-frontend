@@ -157,7 +157,8 @@ export default {
             { label: 'Spins', to: '/spins' },
             { label: 'Ads Settings', to: '/adsSettings' },
             { label: 'Support Admin', to: '/supportAdmin' },
-            { label: 'Slot Machine', to: '/slotMachine' }
+            { label: 'Slot Machine', to: '/slotMachine' },
+            { label: 'Misc. Settings', to: '/miscSettings' }
           ]
         }
       ])

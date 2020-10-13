@@ -89,7 +89,7 @@ export default {
         } else _eventRef.close()
         state.editingEvent = undefined
       } catch (err) {
-        await alerta(err ?? 'no message', 'ehhhhh')
+        await alerta('error', err ?? 'no message')
       } finally {
         axios.defaults.headers.post['Content-Type'] = axiosAnt
       }
