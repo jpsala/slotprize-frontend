@@ -116,7 +116,7 @@ import Rules from './Rules'
 import { reactive, toRefs, watch, onMounted, ref, computed } from '@vue/composition-api'
 import clone from 'rfdc'
 import { alerta } from 'src/helpers'
-import { format } from 'date-fns/fp'
+import { format } from 'date-fns'
 
 export default {
   components: { Rules },
@@ -173,7 +173,6 @@ export default {
         state.editMode = true
       },
       ruleTypeChanged (v) {
-        console.log('ruleTypeChanged', v)
         emit('rule-type-change', v)
       }
     })
@@ -256,6 +255,19 @@ export default {
       return [{ id: undefined, name: 'No Skin' }, ...props.skins]
     })
     onMounted(() => {})
+    watch(() => props.event.rule, (v) => {
+      console.log('rule changed', v)
+      try {
+        if (typeof state.eventClone.rule === 'string') state.eventClone.rule = JSON.parse(state.eventClone.rule)
+      } catch (error) {
+        console.error(error)
+        state.eventClone.rule = {
+          type: 'unique',
+          start: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+          end: format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+        }
+      }
+    })
     watch(
       () => props.event,
       (event) => {
@@ -273,8 +285,8 @@ export default {
         } catch (error) {
           state.eventClone.rule = {
             type: 'unique',
-            start: format(new Date(), 'yyyy/dd/MM HH:mm:ss'),
-            end: format(new Date(), 'yyyy/dd/MM HH:mm:ss')
+            start: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+            end: format(new Date(), 'yyyy-MM-dd HH:mm:ss')
           }
         }
         // if (state.eventClone.popupTextureUrl) state.eventClone.popupTextureUrl += '?version=' + rand(1, 1000)
@@ -286,8 +298,7 @@ export default {
         }
       },
       {
-        immediate: true,
-        deep: true
+        immediate: true
       }
     )
     return {

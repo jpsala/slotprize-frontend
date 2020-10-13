@@ -88,6 +88,7 @@ export default {
           state.events.push(event)
         } else _eventRef.close()
         state.editingEvent = undefined
+        window.location.reload()
       } catch (err) {
         await alerta('error', err ?? 'no message')
       } finally {

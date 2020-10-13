@@ -1,5 +1,6 @@
 <template>
   <div class="q-mt-md">
+    {{debug}}
     <div v-if="model.type === 'cron' && isDev" class="row">
       <div class="col">
         <q-input :disable="!editing" v-model="model.rule" />
@@ -88,6 +89,7 @@ export default {
   setup (props, { emit }) {
     const { isDev } = useSession()
     const state = reactive({
+      debug: {},
       model: clone()(props.rule),
       days: [
         { value: 0, label: 'Saturday' },
@@ -135,9 +137,13 @@ export default {
     })
     watch(() => props.rule, () => {
       state.model = clone()(props.rule)
+      console.log('rule watch', props.rule)
+      state.debug.rule = props.rule
     }, { deep: true })
     watch(() => state.model, () => {
+      console.log('rule watch state.model', state.model)
       emit('change', state.model)
+      state.debug.model = state.model
     }, { deep: true })
     return {
       ...toRefs(state), isDev
