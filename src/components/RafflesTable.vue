@@ -59,6 +59,7 @@
         @click="$emit('select-raffle',{raffle, event:$event})"
         class="cursor-pointer"
       >
+      <!-- <td><q-btn dense color="primary" @click="()=>{$emit('ban',">BAN</q-btn></td> -->
         <td
           v-if="type==='history' || type==='live' || type==='waiting'"
           class="text-left"

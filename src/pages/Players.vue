@@ -46,7 +46,35 @@
       :data="itemsForTable"
       row-key="first_name"
       :pagination="initialPagination"
-    />
+    >
+     <template v-slot:body="props">
+        <q-tr :props="props">
+           <q-td key="Banned" :props="props">
+            <q-btn @click ="banUser(props.row.ID)" outline :color="props.row.Banned ? 'red-8' : 'primary'">{{props.row.Banned ? 'UnBan' : 'Ban'}}</q-btn>
+           </q-td>
+           <q-td key="ID" :props="props">
+            {{props.row.ID}}
+          </q-td>
+           <q-td key="First Name" :props="props">
+            {{props.row['First Name']}}
+          </q-td>
+           <q-td key="Last Name" :props="props">
+            {{props.row['Last Name']}}
+          </q-td>
+           <q-td key="email" :props="props">
+            {{props.row.email}}
+          </q-td>
+           <q-td key="Device Id" :props="props">
+            <q-btn outline @click="rowClick(props.row['Device Id'])">
+              {{props.row['Device Id']}}
+              </q-btn>
+          </q-td>
+           <q-td key="Created At" :props="props">
+            {{props.row['Created At']}}
+          </q-td>
+        </q-tr>
+      </template>
+    </q-table>
   </div>
 </template>
 
@@ -84,8 +112,15 @@ export default {
         return `Minimun Age ${diffYears(state.maxAllowedBirthYear)}`
       })
     })
-    const rowClick = (_, row) => {
-      state.selected = state.items.find(item => item.device_id === row['device Id'])
+    const rowClick = (id) => {
+      state.selected = state.items.find(item => item.device_id === id)
+    }
+    const banUser = async (id) => {
+      const resp = await axios.get(`/slot/toggle_ban_for_crud?id=${id}`)
+      const banned = Number(resp.data)
+      const user = state.items.find(_user => Number(_user.id) === Number(id))
+      console.log('user', user)
+      user.banned = banned
     }
     function diffYears (year) {
       const now = new Date()
@@ -108,13 +143,15 @@ export default {
     }
     const itemsForTable = computed(() => {
       return state.items.map(player => {
+        console.log('banned', player)
         return {
+          Banned: player.banned === 1,
           ID: player.id,
-          'first Name': player.first_name,
-          'last Name': player.last_name,
+          'First Name': player.first_name,
+          'Last Name': player.last_name,
           email: player.email,
-          'device Id': player.device_id,
-          'created At': format(new Date(player.created_at), 'yyyy-MM-dd')
+          'Device Id': player.device_id,
+          'Created At': format(new Date(player.created_at), 'yyyy-MM-dd')
         }
       })
     })
@@ -129,7 +166,15 @@ export default {
     }
     watch(() => loggedIn, getItemsFromDB, { immediate: true })
     watch(() => state.filter, debounce(async () => await getItemsFromDB(), 500))
-    return { ...toRefs(state), loggedIn, rowClick, playerChange, itemsForTable, submitMaxAllowedBirthYear }
+    return {
+      ...toRefs(state),
+      loggedIn,
+      rowClick,
+      playerChange,
+      itemsForTable,
+      submitMaxAllowedBirthYear,
+      banUser
+    }
   }
 }
 </script>
