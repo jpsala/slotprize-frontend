@@ -1,6 +1,6 @@
 <template>
   <div>
-
+    isDev: {{isDev}}
     <!-- <q-toggle v-show="!editing" :value="editing" @input="$emit('edit', value)" label="Expanded" class="q-mb-md" /> -->
     <q-list class="rounded-borders">
       <q-expansion-item icon="schedule" v-model="expanded" label="Rules">
@@ -33,7 +33,7 @@ export default {
     }
   },
   setup (props, { emit }) {
-    const { isDev } = useSession()
+    const { isDev, user } = useSession()
     const state = reactive({
       types: ['unique', 'daily', 'weekly'],
       activeRule: clone()(props.rule),
@@ -56,14 +56,14 @@ export default {
         state.clonedRules[idxAnt] = rule
       }
     })
-    if (isDev) state.types.add('cron')
+    if (isDev.value) state.types.push('cron')
     state.activeType = state.activeRule.type
     watch(() => state.activeType, (type) => {
       console.log('changed', type)
       const rule = state.clonedRules.find(_rule => _rule.type === type)
       state.activeRule = rule
     }, { immediate: false })
-    return { ...toRefs(state), isDev }
+    return { ...toRefs(state), isDev, user }
   }
 }
 </script>

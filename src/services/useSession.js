@@ -5,8 +5,7 @@ const jwtSecret = 'wopidom.front'
 const state = reactive({
   loading: false,
   apiToken: window.localStorage.getItem(jwtSecret),
-  user: undefined,
-  isDev: false
+  user: undefined
 })
 export const setApiToken = (value) => {
   state.apiToken = value
@@ -17,12 +16,11 @@ const useSession = () => {
   const user = computed(() => state.user)
   const apiToken = computed(() => state.apiToken)
   const loggedIn = computed(() => Boolean(state.user))
+  const isDev = computed(() => state.user && state.user.isDev === 1)
 
   let loggedInHandle = () => false
   const onLoggedInChange = (cb) => { loggedInHandle = cb }
-  const setUser = (data) => {
-    state.user = data
-  }
+  const setUser = (data) => { state.user = data }
   const logout = () => {
     setApiToken(undefined)
     setUser(undefined)
@@ -53,6 +51,7 @@ const useSession = () => {
   }, { immediate: true })
   return {
     user,
+    isDev,
     tryToLogin,
     login,
     logout,
