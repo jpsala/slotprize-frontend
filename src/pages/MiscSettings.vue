@@ -53,6 +53,7 @@ import { reactive, toRefs, watch } from '@vue/composition-api'
 import useSession from 'src/services/useSession'
 import axios from '../services/axios'
 import useWindowResize from 'src/services/useWindowResize'
+import { Notify } from 'quasar'
 export default {
   setup () {
     const screen = useWindowResize()
@@ -72,7 +73,16 @@ export default {
     const submit = async () => {
       await axios.post('/slot/misc_settings_for_crud', {
         gameVersion: state.gameVersion,
-        maintenanceMode: state.maintenanceMode
+        maintenanceMode: state.maintenanceMode,
+        wallet: state.wallet,
+        interstitialsRatio: state.interstitialsRatio,
+        lapseForSpinRegeneration: state.lapseForSpinRegeneration * 60,
+        maxSpinsForSpinRegeneration: state.maxSpinsForSpinRegeneration
+      })
+      Notify.create({
+        message: 'Settings where saved',
+        icon: 'save',
+        color: 'green-8'
       })
     }
     watch(() => loggedIn, async () => {
@@ -87,7 +97,7 @@ export default {
       state.interstitialsRatio = response.data.interstitialsRatio
       state.lapseForSpinRegeneration = response.data.lapseForSpinRegeneration / 60
       state.maxSpinsForSpinRegeneration = response.data.maxSpinsForSpinRegeneration
-      console.log('response', response)
+      console.log('response', response.data)
     }, { immediate: true })
     return { ...toRefs(state), submit, screen }
   }
