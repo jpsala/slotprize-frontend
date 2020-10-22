@@ -14,7 +14,7 @@
         style="width: 400px"
       >
         <div class="text-h6">
-          Daily Reword
+          Daily Rewords
         </div>
       </q-card-section>
 
@@ -31,7 +31,7 @@
           <q-item>
             <q-item-section style="max-width: 120px">
               <q-select
-                label="Reword Type"
+                label="Rewords Type"
                 stack-label
                 v-model="model.type"
                 :options="['spin', 'coin', 'ticket']"
