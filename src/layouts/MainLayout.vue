@@ -101,7 +101,7 @@
     <q-page-container id="venta-page-container">
       <router-view />
     </q-page-container>
-  </q-layout>
+    </q-layout>
 </template>
 
 <script>
@@ -109,7 +109,6 @@ import { ref, onBeforeMount } from '@vue/composition-api'
 import { RemoveArrow } from 'app/src/components/RemoveArrowDirective'
 import myDrawerContent from 'app/src/components/MyDrawerContent'
 import useSession from '../services/useSession'
-import useWindowResize from '../services/useWindowResize'
 import useGlobal from '../services/useGlobal'
 import { router } from '../boot/router'
 
@@ -158,12 +157,11 @@ export default {
             { label: 'Ads Settings', to: '/adsSettings' },
             { label: 'Support Admin', to: '/supportAdmin' },
             { label: 'Slot Machine', to: '/slotMachine' },
-            { label: 'Misc. Settings', to: '/miscSettings' }
+            { label: 'General Settings', to: '/miscSettings' }
           ]
         }
       ])
     )
-    const Screen = useWindowResize()
 
     const left = ref(false)
     const {
@@ -182,7 +180,7 @@ export default {
       }
     })
     return {
-      logout, left, items, loggedIn, Screen, user, loading, isDev, utcDate
+      logout, left, items, loggedIn, user, loading, isDev, utcDate
     }
   }
 }
