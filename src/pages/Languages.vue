@@ -24,6 +24,7 @@
           :key="row.id"
           @click="selectRow(row, $event)"
           class="cursor-pointer"
+          :class="getClass(row)"
         >
           <td class="text-left">
             {{ row.languageCode }}
@@ -36,9 +37,9 @@
           </td>
           <td class="text-right">
             <q-icon
-              @click="delLanguage(row.id)"
-              class="remove"
-              name="remove_circle_outline"
+              @click="delLanguage(row)"
+              class='remove'
+              :name="row.deleted === 0 ? 'remove_circle_outline' : 'add_circle_outline'"
               size="30px"
               color="red-5"
             />
@@ -88,21 +89,22 @@ export default {
       if (event.target.tagName !== 'TD') return
       state.selected = language
     }
-    const delLanguage = async (languageId) => {
+    const delLanguage = async (language) => {
       if (!(await confirma('Sure?'))) return
       try {
         showSpinner()
+        const deleted = language.deleted === 1
         const response = await axios({
           method: 'delete',
           url: 'slot/language_for_crud',
-          params: { languageId }
+          params: { languageId: language.id }
         })
         hideSpinner()
         if (response.data !== 1) {
           await alerta('Error deleting language')
         }
-        const idxLanguageForDeletion = state.rows.findIndex(lang => lang.id === languageId)
-        state.rows.splice(idxLanguageForDeletion, 1)
+        // const languageForDeletion = state.rows.findIndex(lang => lang.id === language.id)
+        language.deleted = deleted ? 0 : 1
       } catch (error) {
         hideSpinner()
         await alerta('Error deleting language', error)
@@ -156,13 +158,20 @@ export default {
     const languageCancel = () => {
       state.selected = undefined
     }
+    const getClass = (lang) => {
+      console.log('lang', lang)
+      let newClass = ''
+      if (lang.deleted === 1) newClass += 'deleted'
+      console.log('clss', lang.deleted, newClass)
+      return newClass
+    }
     watch(() => loggedIn, async () => {
       showSpinner()
       const response = await axios({ url: '/slot/languages_for_crud', method: 'get' })
       state.rows = response.data
       hideSpinner()
     }, { immediate: true })
-    return { ...toRefs(state), languageCloseDialog, languageCancel, addLanguage, delLanguage, selectRow }
+    return { ...toRefs(state), getClass, languageCloseDialog, languageCancel, addLanguage, delLanguage, selectRow }
   }
 }
 </script>
@@ -177,8 +186,12 @@ export default {
       border-radius: 8px;
     }
   }
+  tr.deleted{
+    text-decoration: line-through;
+  }
   tr .remove{
     position:absolute; right: 0px; top: 8px;
+    text-decoration: unset !important;
     display: none;
   }
   tr:hover .remove {
