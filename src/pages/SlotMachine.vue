@@ -55,8 +55,8 @@
             </div>
           </q-item>
           <q-item
-            v-for="(item, index) of paytable"
-            :key="index"
+            v-for="item of paytable"
+            :key="item.id"
             clickable
             :class="{error: item.withError}"
             @click="paytableRowClick(item, $event)"
