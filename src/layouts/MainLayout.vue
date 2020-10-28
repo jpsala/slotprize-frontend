@@ -144,6 +144,7 @@ export default {
           icon: 'build',
           open: true,
           items: [
+            { label: 'General Settings', to: '/miscSettings' },
             { label: 'Events', to: '/events' },
             { label: 'Players', to: '/players' },
             { label: 'Jackpot', to: '/jackpot' },
@@ -156,8 +157,7 @@ export default {
             { label: 'Spins', to: '/spins' },
             { label: 'Ads Settings', to: '/adsSettings' },
             { label: 'Support Admin', to: '/supportAdmin' },
-            { label: 'Slot Machine', to: '/slotMachine' },
-            { label: 'General Settings', to: '/miscSettings' }
+            { label: 'Slot Machine', to: '/slotMachine' }
           ]
         }
       ])
