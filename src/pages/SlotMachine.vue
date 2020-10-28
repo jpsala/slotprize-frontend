@@ -422,7 +422,7 @@ export default {
         }).sort((a, b) => {
           let aSortValue = a.points
           if (a.jackpot) aSortValue = 30000000
-          else if (a.paymentType.toUpperCase() === 'SPIN') aSortValue = 30000000
+          else if (a.paymentType.toUpperCase() === 'SPIN') aSortValue = 20000000
           else if (a.paymentType.toUpperCase() === 'TICKET') aSortValue = 10000000
 
           let bSortValue = b.points
