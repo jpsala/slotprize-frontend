@@ -420,12 +420,12 @@ export default {
             paymentType: pt.symbol.paymentType
           }
         }).sort((a, b) => {
-          let aSortValue = a.probability
+          let aSortValue = a.points
           if (a.jackpot) aSortValue = -10
           else if (a.paymentType.toUpperCase() === 'SPIN') aSortValue = -5
           else if (a.paymentType.toUpperCase() === 'TICKET') aSortValue = -2
 
-          let bSortValue = b.probability
+          let bSortValue = b.points
           if (b.jackpot) bSortValue = -10
           else if (b.paymentType.toUpperCase() === 'SPIN') bSortValue = -5
           else if (b.paymentType.toUpperCase() === 'TICKET') bSortValue = -1
