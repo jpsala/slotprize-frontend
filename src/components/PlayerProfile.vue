@@ -1,14 +1,9 @@
 <template>
   <div>
     <!-- <div class="text-h6">Player Profile</div> -->
-    <q-list
-      bordered
-      separator
-    >
-      <q-item
-        v-for="(value, index) in playerEntries"
-        :key="index"
-      >
+    <q-list bordered separator>
+      <template v-for="(value, index) in playerEntries">
+      <q-item v-if="value[0] !== 'SendWinJackpotEventWhenProfileFilled'" :key="index">
         <q-item-section style="max-width: 120px">
           {{ value[0] }}:
         </q-item-section>
@@ -16,6 +11,7 @@
           {{ value[1] }}
         </q-item-section>
       </q-item>
+      </template>
     </q-list>
   </div>
 </template>
@@ -47,6 +43,7 @@ export default {
       if (!props.player) return
       delete props.player.modified_at
       delete props.player.password
+      delete props.player.SendWinJackpotEventWhenProfileFilled
       state.playerEntries = Object.entries(camelcaseKeys(props.player, {
         pascalCase: true
       }))
