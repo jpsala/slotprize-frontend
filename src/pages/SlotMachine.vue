@@ -121,6 +121,7 @@
                   :borderless="false"
                   class="col self-end"
                   @change="paytableInputChange(item, 'p', $event)"
+                  @focus="changeFocus"
                   :value="item.points"
                   style="width: 75px"
                   :suffix="item.paymentType+'s'"
@@ -253,7 +254,8 @@ export default {
       totalProbability: 0,
       win: 0,
       lose: 0,
-      winLoseDirty: false
+      winLoseDirty: false,
+      focused: undefined
     })
     const saveSymbol = (symbol) => {
       const idx = state.symbols.findIndex(_symbol => Number(_symbol.id) === Number(symbol.id))
@@ -386,7 +388,15 @@ export default {
       await axios.post('/slot/win_lose_for_tombola_crud', { win: Number(state.win), lose: Number(state.lose) })
       state.winLoseDirty = false
     }
+    const changeFocus = (e) => {
+      let el = e.target
+      if (el.tagName === 'DIV') { el = el.querySelector('input') }
+      state.focused = el
+      console.log('el', el)
+    }
     watch(() => state.tableData, () => {
+      const focusedEl = document.activeElement
+      console.log('focused', focusedEl)
       state.thereIsANewItem = false
       state.withError = false
       state.totalProbability = 0
@@ -434,6 +444,10 @@ export default {
           if (Number(aSortValue) < Number(bSortValue)) { return 1 }
           return 0
         })
+      setTimeout(() => {
+        state.focused.focus()
+        console.log('state.q-field--focuseds', state.focused)
+      }, 100)
     }, { deep: true, inmediate: true })
     onUnmounted(() => {
       // const listEl = document.querySelector('.items-section .q-list')
@@ -473,7 +487,8 @@ export default {
       tableIsValid,
       paytableResize,
       winInputChange,
-      saveWinLose
+      saveWinLose,
+      changeFocus
     }
   }
 }
