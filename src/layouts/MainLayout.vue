@@ -154,8 +154,6 @@ export default {
             { label: 'Winners', to: '/winners' },
             { label: 'Daily Rewards', to: '/dailyreward' },
             { label: 'Tickets', to: '/tickets' },
-            { label: 'Spins', to: '/spins' },
-            { label: 'Ads Settings', to: '/adsSettings' },
             { label: 'Support Admin', to: '/supportAdmin' },
             { label: 'Slot Machine', to: '/slotMachine' }
           ]
