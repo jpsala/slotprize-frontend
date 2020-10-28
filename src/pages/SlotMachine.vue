@@ -421,17 +421,17 @@ export default {
           }
         }).sort((a, b) => {
           let aSortValue = a.points
-          if (a.jackpot) aSortValue = -10
-          else if (a.paymentType.toUpperCase() === 'SPIN') aSortValue = -5
-          else if (a.paymentType.toUpperCase() === 'TICKET') aSortValue = -2
+          if (a.jackpot) aSortValue = 30000000
+          else if (a.paymentType.toUpperCase() === 'SPIN') aSortValue = 30000000
+          else if (a.paymentType.toUpperCase() === 'TICKET') aSortValue = 10000000
 
           let bSortValue = b.points
-          if (b.jackpot) bSortValue = -10
-          else if (b.paymentType.toUpperCase() === 'SPIN') bSortValue = -5
-          else if (b.paymentType.toUpperCase() === 'TICKET') bSortValue = -1
+          if (b.jackpot) bSortValue = 30000000
+          else if (b.paymentType.toUpperCase() === 'SPIN') bSortValue = 20000000
+          else if (b.paymentType.toUpperCase() === 'TICKET') bSortValue = 10000000
 
-          if (Number(aSortValue) < Number(bSortValue)) { return -1 }
-          if (Number(aSortValue) > Number(bSortValue)) { return 1 }
+          if (Number(aSortValue) > Number(bSortValue)) { return -1 }
+          if (Number(aSortValue) < Number(bSortValue)) { return 1 }
           return 0
         })
     }, { deep: true, inmediate: true })
