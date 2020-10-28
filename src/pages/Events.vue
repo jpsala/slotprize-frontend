@@ -16,6 +16,7 @@
         :skins="skins"
         :event="event"
         :disabled="editingEvent && editingEvent.id !== event.id"
+        @duplicate="duplicate"
       />
       <Event
         ref="eventRefNew"
@@ -136,6 +137,20 @@ export default {
     const ruleTypeChanged = (rule) => {
       state.editingEvent.rule = rule
     }
+    const duplicate = (event) => {
+      state.newEvent = clone()(event)
+      state.editingEvent = state.newEvent
+      state.savedRule = clone()(event.rule)
+      state.newEvent.name += ' (cloned)'
+      state.newEvent.id = -1
+      setTimeout(() => {
+        const eventEl = eventRefNew.value.$el
+        const btnOkEl = eventEl.querySelector('.btn-ok-event')
+        const firstInput = eventEl.querySelector('input')
+        btnOkEl.scrollIntoView({ behavior: 'smooth' })
+        firstInput.focus()
+      }, 100)
+    }
     watch(() => loggedIn.value, getEvents, {
       immediate: true
     })
@@ -148,7 +163,8 @@ export default {
       changeEventEditing,
       eventRef,
       eventRefNew,
-      ruleTypeChanged
+      ruleTypeChanged,
+      duplicate
     }
   }
 }

@@ -15,6 +15,9 @@
           <th class="text-center">
             Image
           </th>
+          <th class="text-left">
+
+          </th>
           <th class="text-left" />
         </tr>
       </thead>
@@ -24,7 +27,6 @@
           :key="row.id"
           @click="selectRow(row, $event)"
           class="cursor-pointer"
-          :class="getClass(row)"
         >
           <td class="text-left">
             {{ row.languageCode }}
@@ -35,14 +37,34 @@
           <td class="text-center  img-td">
             <img :src="row.textureUrl">
           </td>
+          <td class="text-left" style="max-width: 90px">
+            <q-chip v-if="row.deleted === 1 " color="red-5" style="max-width: 90px" text-color="white" icon="cancel">Inactive</q-chip>
+            <q-chip v-else color="green-5" style="max-width: 90px" text-color="white" icon="check">Active</q-chip>
+          </td>
           <td class="text-right">
-            <q-icon
-              @click="delLanguage(row)"
-              class='remove'
-              :name="row.deleted === 0 ? 'remove_circle_outline' : 'add_circle_outline'"
-              size="30px"
-              color="red-5"
-            />
+            <q-btn class="dot-menu" color="grey-7" round flat icon="more_vert">
+                <q-menu cover auto-close>
+                  <q-list>
+                    <q-item clickable>
+                      <q-item-section @click="() => delLanguage(row)">
+                        Remove Language
+                      </q-item-section>
+                    </q-item>
+                    <q-item clickable>
+                      <q-item-section @click="toggleLanguage(row)">
+                        {{row.deleted === 1 ? 'Activate Language' : 'Deactivate Language'}}
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-menu>
+              </q-btn>
+              <!-- <q-icon
+                @click="delLanguage(row)"
+                class='remove'
+                :name="row.deleted === 0 ? 'remove_circle_outline' : 'add_circle_outline'"
+                size="30px"
+                color="red-5"
+              /> -->
           </td>
         </tr>
       </tbody>
@@ -89,8 +111,7 @@ export default {
       if (event.target.tagName !== 'TD') return
       state.selected = language
     }
-    const delLanguage = async (language) => {
-      if (!(await confirma('Sure?'))) return
+    const toggleLanguage = async (language) => {
       try {
         showSpinner()
         const deleted = language.deleted === 1
@@ -105,6 +126,29 @@ export default {
         }
         // const languageForDeletion = state.rows.findIndex(lang => lang.id === language.id)
         language.deleted = deleted ? 0 : 1
+      } catch (error) {
+        hideSpinner()
+        await alerta('Error deleting language', error)
+      } finally {
+        hideSpinner()
+      }
+    }
+    const delLanguage = async (language) => {
+      if (!(await confirma('Do you really want to delete this language?'))) return
+      try {
+        showSpinner()
+        const response = await axios({
+          method: 'delete',
+          url: 'slot/language_for_crud',
+          params: { languageId: language.id, remove: true }
+        })
+        hideSpinner()
+        if (response.data !== 1) {
+          await alerta('Error deleting language')
+        }
+        // const languageForDeletion = state.rows.findIndex(lang => lang.id === language.id)
+        const rowForDeletionIdx = state.rows.findIndex(_row => _row.id === language.id)
+        state.rows.splice(rowForDeletionIdx, 1)
       } catch (error) {
         hideSpinner()
         await alerta('Error deleting language', error)
@@ -152,7 +196,7 @@ export default {
     }
     const addLanguage = () => {
       state.selected = {
-        id: -1, isNew: true
+        id: -1, isNew: true, deleted: 0
       }
     }
     const languageCancel = () => {
@@ -171,7 +215,7 @@ export default {
       state.rows = response.data
       hideSpinner()
     }, { immediate: true })
-    return { ...toRefs(state), getClass, languageCloseDialog, languageCancel, addLanguage, delLanguage, selectRow }
+    return { ...toRefs(state), toggleLanguage, getClass, languageCloseDialog, languageCancel, addLanguage, delLanguage, selectRow }
   }
 }
 </script>

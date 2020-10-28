@@ -13,6 +13,11 @@
               Edit Event
             </q-item-section>
           </q-item>
+          <q-item clickable :disable="editMode || disabled">
+            <q-item-section @click="$emit('duplicate', eventClone)">
+              Duplicate Event
+            </q-item-section>
+          </q-item>
         </q-list>
       </q-menu>
     </q-btn>
@@ -102,7 +107,7 @@
 
     <q-card-actions v-if="editMode" align="right">
       <q-btn flat @click="cancel(eventClone)"> Cancel </q-btn>
-      <q-btn flat @click="save(eventClone)"> Ok </q-btn>
+      <q-btn class="btn-ok-event" flat @click="save(eventClone)"> Ok </q-btn>
     </q-card-actions>
     <q-card-actions v-else align="right">
       <q-btn :disable="disabled" flat @click="edit(eventClone)"> Edit </q-btn>
