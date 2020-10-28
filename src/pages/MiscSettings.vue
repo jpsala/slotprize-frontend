@@ -7,8 +7,12 @@
     <q-separator spaced="30px"/>
 
     <div class="text-subtitle1 text-weight-regular text-uppercase">Maintenace Mode</div>
-    <q-checkbox :color="maintenanceMode ? 'red-8': 'green-3'"
-                v-model="maintenanceMode" :label="maintenanceMode ? 'In maintenance mode' : 'Not in maintenance mode'" />
+    <!-- <q-checkbox :color="maintenanceMode ? 'red-8': 'green-3'"
+                v-model="maintenanceMode" :label="maintenanceMode ? 'In maintenance mode' : 'Not in maintenance mode'" /> -->
+     <q-radio :style="'color:' + (maintenanceMode ? 'red':'')"
+              :color="maintenanceMode ? 'red-4':''"
+              v-model="maintenanceMode" :val="true" label="In maintenance mode" /><br />
+     <q-radio v-model="maintenanceMode" :val="false" label="Functioning normally" />
 
     <q-separator spaced="30px"/>
 
