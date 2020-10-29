@@ -42,10 +42,6 @@
             name="LoginInfo"
             label="Login Info"
           />
-          <q-tab
-            name="VideoAdsViewCount"
-            label="Ads"
-          />
         </q-tabs>
 
         <q-separator />
@@ -74,9 +70,6 @@
           <q-tab-panel name="LoginInfo">
             <PlayerLoginHistory :player="item" />
           </q-tab-panel>
-          <q-tab-panel name="VideoAdsViewCount">
-            <VideoAdsViewCount :player="item" />
-          </q-tab-panel>
         </q-tab-panels>
       </q-card>
     </div>
@@ -89,10 +82,9 @@ import PlayerWallet from '../components/PlayerWallet'
 import PlayerRaffles from '../components/PlayerRaffles'
 import PlayerSupportMessages from '../components/PlayerSupportMessages'
 import PlayerLoginHistory from '../components/PlayerLoginHistory'
-import VideoAdsViewCount from '../components/VideoAdsViewCount'
 import axios from '../services/axios'
 export default {
-  components: { VideoAdsViewCount, PlayerProfile, PlayerRaffles, PlayerSupportMessages, PlayerWallet, PlayerLoginHistory },
+  components: { PlayerProfile, PlayerRaffles, PlayerSupportMessages, PlayerWallet, PlayerLoginHistory },
   props: {
     player: {
       type: [Object, undefined],
