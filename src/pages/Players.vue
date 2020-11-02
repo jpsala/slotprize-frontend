@@ -96,7 +96,6 @@ export default {
       loggedIn
     } = useSession()
     const state = reactive({
-      cant: 200,
       items: [],
       filter: ref(''),
       initialPagination: {
@@ -132,8 +131,6 @@ export default {
       const resp = await axios({
         url: '/slot/playersForFront',
         params: {
-          from: 0,
-          limit: state.cant,
           filter: state.filter
         }
       })

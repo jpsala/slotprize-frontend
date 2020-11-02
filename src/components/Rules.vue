@@ -1,6 +1,5 @@
 <template>
   <div>
-    isDev: {{isDev}}
     <!-- <q-toggle v-show="!editing" :value="editing" @input="$emit('edit', value)" label="Expanded" class="q-mb-md" /> -->
     <q-list class="rounded-borders">
       <q-expansion-item icon="schedule" v-model="expanded" label="Rules">
