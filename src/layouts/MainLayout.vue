@@ -144,7 +144,7 @@ export default {
           icon: 'build',
           open: true,
           items: [
-            { label: 'General Settings', to: '/miscSettings' },
+            { label: 'General Settings', to: '/generalSettings' },
             { label: 'Events', to: '/events' },
             { label: 'Players', to: '/players' },
             { label: 'Jackpot', to: '/jackpot' },
