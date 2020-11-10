@@ -44,7 +44,7 @@
       />
     </div>
     <div class="text-subtitle1 text-weight-regular text-uppercase">Signup</div>
-    <q-input v-model="signupCount" hint="holaNumber of spin plays required to display the player profile form" label="SignUp Count"/>
+    <q-input v-model="signupCount" hint="Number of spin plays required to display the player profile form" label="SignUp Count"/>
 
     <div class="row q-mt-xl float-right">
       <q-btn color="primary" @click="submit">
