@@ -7,11 +7,11 @@
       <q-separator inset />
 
       <q-card-section>
-        <q-markup-table>
-      <q-spinner v-show="loading" color="primary" size="3em"/>
-      <q-inner-loading :showing="posting" size="4em">
-        <h5 class="text-green-10 text-weight-bold q-pa-md">Posting language data</h5>
-        </q-inner-loading>
+        <q-markup-table :bordered='false' flat>
+          <q-spinner v-show="loading" color="primary" size="3em"/>
+          <q-inner-loading :showing="posting" size="4em">
+            <h5 class="bg-green text-white" style="opacity: 100; z-index: 10">Posting language data</h5>
+          </q-inner-loading>
     <!-- <thead>
       <tr>
         <th>Lang</th>
