@@ -10,13 +10,13 @@
     <!-- <q-checkbox :color="maintenanceMode ? 'red-8': 'green-3'"
                 v-model="maintenanceMode" :label="maintenanceMode ? 'In maintenance mode' : 'Not in maintenance mode'" /> -->
      <div class="row">
-       <div class="row col-xs-12 col-sm-12 col-md-2 col-lg-3 self-start">
+       <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-2 self-start">
           <q-radio class="col-12" :style="'color:' + (maintenanceMode ? 'red':'')"
                     :color="maintenanceMode ? 'red-4':''"
                     v-model="maintenanceMode" :val="true" label="In maintenance mode" /><br />
           <q-radio v-model="maintenanceMode" :val="false" label="Functioning normally" />
        </div>
-      <Localization class="col-xs-12 col-sm-12 col-md-10 col-lg-9" item='maintenanceMode' />
+      <Localization class="col-xs-12 col-sm-12 col-md-12 col-lg-10 self-start" item='maintenanceMode' />
     </div>
 
     <q-separator spaced="30px"/>
