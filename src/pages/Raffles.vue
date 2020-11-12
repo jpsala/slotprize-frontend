@@ -113,7 +113,7 @@ export default {
       state.playerForShowing = response.data
     }
     const addRaffle = () => { state.selected = newRaffle }
-    const newRaffles = computed(() => state.raffles.filter((raffle) => raffle.state === 'new' && !raffle.isLive))
+    const newRaffles = computed(() => state.raffles.filter((raffle) => raffle.state === 'new' && !raffle.isLive && !raffle.isPast))
     const liveRaffles = computed(() => state.raffles.filter((raffle) => raffle.state === 'new' && raffle.isLive))
     const wonRaffles = computed(() => state.raffles.filter((raffle) => {
       return ['won', 'delivered', 'nopurchase'].includes(raffle.state) ||
