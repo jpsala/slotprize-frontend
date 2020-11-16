@@ -5,6 +5,9 @@
     </h3>
 
     <q-separator spaced="30px"/>
+    <div class="text-subtitle1 text-weight-regular text-uppercase">Spin Time Threshold</div>
+    <q-input v-model="spinTimeThreshold" label="How much time passed sincel last spin"/>
+    <q-separator spaced="30px"/>
 
     <div class="text-subtitle1 text-weight-regular text-uppercase">Maintenace Mode</div>
     <!-- <q-checkbox :color="maintenanceMode ? 'red-8': 'green-3'"
@@ -73,6 +76,7 @@ export default {
     const screen = useWindowResize()
     const { loggedIn } = useSession()
     const state = reactive({
+      spinTimeThreshold: undefined,
       gameVersion: undefined,
       maintenanceMode: false,
       lapseForSpinRegeneration: 0,
@@ -93,7 +97,8 @@ export default {
         wallet: state.wallet,
         interstitialsRatio: state.interstitialsRatio,
         lapseForSpinRegeneration: state.lapseForSpinRegeneration * 60,
-        maxSpinsForSpinRegeneration: state.maxSpinsForSpinRegeneration
+        maxSpinsForSpinRegeneration: state.maxSpinsForSpinRegeneration,
+        spinTimeThreshold: state.spinTimeThreshold
       })
       Notify.create({
         message: 'Settings where saved',
@@ -108,6 +113,7 @@ export default {
         params: {}
       })
       state.gameVersion = response.data.gameVersion
+      state.spinTimeThreshold = response.data.spinTimeThreshold
       state.signupCount = response.data.signupCount
       state.maintenanceMode = response.data.maintenanceMode
       state.wallet = response.data.wallet

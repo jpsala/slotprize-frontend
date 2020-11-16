@@ -12,28 +12,22 @@
           <q-inner-loading :showing="posting" size="4em">
             <h5 class="bg-green text-white" style="opacity: 100; z-index: 10">Posting language data</h5>
           </q-inner-loading>
-    <!-- <thead>
-      <tr>
-        <th>Lang</th>
-        <th class="text-left">Text</th>
-      </tr>
-    </thead> -->
-    <tbody>
-      <tr v-for="(item,index) of localizations" :key="index">
+          <tbody>
+            <tr v-for="(item,index) of localizations" :key="index">
 
-        <td style="width: 80px">{{item.languageCode}}</td>
-        <td>
-          <div class="row">
-            <q-input class="col" :disable="loading || (!item.dirty &&editing)" v-model="item.text" autogrow borderless dense @input="textChange(item)" />
-            <q-btn class="col-2" icon="save" v-if="item.dirty === true"
-                   style="width: 40px" color="green-8" @click="saveItem(item)"/>
-            <q-btn class="col-2 q-ml-sm" icon="cancel" v-if="item.dirty === true"
-                   style="width: 40px" color="red-8" @click="cancelEdit(item)"/>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </q-markup-table>
+              <td style="width: 80px">{{item.languageCode}}</td>
+              <td>
+                <div class="row">
+                  <q-input class="col" :disable="loading || (!item.dirty &&editing)" v-model="item.text" autogrow borderless dense @input="textChange(item)" />
+                  <q-btn class="col-2" icon="save" v-if="item.dirty === true"
+                        style="width: 40px" color="green-8" @click="saveItem(item)"/>
+                  <q-btn class="col-2 q-ml-sm" icon="cancel" v-if="item.dirty === true"
+                        style="width: 40px" color="red-8" @click="cancelEdit(item)"/>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </q-markup-table>
       </q-card-section>
     </q-card>
 </template>
