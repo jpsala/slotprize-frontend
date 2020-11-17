@@ -47,7 +47,7 @@ export default {
         return {
           Raffle: item.name,
           Tickets: item.tickets,
-          Numbers: item.numbers,
+          Numbers: item.raffleNumbers,
           Description: item.description,
           'Closing Date': format(new Date(item.closingDate), 'yyyy-MM-dd'),
           'Transaction Date': format(new Date(item.transactionDate), 'yyyy-MM-dd')

@@ -14,6 +14,7 @@
         />
       </div>
     </q-form>
+    <div class="tableFixHead">
     <q-markup-table class="q-mt-xl">
       <thead>
         <tr>
@@ -68,6 +69,7 @@
         </tr>
       </tbody>
     </q-markup-table>
+    </div>
     <player-dialog
       persistent
       :player="playerForShowing"
@@ -125,9 +127,20 @@ export default {
 
 <style lang="sass">
   .New
-    background-color: $red-1
+    background-color: white
   .Open
     background-color: $green-1
   .Closed
-    background-color:
+    background-color: $grey-2
+  .q-markup-table
+    overflow-y: auto;
+    height: 73vh;
+  .q-markup-table thead th
+    position: sticky !important;
+    top: 0;
+  table
+    border-collapse: collapse;
+    overflow: display;
+  th
+    background: white;
 </style>
