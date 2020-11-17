@@ -18,6 +18,9 @@
           <th class="text-left">
 
           </th>
+          <th class="is-default">
+
+          </th>
           <th class="text-left" />
         </tr>
       </thead>
@@ -41,6 +44,10 @@
             <q-chip v-if="row.deleted === 1 " color="red-5" style="max-width: 90px" text-color="white" icon="cancel">Inactive</q-chip>
             <q-chip v-else color="green-5" style="max-width: 90px" text-color="white" icon="check">Active</q-chip>
           </td>
+          <td class="is-default text-primary text-subtitle1 text-h6" style="font-size: 110%; font-weight: bold" v-if="row.isDefault === 1">
+            <q-chip color="green-5" style="max-width: 90px" text-color="white" icon="check">Default</q-chip>
+          </td>
+          <td class="is-default" v-else><q-btn outline rounded color="primary" @click="makeDefault(row)">Make default</q-btn></td>
           <td class="text-right">
             <q-btn class="dot-menu" color="grey-7" round flat icon="more_vert">
                 <q-menu cover auto-close>
@@ -108,6 +115,7 @@ export default {
       rows: undefined
     })
     const selectRow = async (language, event) => {
+      console.log('event.target.tagName', event.target)
       if (event.target.tagName !== 'TD') return
       state.selected = language
     }
@@ -209,13 +217,19 @@ export default {
       console.log('clss', lang.deleted, newClass)
       return newClass
     }
+    const makeDefault = async (row) => {
+      state.rows.forEach(_row => { _row.isDefault = false })
+      console.log('row', row)
+      row.isDefault = 1
+      await axios.post('slot/language_default_for_crud', { id: row.id })
+    }
     watch(() => loggedIn, async () => {
       showSpinner()
       const response = await axios({ url: '/slot/languages_for_crud', method: 'get' })
       state.rows = response.data
       hideSpinner()
     }, { immediate: true })
-    return { ...toRefs(state), toggleLanguage, getClass, languageCloseDialog, languageCancel, addLanguage, delLanguage, selectRow }
+    return { ...toRefs(state), toggleLanguage, getClass, languageCloseDialog, languageCancel, addLanguage, delLanguage, selectRow, makeDefault }
   }
 }
 </script>
@@ -241,5 +255,10 @@ export default {
   tr:hover .remove {
     display: block;
     cursor: pointer;
+  }
+  td.is-default {
+    max-width: 60px;
+    padding: 0;
+    margin: 0;
   }
 </style>
