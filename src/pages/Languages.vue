@@ -212,11 +212,14 @@ export default {
       state.selected = undefined
     }
     const refreshJSON = async (row) => {
+      showSpinner()
       try {
         const resp = await axios.post('/slot/localizations_update_for_crud', { languageCode: row.languageCode })
         console.log('resp', resp)
       } catch (err) {
         await alerta('Error update json file', err)
+      } finally {
+        hideSpinner()
       }
     }
     const openJson = (row) => {
