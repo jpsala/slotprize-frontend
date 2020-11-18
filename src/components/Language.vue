@@ -23,7 +23,7 @@
           />
         </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="text-h6">
           <q-input
             readonly
@@ -32,7 +32,7 @@
             label="JSON file"
           />
         </div>
-      </div>
+      </div> -->
       <input
         autofocus
         ref="imgInput"
@@ -54,12 +54,12 @@
       class="q-mt-lg"
       align="right"
     >
-      <q-btn
+      <!-- <q-btn
         flat
         @click="$refs.fileInput.click()"
       >
         Select JSON file
-      </q-btn>
+      </q-btn> -->
       <q-btn
         flat
         @click="$refs.imgInput.click()"

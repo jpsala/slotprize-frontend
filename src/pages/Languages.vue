@@ -9,15 +9,16 @@
           <th class="text-left">
             Language Code
           </th>
-          <th class="text-left">
-            Json File
-          </th>
           <th class="text-center">
             Image
           </th>
           <th class="text-left">
 
           </th>
+          <th class="is-default">
+
+          </th>
+          <th class="text-left" />
           <th class="text-left" />
         </tr>
       </thead>
@@ -28,20 +29,22 @@
           @click="selectRow(row, $event)"
           class="cursor-pointer"
         >
-          <td class="text-left">
+          <td class="text-left language-code-td">
             {{ row.languageCode }}
           </td>
-          <td class="text-left">
-            {{ row.localizationUrl }}
-          </td>
-          <td class="text-center  img-td">
+          <td class="text-center img-td">
             <img :src="row.textureUrl">
           </td>
-          <td class="text-left" style="max-width: 90px">
+          <td class="text-left active-td">
             <q-chip v-if="row.deleted === 1 " color="red-5" style="max-width: 90px" text-color="white" icon="cancel">Inactive</q-chip>
             <q-chip v-else color="green-5" style="max-width: 90px" text-color="white" icon="check">Active</q-chip>
           </td>
-          <td class="text-right">
+          <td v-if="row.isDefault === 1" class="is-default text-primary text-subtitle1 text-h6" style="font-size: 110%; font-weight: bold" >
+            <q-chip color="green-5" style="max-width: 90px" text-color="white" icon="check">Default</q-chip>
+          </td>
+          <td class="is-default" v-else><q-btn outline rounded color="primary" @click="makeDefault(row)">Make default</q-btn></td>
+          <td class="is-default"><q-btn outline rounded color="primary" @click="refreshJSON(row)">Update JSON</q-btn></td>
+          <td class="text-right dot-menu-td">
             <q-btn class="dot-menu" color="grey-7" round flat icon="more_vert">
                 <q-menu cover auto-close>
                   <q-list>
@@ -58,13 +61,6 @@
                   </q-list>
                 </q-menu>
               </q-btn>
-              <!-- <q-icon
-                @click="delLanguage(row)"
-                class='remove'
-                :name="row.deleted === 0 ? 'remove_circle_outline' : 'add_circle_outline'"
-                size="30px"
-                color="red-5"
-              /> -->
           </td>
         </tr>
       </tbody>
@@ -74,6 +70,18 @@
       @close="languageCloseDialog"
       @cancel="languageCancel"
     />
+    <q-page-sticky
+      position="top-right"
+      :offset="[18, 18]"
+    >
+      <q-btn
+        :disable="selected !== undefined"
+        @click="openJson"
+        label="Open Localization Spreadsheet"
+        icon="refresh"
+        color="green-6"
+      />
+    </q-page-sticky>
     <q-page-sticky
       position="top-left"
       :offset="[18, 18]"
@@ -102,12 +110,13 @@ const { showSpinner, hideSpinner } = useGlobal()
 export default {
   components: { LanguageDialog },
   setup () {
-    const { loggedIn } = useSession()
+    const { loggedIn, isDev } = useSession()
     const state = reactive({
       selected: undefined,
       rows: undefined
     })
     const selectRow = async (language, event) => {
+      console.log('event.target.tagName', event.target)
       if (event.target.tagName !== 'TD') return
       state.selected = language
     }
@@ -202,6 +211,15 @@ export default {
     const languageCancel = () => {
       state.selected = undefined
     }
+    const refreshJSON = (row) => {
+      console.log('lang', row)
+    }
+    const openJson = (row) => {
+      const url = isDev
+        ? 'https://docs.google.com/spreadsheets/d/1zHwpbks-VsttadBy9LRdwQW7E9aDGBc0e80Gw2ALNuQ/edit#gid=1259474418'
+        : 'https://docs.google.com/spreadsheets/d/1zHwpbks-VsttadBy9LRdwQW7E9aDGBc0e80Gw2ALNuQ/edit#gid=1117868095'
+      window.open(url, '_blank')
+    }
     const getClass = (lang) => {
       console.log('lang', lang)
       let newClass = ''
@@ -209,23 +227,41 @@ export default {
       console.log('clss', lang.deleted, newClass)
       return newClass
     }
+    const makeDefault = async (row) => {
+      state.rows.forEach(_row => { _row.isDefault = false })
+      console.log('row', row)
+      row.isDefault = 1
+      await axios.post('slot/language_default_for_crud', { id: row.id })
+    }
     watch(() => loggedIn, async () => {
       showSpinner()
       const response = await axios({ url: '/slot/languages_for_crud', method: 'get' })
       state.rows = response.data
       hideSpinner()
     }, { immediate: true })
-    return { ...toRefs(state), toggleLanguage, getClass, languageCloseDialog, languageCancel, addLanguage, delLanguage, selectRow }
+    return {
+      ...toRefs(state),
+      toggleLanguage,
+      getClass,
+      languageCloseDialog,
+      languageCancel,
+      addLanguage,
+      delLanguage,
+      selectRow,
+      makeDefault,
+      refreshJSON,
+      openJson
+    }
   }
 }
 </script>
 
 <style lang="scss">
   .img-td{
-    max-width: 50px!important;
-    width: 100px!important;
+    // max-width: 50px!important;
+    min-width: 100px!important;
     img{
-      width: 100%;
+      // width: 100%;
       height: auto;
       border-radius: 8px;
     }
@@ -241,5 +277,21 @@ export default {
   tr:hover .remove {
     display: block;
     cursor: pointer;
+  }
+  td.is-default {
+    max-width: 60px;
+    width: 140px;
+    padding: 0;
+    margin: 0;
+  }
+  .active-td{
+    width: 100px;
+    max-width: 150px;
+  }
+  .dot-menu-td {
+    width: 10px;
+    .dot-menu{
+      width: 40px;
+    }
   }
 </style>
