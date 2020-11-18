@@ -1,8 +1,20 @@
 <template>
   <div class="q-pa-md q-gutter-md"  style="max-wwidth: 800px">
+    <div class="row q-mt-xl float-right">
+      <q-btn color="primary" @click="submit">
+        Submit
+      </q-btn>
+    </div>
     <h3 class="q-ml-xl q-pl-xl" style="margin-bottom: 0; padding-bottom: 0">
       General Settings
     </h3>
+
+    <q-separator spaced="30px"/>
+    <div class="text-subtitle1 text-weight-regular text-uppercase">Localization URL</div>
+    <div class="q-pa-md">
+      <q-input v-model="languageJsonUrl" type="textarea" autogrow hint="Replace the language code with <languageCode>"/>
+    </div>
+    <q-separator spaced="30px"/>
 
     <q-separator spaced="30px"/>
     <div class="text-subtitle1 text-weight-regular text-uppercase">Spin Time Threshold</div>
@@ -70,6 +82,7 @@ import axios from '../services/axios'
 import useWindowResize from 'src/services/useWindowResize'
 import Localization from 'components/Localization'
 import { Notify } from 'quasar'
+import { alerta } from 'src/helpers'
 export default {
   components: { Localization },
   setup () {
@@ -83,6 +96,7 @@ export default {
       maxSpinsForSpinRegeneration: 0,
       interstitialsRatio: undefined,
       signupCount: undefined,
+      languageJsonUrl: undefined,
       wallet: {
         spins: undefined,
         coins: undefined,
@@ -90,16 +104,22 @@ export default {
       }
     })
     const submit = async () => {
-      await axios.post('/slot/misc_settings_for_crud', {
-        gameVersion: state.gameVersion,
-        maintenanceMode: state.maintenanceMode,
-        signupCount: state.signupCount,
-        wallet: state.wallet,
-        interstitialsRatio: state.interstitialsRatio,
-        lapseForSpinRegeneration: state.lapseForSpinRegeneration * 60,
-        maxSpinsForSpinRegeneration: state.maxSpinsForSpinRegeneration,
-        spinTimeThreshold: state.spinTimeThreshold
-      })
+      try {
+        await axios.post('/slot/misc_settings_for_crud', {
+          gameVersion: state.gameVersion,
+          maintenanceMode: state.maintenanceMode,
+          signupCount: state.signupCount,
+          wallet: state.wallet,
+          interstitialsRatio: state.interstitialsRatio,
+          lapseForSpinRegeneration: state.lapseForSpinRegeneration * 60,
+          maxSpinsForSpinRegeneration: state.maxSpinsForSpinRegeneration,
+          languageJsonUrl: state.languageJsonUrl,
+          spinTimeThreshold: state.spinTimeThreshold
+        })
+      } catch (err) {
+        await alerta('Error', err)
+        return
+      }
       Notify.create({
         message: 'Settings where saved',
         icon: 'save',
@@ -112,6 +132,7 @@ export default {
         method: 'get',
         params: {}
       })
+      state.languageJsonUrl = response.data.languageJsonUrl
       state.gameVersion = response.data.gameVersion
       state.spinTimeThreshold = response.data.spinTimeThreshold
       state.signupCount = response.data.signupCount
