@@ -101,7 +101,7 @@ const confirma = async (title, msg) => {
   })
 }
 const notify = ({
-  message = 'Falta', error = false, timeout = 3000, icon = ''
+  message = '', error = false, timeout = 3000, icon = ''
 } = {}) => {
   Notify.create({
     color: error ? 'red-4' : 'green-4',

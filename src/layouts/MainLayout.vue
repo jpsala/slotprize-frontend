@@ -149,7 +149,7 @@ export default {
             { label: 'Players', to: '/players' },
             { label: 'Jackpot', to: '/jackpot' },
             { label: 'Raffles', to: '/raffles' },
-            { label: 'Languages', to: '/languages' },
+            { label: 'Localization', to: '/languages' },
             { label: 'Skins', to: '/skins' },
             { label: 'Winners', to: '/winners' },
             { label: 'Daily Rewards', to: '/dailyreward' },

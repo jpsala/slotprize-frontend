@@ -102,7 +102,7 @@ import { reactive, toRefs, watch } from '@vue/composition-api'
 import useSession from 'src/services/useSession'
 import axios from '../services/axios'
 import LanguageDialog from '../components/LanguageDialog'
-import { alerta, confirma } from 'src/helpers'
+import { alerta, confirma, notify } from 'src/helpers'
 import useGlobal from '../services/useGlobal'
 
 const { showSpinner, hideSpinner } = useGlobal()
@@ -214,8 +214,8 @@ export default {
     const refreshJSON = async (row) => {
       showSpinner()
       try {
-        const resp = await axios.post('/slot/localizations_update_for_crud', { languageCode: row.languageCode })
-        console.log('resp', resp)
+        await axios.post('/slot/localizations_update_for_crud', { languageCode: row.languageCode })
+        notify({ message: `${row.languageCode} was updated`, icon: 'check' })
       } catch (err) {
         hideSpinner()
         await alerta('Error update json file', err)
@@ -241,6 +241,7 @@ export default {
       console.log('row', row)
       row.isDefault = 1
       await axios.post('slot/language_default_for_crud', { id: row.id })
+      notify({ message: `${row.languageCode} is now the default`, icon: 'check' })
     }
     watch(() => loggedIn, async () => {
       showSpinner()
