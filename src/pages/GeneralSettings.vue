@@ -10,7 +10,7 @@
     </h3>
 
     <q-separator spaced="30px"/>
-    <div class="text-subtitle1 text-weight-regular text-uppercase">Localization URL</div>
+    <div class="text-subtitle1 text-weight-regular text-uppercase">Localization</div>
     <div class="q-pa-md">
       <q-input v-model="languageJsonUrl" type="textarea" autogrow hint="Replace the language code with <languageCode>"/>
     </div>
