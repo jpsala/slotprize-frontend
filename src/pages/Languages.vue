@@ -36,14 +36,14 @@
             <img :src="row.textureUrl">
           </td>
           <td class="text-left active-td">
-            <q-chip v-if="row.deleted === 1 " color="red-5" style="max-width: 90px" text-color="white" icon="cancel">Inactive</q-chip>
-            <q-chip v-else color="green-5" style="max-width: 90px" text-color="white" icon="check">Active</q-chip>
+            <q-chip v-if="row.deleted === 1" color="white" style="max-width: 90px" text-color="green-8" icon="cancel">Inactive</q-chip>
+            <q-chip v-else color="white" style="max-width: 90px" text-color="green-8" icon="check">Active</q-chip>
           </td>
           <td v-if="row.isDefault === 1" class="is-default text-primary text-subtitle1 text-h6" style="font-size: 110%; font-weight: bold" >
-            <q-chip color="green-5" style="max-width: 90px" text-color="white" icon="check">Default</q-chip>
+            <q-chip color="white" square style="max-width: 90px" text-color="green" icon="check">Default</q-chip>
           </td>
-          <td class="is-default" v-else><q-btn outline rounded color="primary" @click="makeDefault(row)">Make default</q-btn></td>
-          <td class="is-default"><q-btn outline rounded color="primary" @click="refreshJSON(row)">Update JSON</q-btn></td>
+          <td class="is-default" v-else><q-btn push size="sm"  color="grey-7" @click="makeDefault(row)">Make default</q-btn></td>
+          <td class="is-default"><q-btn push size="sm"  color="grey-7" @click="refreshJSON(row)">Update JSON</q-btn></td>
           <td class="text-right dot-menu-td">
             <q-btn class="dot-menu" color="grey-7" round flat icon="more_vert">
                 <q-menu cover auto-close>
@@ -217,6 +217,7 @@ export default {
         const resp = await axios.post('/slot/localizations_update_for_crud', { languageCode: row.languageCode })
         console.log('resp', resp)
       } catch (err) {
+        hideSpinner()
         await alerta('Error update json file', err)
       } finally {
         hideSpinner()
@@ -287,8 +288,10 @@ export default {
     cursor: pointer;
   }
   td.is-default {
-    max-width: 60px;
+    max-width: 140px;
+    min-width: 120px;
     width: 140px;
+    min-width: 120px;
     padding: 0;
     margin: 0;
   }
