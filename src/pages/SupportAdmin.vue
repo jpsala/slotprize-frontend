@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md q-gutter-md justify-center">
+  <div class="q-pa-md q-gutter-md justify-center support-admin">
     <h3 class="q-ml-xl q-pl-xl">
       Support Admin
     </h3>
@@ -126,21 +126,22 @@ export default {
 </script>
 
 <style lang="sass">
-  .New
-    background-color: white
-  .Open
-    background-color: $green-1
-  .Closed
-    background-color: $grey-2
-  .q-markup-table
-    overflow-y: auto;
-    height: 73vh;
-  .q-markup-table thead th
-    position: sticky !important;
-    top: 0;
-  table
-    border-collapse: collapse;
-    overflow: display;
-  th
-    background: white;
+  .support-admin
+    .New
+      background-color: white
+    .Open
+      background-color: $green-1
+    .Closed
+      background-color: $grey-2
+    .q-markup-table
+      overflow-y: auto;
+      height: 73vh;
+    .q-markup-table thead th
+      position: sticky !important;
+      top: 0;
+    table
+      border-collapse: collapse;
+      overflow: display;
+    th
+      background: white;
 </style>

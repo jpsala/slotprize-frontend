@@ -15,7 +15,7 @@ export const getApiToken = (value) => state.apiToken
 const useSession = () => {
   const user = computed(() => state.user)
   const apiToken = computed(() => state.apiToken)
-  const loggedIn = computed(() => Boolean(state.user))
+  const loggedIn = computed(() => Boolean(state.user), { inmediate: true })
   const isDev = computed(() => state.user && state.user.isDev === 1)
 
   let loggedInHandle = () => false

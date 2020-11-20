@@ -1,13 +1,32 @@
 <template>
   <div class="q-pa-md q-gutter-md justify-center">
-    <h3 class="q-ml-xl q-pl-xl">
-      Languages
-    </h3>
-    <q-markup-table>
+    <div class="text-subtitle1 text-weight-regular text-uppercase">Localization</div>
+    <div>
+      <q-input v-model="localizationJsonUrl" type="textarea" autogrow hint="Replace the language code with <languageCode> and the environment with <environment>"/>
+    </div>
+    <div v-if="isDevEnv">
+      <q-input v-model="localizationSpreadsheetUrlDev" type="textarea" autogrow hint="spreadsheet url for DEV"/>
+    </div>
+    <div v-else class="">
+      <q-input v-model="localizationSpreadsheetUrlLive" type="textarea" autogrow hint="spreadsheet url for LIVE"/>
+    </div>
+    <div class="row q-mt-md q-mb-xl float-right">
+      <q-btn color="primary" @click="submitSettings">
+        Submit
+      </q-btn>
+    </div>
+
+    <q-separator style="clear: both" class="q-mt-xl" spaced="30px"/>
+
+    <div class="q-mt-md text-subtitle1 text-weight-regular text-uppercase">Languages</div>
+    <q-markup-table class="">
       <thead>
         <tr>
           <th class="text-left">
             Language Code
+          </th>
+          <th class="text-left">
+            Last JSON Update
           </th>
           <th class="text-center">
             Image
@@ -31,6 +50,9 @@
         >
           <td class="text-left language-code-td">
             {{ row.languageCode }}
+          </td>
+          <td class="text-left">
+            {{ row.updatedAt }}
           </td>
           <td class="text-center img-td">
             <img :src="row.textureUrl">
@@ -70,29 +92,11 @@
       @close="languageCloseDialog"
       @cancel="languageCancel"
     />
-    <q-page-sticky
-      position="top-right"
-      :offset="[18, 18]"
-    >
-      <q-btn
-        :disable="selected !== undefined"
-        @click="openJson"
-        label="Open Localization Spreadsheet"
-        icon="refresh"
-        color="green-6"
-      />
+    <q-page-sticky position="top-right" :offset="[18, 18]" >
+      <q-btn :disable="selected !== undefined" @click="openJson" label="Open Localization Spreadsheet" icon="refresh" color="green-6"/>
     </q-page-sticky>
-    <q-page-sticky
-      position="top-left"
-      :offset="[18, 18]"
-    >
-      <q-btn
-        :disable="selected !== undefined"
-        @click="addLanguage"
-        fab
-        icon="add"
-        color="red-6"
-      />
+    <q-page-sticky position="top-right" :offset="[28, 340]">
+      <q-btn :disable="selected !== undefined" @click="addLanguage" fab icon="add" color="red-6" />
     </q-page-sticky>
   </div>
 </template>
@@ -104,16 +108,21 @@ import axios from '../services/axios'
 import LanguageDialog from '../components/LanguageDialog'
 import { alerta, confirma, notify } from 'src/helpers'
 import useGlobal from '../services/useGlobal'
+import { Notify } from 'quasar'
 
 const { showSpinner, hideSpinner } = useGlobal()
 
 export default {
   components: { LanguageDialog },
   setup () {
-    const { loggedIn, isDev } = useSession()
+    const { loggedIn } = useSession()
+    const { isDevEnv } = useGlobal()
     const state = reactive({
       selected: undefined,
-      rows: undefined
+      rows: undefined,
+      localizationJsonUrl: undefined,
+      localizationSpreadsheetUrlLive: undefined,
+      localizationSpreadsheetUrlDev: undefined
     })
     const selectRow = async (language, event) => {
       console.log('event.target.tagName', event.target)
@@ -177,7 +186,6 @@ export default {
       if (files.localization) { fd.append('localizationFile', files.localization) }
       if (files.texture) { fd.append('textureFile', files.texture) }
       if (language.isNew) fd.append('isNew', language.isNew)
-
       const axiosAnt = axios.defaults.headers.post['Content-Type']
       try {
         axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
@@ -214,7 +222,9 @@ export default {
     const refreshJSON = async (row) => {
       showSpinner()
       try {
-        await axios.post('/slot/localizations_update_for_crud', { languageCode: row.languageCode })
+        const resp = await axios.post('/slot/localizations_update_for_crud', { languageCode: row.languageCode, environment: isDevEnv ? 'dev' : 'live' })
+        row.updatedAt = resp.data
+        console.log('resp', resp)
         notify({ message: `${row.languageCode} was updated`, icon: 'check' })
       } catch (err) {
         hideSpinner()
@@ -224,9 +234,8 @@ export default {
       }
     }
     const openJson = (row) => {
-      const url = isDev
-        ? 'https://docs.google.com/spreadsheets/d/1zHwpbks-VsttadBy9LRdwQW7E9aDGBc0e80Gw2ALNuQ/edit#gid=1259474418'
-        : 'https://docs.google.com/spreadsheets/d/1zHwpbks-VsttadBy9LRdwQW7E9aDGBc0e80Gw2ALNuQ/edit#gid=1117868095'
+      const url = isDevEnv ? state.localizationSpreadsheetUrlDev : state.localizationSpreadsheetUrlLive
+      console.log('url', url)
       window.open(url, '_blank')
     }
     const getClass = (lang) => {
@@ -235,6 +244,23 @@ export default {
       if (lang.deleted === 1) newClass += 'deleted'
       console.log('clss', lang.deleted, newClass)
       return newClass
+    }
+    const submitSettings = async () => {
+      try {
+        await axios.post('/slot/settings_for_localization', {
+          localizationJsonUrl: state.localizationJsonUrl,
+          localizationSpreadsheetUrlDev: state.localizationSpreadsheetUrlDev,
+          localizationSpreadsheetUrlLive: state.localizationSpreadsheetUrlLive
+        })
+      } catch (err) {
+        await alerta('Error', err)
+        return
+      }
+      Notify.create({
+        message: 'Settings where saved',
+        icon: 'save',
+        color: 'green-8'
+      })
     }
     const makeDefault = async (row) => {
       state.rows.forEach(_row => { _row.isDefault = false })
@@ -246,7 +272,10 @@ export default {
     watch(() => loggedIn, async () => {
       showSpinner()
       const response = await axios({ url: '/slot/languages_for_crud', method: 'get' })
-      state.rows = response.data
+      state.rows = response.data.data
+      state.localizationSpreadsheetUrlDev = response.data.localizationSpreadsheetUrlDev
+      state.localizationSpreadsheetUrlLive = response.data.localizationSpreadsheetUrlLive
+      state.localizationJsonUrl = response.data.localizationJsonUrl
       hideSpinner()
     }, { immediate: true })
     return {
@@ -260,7 +289,9 @@ export default {
       selectRow,
       makeDefault,
       refreshJSON,
-      openJson
+      openJson,
+      isDevEnv,
+      submitSettings
     }
   }
 }

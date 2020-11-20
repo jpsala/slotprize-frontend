@@ -10,16 +10,8 @@
     </h3>
 
     <q-separator spaced="30px"/>
-    <div class="text-subtitle1 text-weight-regular text-uppercase">Localization</div>
-    <div class="q-pa-md">
-      <q-input v-model="languageJsonUrl" type="textarea" autogrow hint="Replace the language code with <languageCode>"/>
-    </div>
-    <q-separator spaced="30px"/>
-
-    <q-separator spaced="30px"/>
     <div class="text-subtitle1 text-weight-regular text-uppercase">Spin Time Threshold</div>
     <q-input v-model="spinTimeThreshold" label="How much time passed sincel last spin"/>
-    <q-separator spaced="30px"/>
 
     <div class="text-subtitle1 text-weight-regular text-uppercase">Maintenace Mode</div>
     <!-- <q-checkbox :color="maintenanceMode ? 'red-8': 'green-3'"
@@ -38,31 +30,6 @@
 
     <div class="text-subtitle1 text-weight-regular text-uppercase">Game Version</div>
     <q-input dense v-model="gameVersion"/>
-
-    <div class="text-subtitle1 text-weight-regular text-uppercase">Default players wallet</div>
-    <div class="row">
-      <q-input  v-model="wallet.spins" label="Spins" class="col"/>
-      <q-input  v-model="wallet.coins" label="Coins" class="col"/>
-      <q-input  v-model="wallet.tickets" label="Tickets" class="col q-mr-sm"/>
-    </div>
-
-    <div class="text-subtitle1 text-weight-regular text-uppercase">Ads</div>
-    <q-input v-model="interstitialsRatio" label="Interstitials Ratio"/>
-    <div class="text-subtitle1 text-weight-regular text-uppercase">Spin</div>
-    <div class="row">
-      <q-input
-        class="col"
-
-        v-model="lapseForSpinRegeneration"
-        label="Regeneration Time in Minutes"
-      />
-      <q-input
-        class="col"
-
-        v-model="maxSpinsForSpinRegeneration"
-        label="Threshold for spin regeneration"
-      />
-    </div>
 
     <div class="text-subtitle1 text-weight-regular text-uppercase">Signup</div>
     <q-input v-model="signupCount" hint="Number of spin plays required to display the player profile form" label="SignUp Count"/>
@@ -83,9 +50,11 @@ import useWindowResize from 'src/services/useWindowResize'
 import Localization from 'components/Localization'
 import { Notify } from 'quasar'
 import { alerta } from 'src/helpers'
+import useGlobal from 'src/services/useGlobal'
 export default {
   components: { Localization },
   setup () {
+    const { isDevEnv } = useGlobal()
     const screen = useWindowResize()
     const { loggedIn } = useSession()
     const state = reactive({
@@ -96,7 +65,6 @@ export default {
       maxSpinsForSpinRegeneration: 0,
       interstitialsRatio: undefined,
       signupCount: undefined,
-      languageJsonUrl: undefined,
       wallet: {
         spins: undefined,
         coins: undefined,
@@ -113,7 +81,6 @@ export default {
           interstitialsRatio: state.interstitialsRatio,
           lapseForSpinRegeneration: state.lapseForSpinRegeneration * 60,
           maxSpinsForSpinRegeneration: state.maxSpinsForSpinRegeneration,
-          languageJsonUrl: state.languageJsonUrl,
           spinTimeThreshold: state.spinTimeThreshold
         })
       } catch (err) {
@@ -132,7 +99,6 @@ export default {
         method: 'get',
         params: {}
       })
-      state.languageJsonUrl = response.data.languageJsonUrl
       state.gameVersion = response.data.gameVersion
       state.spinTimeThreshold = response.data.spinTimeThreshold
       state.signupCount = response.data.signupCount
@@ -143,7 +109,7 @@ export default {
       state.maxSpinsForSpinRegeneration = response.data.maxSpinsForSpinRegeneration
       console.log('response', response.data)
     }, { immediate: true })
-    return { ...toRefs(state), submit, screen }
+    return { ...toRefs(state), submit, screen, isDevEnv }
   }
 }
 </script>

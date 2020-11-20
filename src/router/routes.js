@@ -11,7 +11,7 @@ import Countries from 'src/pages/Countries'
 import SupportAdmin from 'src/pages/SupportAdmin'
 import Players from 'src/pages/Players'
 import Player from 'src/components/Player'
-import Tickets from 'src/pages/Tickets'
+import Balance from 'src/pages/Balance'
 import Spins from 'src/pages/SpinSettings'
 import Winners from 'src/pages/Winners'
 import DailyReward from 'src/pages/DailyReward'
@@ -20,6 +20,7 @@ import AdsSettings from 'src/pages/AdsSettings'
 import Error404 from 'src/pages/Error404'
 import MainLayout from 'src/layouts/MainLayout'
 import GeneralSettings from 'src/pages/GeneralSettings'
+import Legals from 'src/pages/Legals'
 const routes = [
   {
     path: '/',
@@ -37,12 +38,13 @@ const routes = [
       { path: 'winners', component: Winners },
       { path: 'testRules', component: TestRules },
       { path: 'dailyreward', component: DailyReward },
-      { path: 'tickets', component: Tickets },
+      { path: 'balance', component: Balance },
       { path: 'countries', component: Countries },
       { path: 'adsSettings', component: AdsSettings },
       { path: 'supportAdmin', component: SupportAdmin },
       { path: 'players', component: Players },
       { path: 'generalSettings', component: GeneralSettings },
+      { path: 'legals', component: Legals },
       { path: 'player', component: Player }
     ]
   },

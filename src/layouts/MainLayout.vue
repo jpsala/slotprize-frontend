@@ -4,7 +4,7 @@
 
     <q-header
       elevated
-      :class="isDev ? 'bg-secondary text-subtitle1':''"
+      :class="isDevEnv ? 'bg-secondary text-subtitle1':''"
     >
       <q-toolbar>
         <q-btn
@@ -22,7 +22,7 @@
           </q-avatar>
         </q-toolbar-title>
         <span
-          v-show="isDev"
+          v-show="isDevEnv"
           class="q-mr-md"
           style="color:#ffeb3bcf; font-size: 100%"
         >DevMode!</span>
@@ -131,7 +131,7 @@ export default {
   components: { myDrawerContent },
 
   setup () {
-    const { loading, isDev, utcDate } = useGlobal()
+    const { loading, isDevEnv, utcDate } = useGlobal()
     const items = ref(
       setItemsDefaults([
         {
@@ -153,8 +153,9 @@ export default {
             { label: 'Skins', to: '/skins' },
             { label: 'Winners', to: '/winners' },
             { label: 'Daily Rewards', to: '/dailyreward' },
-            { label: 'Tickets', to: '/tickets' },
+            { label: 'Balance', to: '/balance' },
             { label: 'Support Admin', to: '/supportAdmin' },
+            { label: 'Legals', to: '/legals' },
             { label: 'Slot Machine', to: '/slotMachine' }
           ]
         }
@@ -178,7 +179,7 @@ export default {
       }
     })
     return {
-      logout, left, items, loggedIn, user, loading, isDev, utcDate
+      logout, left, items, loggedIn, user, loading, isDevEnv, utcDate
     }
   }
 }

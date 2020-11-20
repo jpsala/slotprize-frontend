@@ -5,6 +5,7 @@ function whichBox () {
   const url = document.location.hostname
   const devBoxes = ['dev.slotoprizes.tagadagames.com', 'localhost', 'bo.dev.slotoprizes.tagadagames.com']
   const isDev = devBoxes.includes(url)
+  // @TODO Ver que es este "isLocal"
   return { isDev, isLocal }
 }
 const debounce = (func, wait, immediate) => {
