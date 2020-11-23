@@ -28,8 +28,10 @@
 
     <q-separator spaced="30px"/>
 
-    <div class="text-subtitle1 text-weight-regular text-uppercase">Game Version</div>
-    <q-input dense v-model="gameVersion"/>
+    <div class="text-subtitle1 text-weight-regular text-uppercase">Current Game Version</div>
+    <q-input dense v-model="currentGameVersion"/>
+    <div class="text-subtitle1 text-weight-regular text-uppercase">Latest Mandatory Game Version</div>
+    <q-input dense v-model="latestMandatoryVersion"/>
 
     <div class="text-subtitle1 text-weight-regular text-uppercase">Signup</div>
     <q-input v-model="signupCount" hint="Number of spin plays required to display the player profile form" label="SignUp Count"/>
@@ -59,7 +61,8 @@ export default {
     const { loggedIn } = useSession()
     const state = reactive({
       spinTimeThreshold: undefined,
-      gameVersion: undefined,
+      currentGameVersion: undefined,
+      latestMandatoryVersion: undefined,
       maintenanceMode: false,
       lapseForSpinRegeneration: 0,
       maxSpinsForSpinRegeneration: 0,
@@ -74,7 +77,8 @@ export default {
     const submit = async () => {
       try {
         await axios.post('/slot/misc_settings_for_crud', {
-          gameVersion: state.gameVersion,
+          currentGameVersion: state.currentGameVersion,
+          latestMandatoryVersion: state.latestMandatoryVersion,
           maintenanceMode: state.maintenanceMode,
           signupCount: state.signupCount,
           wallet: state.wallet,
@@ -99,7 +103,8 @@ export default {
         method: 'get',
         params: {}
       })
-      state.gameVersion = response.data.gameVersion
+      state.currentGameVersion = response.data.currentGameVersion
+      state.latestMandatoryVersion = response.data.latestMandatoryVersion
       state.spinTimeThreshold = response.data.spinTimeThreshold
       state.signupCount = response.data.signupCount
       state.maintenanceMode = response.data.maintenanceMode
