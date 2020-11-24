@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md q-gutter-md"  style="max-wwidth: 800px">
+  <div class="q-pa-md q-gutter-md">
     <div class="row q-mt-xl float-right">
       <q-btn color="primary" @click="submit">
         Submit
@@ -19,8 +19,8 @@
      <div class="row">
        <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-2 self-start">
           <q-radio class="col-12" :style="'color:' + (maintenanceMode ? 'red':'')"
-                    :color="maintenanceMode ? 'red-4':''"
-                    v-model="maintenanceMode" :val="true" label="In maintenance mode" /><br />
+                   :color="maintenanceMode ? 'red-4':''"
+                   v-model="maintenanceMode" :val="true" label="In maintenance mode" /><br />
           <q-radio v-model="maintenanceMode" :val="false" label="Functioning normally" />
        </div>
       <Localization class="col-xs-12 col-sm-12 col-md-12 col-lg-10 self-start" item='maintenanceMode' />

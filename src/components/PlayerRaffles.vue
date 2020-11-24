@@ -41,7 +41,7 @@ export default {
     })
     onMounted(async () => {
       showSpinner()
-      const resp = await axios.get(`/slot/raffle_purchase_history?deviceId=${props.player.device_id}`)
+      const resp = await axios.get(`/slot/raffle_purchase_history_for_crud?deviceId=${props.player.device_id}`)
       hideSpinner()
       state.items = resp.data.map(item => {
         return {

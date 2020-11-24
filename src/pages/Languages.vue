@@ -247,7 +247,7 @@ export default {
     }
     const submitSettings = async () => {
       try {
-        await axios.post('/slot/settings_for_localization', {
+        await axios.post('/slot/settings_for_localization_for_crud', {
           localizationJsonUrl: state.localizationJsonUrl,
           localizationSpreadsheetUrlDev: state.localizationSpreadsheetUrlDev,
           localizationSpreadsheetUrlLive: state.localizationSpreadsheetUrlLive

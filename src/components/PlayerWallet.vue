@@ -53,7 +53,7 @@ export default {
       spins: undefined
     })
     onMounted(async () => {
-      const resp = await axios.get(`/slot/wallet?deviceId=${props.player.device_id}`)
+      const resp = await axios.get(`/slot/wallet_for_crud?deviceId=${props.player.device_id}`)
       state.coins = resp.data.coins
       state.tickets = resp.data.tickets
       state.spins = resp.data.spins
