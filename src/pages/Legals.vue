@@ -4,7 +4,7 @@
     <div class="q-gutter-y-md" style="max-width: 100%">
       <h3 class="q-ml-xl q-pl-xl" style="margin-bottom: 0; padding-bottom: 0">Legals</h3>
       <q-separator />
-      <h4 v-if="missingLocalizations">There are missing localizations</h4>
+      <h4 class="bg-red-8 text-white q-pa-lg" style="border-radius: 10px" v-if="missingLocalizations">There are missing localizations</h4>
       <q-option-group v-model="panel" inline :options="items" />
       <q-tab-panels v-model="panel" animated >
         <q-tab-panel v-for="tab of items" :name="tab.value" :key="tab.value">
