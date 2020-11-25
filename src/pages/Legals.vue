@@ -5,7 +5,6 @@
       <h3 class="q-ml-xl q-pl-xl" style="margin-bottom: 0; padding-bottom: 0">Legals</h3>
       <q-separator />
       <h4 v-if="missingLocalizations">There are missing localizations</h4>
-      <q-checkbox v-model="dontEnforce" label="dont enforce agreement" />
       <q-option-group v-model="panel" inline :options="items" />
       <q-tab-panels v-model="panel" animated >
         <q-tab-panel v-for="tab of items" :name="tab.value" :key="tab.value">
@@ -22,7 +21,12 @@
           </div>
         </q-tab-panel>
       </q-tab-panels>
-      <div class="row q-mt-md float-right">
+      <!-- <q-separator /> -->
+      <div class="row">
+      <q-checkbox class="float-right q-mb-lg" size="xl" style="font-size:160%" v-model="dontEnforce" label="dont enforce agreement" />
+      <q-separator style="clear: both"/>
+      </div>
+      <div class="row q-mt-md float-right q-mt-xl">
         <q-btn color="primary" @click="submit">
           Submit
         </q-btn>
