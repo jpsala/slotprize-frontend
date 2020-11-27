@@ -21,6 +21,7 @@ import Error404 from 'src/pages/Error404'
 import MainLayout from 'src/layouts/MainLayout'
 import GeneralSettings from 'src/pages/GeneralSettings'
 import Legals from 'src/pages/Legals'
+import Cards from 'src/pages/Cards'
 const routes = [
   {
     path: '/',
@@ -45,6 +46,7 @@ const routes = [
       { path: 'players', component: Players },
       { path: 'generalSettings', component: GeneralSettings },
       { path: 'legals', component: Legals },
+      { path: 'cards', component: Cards },
       { path: 'player', component: Player }
     ]
   },

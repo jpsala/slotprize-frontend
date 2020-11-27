@@ -158,7 +158,7 @@ export default {
       inputImgRef: undefined,
       imgRef: undefined,
       tab: 'info',
-      missingImage: 'https://slotoprizes.tagadagames.com/public/assets/img/missing.png'
+      missingImage: 'https://assets.slotoprizes.tagadagames.com/img/missing.png'
     })
     const cancel = () => {
       emit('close')

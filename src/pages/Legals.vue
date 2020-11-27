@@ -22,11 +22,9 @@
         </q-tab-panel>
       </q-tab-panels>
       <!-- <q-separator /> -->
-      <div class="row">
-      <q-checkbox class="float-right q-mb-lg" size="xl" style="font-size:160%" v-model="dontEnforce" label="dont enforce agreement" />
       <q-separator style="clear: both"/>
-      </div>
-      <div class="row q-mt-md float-right q-mt-xl">
+      <div class="row q-mt-md q-mt-xl justify-end">
+        <q-checkbox class="q-mb-lg float-right q-mr-md" size="xl" style="font-size:140%" v-model="dontEnforce" label="Don't enforce the agreement" />
         <q-btn color="primary" @click="submit">
           Submit
         </q-btn>

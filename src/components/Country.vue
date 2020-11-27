@@ -97,7 +97,7 @@ export default {
       fileForUpload: props.country.countryUrl ?? 'Select a JSON file',
       img: undefined,
       reader: new FileReader(),
-      missingImage: 'https://slotoprizes.tagadagames.com/public/assets/img/missing.png'
+      missingImage: 'https://assets.slotoprizes.tagadagames.com/img/missing.png'
     })
     state.reader.onload = function () {
       state.img.src = state.reader.result

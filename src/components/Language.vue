@@ -102,7 +102,7 @@ export default {
       fileForUpload: props.language.localizationUrl ?? 'Select a JSON file',
       img: undefined,
       reader: new FileReader(),
-      missingImage: 'https://slotoprizes.tagadagames.com/public/assets/img/missing.png'
+      missingImage: 'https://assets.slotoprizes.tagadagames.com/img/missing.png'
     })
     const fileChange = (event) => {
       state.fileForUpload = state.fileInput.files[0].name

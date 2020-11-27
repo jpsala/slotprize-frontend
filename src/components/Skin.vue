@@ -85,7 +85,7 @@ export default {
       img: undefined,
       reader: new FileReader(),
       missingImage:
-        'https://slotoprizes.tagadagames.com/public/assets/img/missing.png'
+        'https://assets.slotoprizes.tagadagames.com/img/missing.png'
     })
     state.reader.onload = function () {
       state.img.src = state.reader.result
