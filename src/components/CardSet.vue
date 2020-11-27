@@ -55,12 +55,12 @@ import clone from 'rfdc'
 export default {
 // components: {},
   props: {
-    cardAlbum: undefined,
+    cardSet: undefined,
     languages: undefined
   },
   setup (props, { emit }) {
     const state = reactive({
-      fileForUpload: props.cardAlbum.textureUrl ?? 'Select a JSON file',
+      fileForUpload: props.cardSet.textureUrl ?? 'Select a JSON file',
       imgInput: undefined,
       img: undefined,
       modelCopy: undefined,
@@ -77,15 +77,15 @@ export default {
     }
     const submit = () => {
       var files = state.imgInput.files
-      emit('submit', { cardAlbum: state.modelCopy, files })
+      emit('submit', { cardSet: state.modelCopy, files })
     }
     onMounted(() => {
-      state.modelCopy = clone()(props.cardAlbum)
+      state.modelCopy = clone()(props.cardSet)
     })
     watch(
       () => props.model,
       () => {
-        state.modelCopy = clone()(props.cardAlbum)
+        state.modelCopy = clone()(props.cardSet)
       },
       { inmediate: true }
     )

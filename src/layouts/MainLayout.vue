@@ -156,7 +156,7 @@ export default {
             { label: 'Balance', to: '/balance' },
             { label: 'Support Admin', to: '/supportAdmin' },
             { label: 'Legals', to: '/legals' },
-            { label: 'Cards', to: '/cards' },
+            { label: 'Card Collections', to: '/cards' },
             { label: 'Slot Machine', to: '/slotMachine' }
           ]
         }

@@ -1,75 +1,190 @@
 <template>
   <div class="q-pa-md q-gutter-md justify-center">
-    <h3 class="q-ml-xl q-pl-xl">Cards</h3>
+    <h3 class="q-ml-xl q-pl-xl">Card Collections</h3>
     <q-separator spaced="30px"/>
-    <div class="text-subtitle1 text-weight-regular text-uppercase">Albums</div>
-    <div class="row">
-      <card-album
-        v-if="newCardAlbum !== undefined"
-        :card-album="newCardAlbum"
-        :languages="languages"
-        @submit="submit"
+    <div class="text-subtitle1 text-weight-regular text-uppercase">Sets</div>
+    <div class="q-pa-md">
+      <q-list bordered padding style="position: relative">
+        <template  v-for="cardSet of cardSets" >
+          <q-item :key="'item1_'+cardSet.id" class="card-item-img">
+            <!-- Edition buttons -->
+            <div v-show="!cardSetEditing || cardSetEditing === cardSet" class="set-btns" :key="'btn_edit_'+cardSet.id" >
+              <q-btn v-if="!cardSetEditing" @click="editSet(cardSet)" round icon="edit" color="primary"
+                    class="edit-set-btn" style="z-index: 1" />
+              <q-btn v-if="cardSetEditing" @click="cancelSetEdition(cardSet)" round icon="close" color="red-6"
+                     class="edit-set-btn" style="z-index: 1" />
+              <q-btn v-if="cardSetEditing" @click="submit(cardSet)" round icon="check" color="primary"
+                     class="edit-set-btn" style="z-index: 1"
+              />
+            </div>
+            <!-- Image -->
+            <q-item-section v-if="cardSetEditing !== cardSet">
+              <!-- Card Set browsing -->
+              <div class="row">
+                <q-item-section thumbnail class="content-center self-center">
+                  <img :src="cardSet.img" :class="cardSetEditing || cardSetEditing === cardSet ? 'self-center':''">
+                </q-item-section>
+                <!-- <q-item-label class="col" style="max-width:40px;place-self: center;">Title</q-item-label> -->
+                <div class="col">
+                  <q-markup-table dense :bordered='false' flat>
+                    <tbody>
+                      <tr v-for="(localization, index) of cardSet.localizations" :key="'localization' + index + 'cardSEt' + cardSet.id">
+                        <td style="width: 30px">{{localization.languageCode}}</td>
+                        <td style="width: 500px"><span class="text-bold">{{localization.text}}</span></td>
+                      </tr>
+                    </tbody>
+                  </q-markup-table>
+                    <q-separator spaced="20px" />
+                  <div class="">
+                    <div><span class="text-caption" style="display: inline-block;width: 100px">Theme Color </span><span class="text-bold"> {{cardSet.themeColor}}</span></div>
+                    <div><span class="text-caption" style="display: inline-block;width: 100px">Payment Type </span><span class="text-bold"> {{cardSet.rewardType}}</span></div>
+                    <div><span class="text-caption" style="display: inline-block;width: 100px">Reward Amount </span><span class="text-bold"> {{cardSet.rewardAmount}}</span></div>
+                  </div>
+                </div>
+              </div>
+              <!-- <q-item-label>{{cardSet.localizations && cardSet.localizations[0].text || 'No tittle'}}</q-item-label> -->
+
+            </q-item-section>
+            <q-item-section v-else>
+              <!-- Card Set Editing -->
+              <q-item-label>
+                <div class="text-overline">Title</div>
+                <q-separator spaced="10px"/>
+                <q-markup-table>
+                  <tbody>
+                    <tr v-for="(localization, index) of cardSet.localizations" :key="'localization' + index + 'cardSEt' + cardSet.id">
+                      <td>{{localization.languageCode}}</td>
+                      <td><q-input v-model="localization.text" /></td>
+                    </tr>
+                  </tbody>
+                </q-markup-table>
+                <q-separator spaced="10px"/>
+                <!-- <div class="text-overline">Theme Color</div> -->
+                  <q-input v-model="cardSet.themeColor" label="Theme Color" class="col"/>
+                <div class="row">
+                  <q-select class="col" label="Reward Type" v-model="cardSet.rewardType" :options="paymentOptions" stack-label/>
+                  <q-input v-model="cardSet.rewardAmount" class="col" label="Reward Amount" stack-label/>
+                </div>
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+            <q-separator :key="'separator1_'+cardSet.id"/>
+          <q-item :key="'item2_'+cardSet.id">
+            <q-item-section>
+              <!-- Cards section -->
+              <q-expansion-item
+                v-if="cardSet.id > -1"
+                :last="(cardSets.length === 0 || cardSet.id === cardSets[cardSets.length-1].id) ? 'true' : 'false'"
+                switch-toggle-side
+                :group="'group_' + cardSet.id"
+                label="Cards"
+                :value="cardSetEditing && cardSetEditing === cardSet"
+                header-class="text-primary"
+              >
+                {{cardSet.cards}}
+              </q-expansion-item>
+            </q-item-section>
+          </q-item>
+          <q-separator :key="'separator_1'.concat(cardSet.id)" v-if="cardSets.length > 0 && cardSet.id !== cardSets[cardSets.length-1].id"/>
+        </template>
+      </q-list>
+      <q-page-sticky position="top-left" :offset="[18, 18]" >
+        <q-btn :disable="cardSetEditing !== undefined" @click="addCardSet"  fab  icon="add"
+              :color="cardSetEditing ? 'red-3':'red-6'"
         />
-      <card-album v-for="cardAlbum of cardAlbums"
-        :key="cardAlbum.id"
-        :card-album="cardAlbum"
-        :languages="languages"
-        @submit="submit"
-        />
+      </q-page-sticky>
     </div>
-        <q-page-sticky position="top-left" :offset="[18, 18]" >
-      <q-btn :disable="editingCardAlbum !== undefined || newCardAlbum" @click="addCardAlbum"  fab  icon="add"
-             :color="editingCardAlbum ? 'red-3':'red-6'"
-      />
-    </q-page-sticky>
   </div>
+
 </template>
 
 <script>
 import { reactive, toRefs, watch } from '@vue/composition-api'
 import useSession from 'src/services/useSession'
 import axios from '../services/axios'
-import CardAlbum from 'src/components/CardAlbum'
 import clone from 'rfdc'
+import useGlobal from '../services/useGlobal'
+import { alerta } from 'src/helpers'
+
 export default {
-  components: { CardAlbum },
   setup () {
+    const { showSpinner, hideSpinner } = useGlobal()
+
     const { loggedIn } = useSession()
     const state = reactive({
-      cardAlbums: [],
+      paymentOptions: ['coin', 'spin', 'ticket', 'jackpot'],
+      cardSets: [],
+      cardSetEditing: undefined,
       languages: [],
       newCard: undefined,
       emptyCard: undefined,
-      emptyCardAlbum: undefined,
-      newCardAlbum: undefined,
-      editingCardAlbum: undefined
+      emptyCardSet: undefined,
+      newCardSet: undefined,
+      cardSetBackup: undefined
     })
-    const addCardAlbum = () => {
-      state.newCardAlbum = clone()(state.emptyCardAlbum)
+    const addCardSet = () => {
+      state.newCardSet = clone()(state.emptyCardSet)
       // state.newCard = response.data.newCard
-      console.log('addCardAlbum')
+      state.cardSets.unshift(state.newCardSet)
+      // console.log(idx)
+      state.cardSetEditing = state.newCardSet
+      console.log('addCardSet')
     }
-    const submit = (cardAlbum, files) => {
-      console.log('cardAlbum, files', cardAlbum, files)
+    const editSet = (cardSet) => {
+      state.cardSetBackup = clone()(cardSet)
+      state.cardSetEditing = cardSet
+    }
+    const cancelSetEdition = (cardSet) => {
+      const idx = state.cardSets.findIndex(_cardSet => _cardSet.id === cardSet.id)
+      state.cardSets[idx] = clone()(state.cardSetBackup)
+      state.cardSetEditing = undefined
+    }
+    const submit = async (cardSet) => {
+      console.log('cardSet, files', cardSet)
+      showSpinner()
+
+      try {
+        const response = await axios.post('/slot/card_sets_for_crud', cardSet)
+        hideSpinner()
+        console.log('response', response)
+        cardSet.id = response.data.id
+        state.cardSetEditing = undefined
+      } catch (err) {
+        hideSpinner()
+        await alerta('Error', err)
+      }
     }
     watch(() => loggedIn, async () => {
       const response = await axios({
-        url: '/slot/card_albums_for_crud',
+        url: '/slot/card_sets_for_crud',
         method: 'get',
         params: {}
       })
       console.log('response', response)
-      state.cardAlbums = response.data.cardAlbums
+      state.cardSets = response.data.cardSets
+      for (const cardSet of state.cardSets) {
+        cardSet.img = 'https://assets.slotoprizes.tagadagames.com/img/missing.png'
+        if (cardSet.cards?.length > 0) cardSet.img = cardSet.cards[0].thumbUrl
+      }
       state.languages = response.data.languages
-      state.emptyCard = response.data.emptyAlbum
-      state.emptyCardAlbum = response.data.newCardAlbum
+      state.emptyCard = response.data.emptySet
+      state.emptyCardSet = response.data.newCardSet
     }, { immediate: true })
     console.log('state', state)
-    return { ...toRefs(state), addCardAlbum, submit }
+    return { ...toRefs(state), addCardSet, submit, editSet, cancelSetEdition }
   }
 }
 </script>
 
-<style>
-
+<style lang="stylus">
+.set-btns
+//   display: none
+  position: absolute;
+  top: 5px;
+  right: 0px
+  .edit-set-btn
+    margin-right: 10px
+// .q-list:hover
+//   .set-btns
+//     display: block
 </style>
