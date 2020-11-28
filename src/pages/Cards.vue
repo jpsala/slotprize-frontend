@@ -8,7 +8,7 @@
         <template  v-for="cardSet of cardSets" >
           <q-item :key="'item1_'+cardSet.id" class="card-item-img">
             <!-- Edition buttons -->
-            <div v-show="!cardSetEditing || cardSetEditing === cardSet" class="set-btns" :key="'btn_edit_'+cardSet.id" >
+            <div v-show="(!cardSetEditing || cardSetEditing === cardSet) && cardEditing === undefined" class="set-btns" :key="'btn_edit_'+cardSet.id" >
               <q-btn v-if="!cardSetEditing" @click="editSet(cardSet)" round icon="edit" color="primary"
                     class="edit-set-btn" style="z-index: 1" />
               <q-btn v-if="cardSetEditing" @click="cancelSetEdition(cardSet)" round icon="close" color="red-6"
@@ -22,7 +22,7 @@
               <!-- Card Set browsing -->
               <div class="row">
                 <q-item-section thumbnail class="content-center self-center">
-                  <img :src="cardSet.img" :class="cardSetEditing || cardSetEditing === cardSet ? 'self-center':''">
+                  <img :src="cardSet.img" style="width:200px; height: auto" :class="cardSetEditing || cardSetEditing === cardSet ? 'self-center':''">
                 </q-item-section>
                 <!-- <q-item-label class="col" style="max-width:40px;place-self: center;">Title</q-item-label> -->
                 <div class="col">
@@ -81,7 +81,10 @@
                 :value="cardSetEditing && cardSetEditing === cardSet"
                 header-class="text-primary"
               >
-                {{cardSet.cards}}
+              <div class="row q-mb-xl">
+                <card :save="saveCard" v-for="card in cardSet.cards" :cardEditing.sync="cardEditing"
+                     :key="card.id" :model="card" :editing="cardEditing"/>
+              </div>
               </q-expansion-item>
             </q-item-section>
           </q-item>
@@ -89,7 +92,7 @@
         </template>
       </q-list>
       <q-page-sticky position="top-left" :offset="[18, 18]" >
-        <q-btn :disable="cardSetEditing !== undefined" @click="addCardSet"  fab  icon="add"
+        <q-btn :disable="cardSetEditing !== undefined || cardEditing !== undefined" @click="addCardSet"  fab  icon="add"
               :color="cardSetEditing ? 'red-3':'red-6'"
         />
       </q-page-sticky>
@@ -103,10 +106,12 @@ import { reactive, toRefs, watch } from '@vue/composition-api'
 import useSession from 'src/services/useSession'
 import axios from '../services/axios'
 import clone from 'rfdc'
+import Card from '../components/Card'
 import useGlobal from '../services/useGlobal'
 import { alerta } from 'src/helpers'
 
 export default {
+  components: { Card },
   setup () {
     const { showSpinner, hideSpinner } = useGlobal()
 
@@ -120,7 +125,8 @@ export default {
       emptyCard: undefined,
       emptyCardSet: undefined,
       newCardSet: undefined,
-      cardSetBackup: undefined
+      cardSetBackup: undefined,
+      cardEditing: undefined
     })
     const addCardSet = () => {
       state.newCardSet = clone()(state.emptyCardSet)
@@ -134,13 +140,19 @@ export default {
       state.cardSetBackup = clone()(cardSet)
       state.cardSetEditing = cardSet
     }
+    const saveCard = async (card) => {
+      const response = await axios.post('/slot/card_for_crud', card)
+      console.log('response', response)
+      card.id = response.data.id
+      state.cardEditing = undefined
+    }
     const cancelSetEdition = (cardSet) => {
       const idx = state.cardSets.findIndex(_cardSet => _cardSet.id === cardSet.id)
       state.cardSets[idx] = clone()(state.cardSetBackup)
       state.cardSetEditing = undefined
     }
     const submit = async (cardSet) => {
-      console.log('cardSet, files', cardSet)
+      console.log('cardSet', cardSet)
       showSpinner()
 
       try {
@@ -151,7 +163,7 @@ export default {
         state.cardSetEditing = undefined
       } catch (err) {
         hideSpinner()
-        await alerta('Error', err)
+        await alerta('Error saving data', err)
       }
     }
     watch(() => loggedIn, async () => {
@@ -171,20 +183,16 @@ export default {
       state.emptyCardSet = response.data.newCardSet
     }, { immediate: true })
     console.log('state', state)
-    return { ...toRefs(state), addCardSet, submit, editSet, cancelSetEdition }
+    return { ...toRefs(state), addCardSet, submit, editSet, cancelSetEdition, saveCard }
   }
 }
 </script>
 
 <style lang="stylus">
 .set-btns
-//   display: none
   position: absolute;
   top: 5px;
   right: 0px
   .edit-set-btn
     margin-right: 10px
-// .q-list:hover
-//   .set-btns
-//     display: block
 </style>
