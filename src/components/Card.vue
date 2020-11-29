@@ -1,5 +1,5 @@
 <template>
-  <q-card class="card-card" v-if="modelCopy">
+  <q-card class="card-card q-mb-md" v-if="modelCopy">
     <input
       ref="imgTextureInput"
       type="file"
@@ -18,10 +18,20 @@
     <img class="texture-img cursor-pointer" :src="modelCopy.textureUrl"
             @click="$refs.imgTextureInput.click()" ref="imgTexture" style="border-radius: 20%">
     <q-separator  />
-    <div v-if="editing" class="thumb-label">Thumb image</div>
-    <img v-if="editing" class="thumb-img cursor-pointer" :src="modelCopy.thumbUrl"
-            @click="$refs.imgThumbInput.click()" ref="imgThumb" style="border-radius: 20%">
 
+    <!-- <div  class="thumb-label">Thumb image</div> -->
+    <q-expansion-item
+      class="bg-grey-3"
+      dense
+      dark
+      switch-toggle-side
+      label="Thumb image"
+      :value="false"
+      header-class="text-primary"
+    >
+    <img  class="thumb-img cursor-pointer" :src="modelCopy.thumbUrl"
+            @click="$refs.imgThumbInput.click()" ref="imgThumb" style="border-radius: 20%">
+    </q-expansion-item>
     <div class="thumb-label">Localization</div>
     <q-card-section>
       <q-markup-table v-if="isEditingThis" flat dense>
@@ -48,6 +58,7 @@
     <q-rating v-model="modelCopy.stars" size="2em" color="green-5" icon="star" />
     </q-card-section>
     <q-card-actions align="right">
+      <q-btn outline v-show="!isEditingThis" :disable="editing !== undefined" label="Delete" color="red-4" icon="cancel" @click="deleteCard(modelCopy)" />
       <q-btn outline v-show="!isEditingThis" :disable="editing !== undefined" label="Edit" color="primary" icon="edit" @click="edit(modelCopy)" />
       <q-btn outline v-show="isEditingThis" label="Cancel"  color="red-6" icon="cancel"  @click="cancel(modelCopy)"/>
       <q-btn outline v-show="isEditingThis" label="Submit" @click="submit(modelCopy)" color="primary" icon="check" />
@@ -64,7 +75,7 @@
 */
 import { reactive, toRefs, onMounted, watch, computed } from '@vue/composition-api'
 import clone from 'rfdc'
-import { alerta } from 'src/helpers'
+import { alerta, confirma } from 'src/helpers'
 import useGlobal from '../services/useGlobal'
 const { showSpinner, hideSpinner } = useGlobal()
 export default {
@@ -96,12 +107,18 @@ export default {
     const imgThumbChange = (event) => {
       state.readerThumb.readAsDataURL(event.target.files[0])
     }
+    const deleteCard = async (card) => {
+      if (await confirma('Are you sure you want to delete this card?')) {
+        emit('delete-card', card)
+      }
+    }
     const edit = (card) => {
       state.backup = clone()(state.modelCopy)
       emit('update:cardEditing', card)
     }
     const cancel = (card) => {
       state.modelCopy = clone()(state.backup)
+      emit('cancel-card-add', card)
       emit('update:cardEditing', undefined)
     }
     const submit = async (card) => {
@@ -128,17 +145,23 @@ export default {
     const isEditingThis = computed(() => {
       return props.editing?.id === props.model?.id
     })
-    onMounted(() => {
+    const cloneModel = () => {
       state.modelCopy = clone()(props.model)
+      if (!state.modelCopy.textureUrl) state.modelCopy.textureUrl = 'https://assets.slotoprizes.tagadagames.com/img/missing.png'
+      if (!state.modelCopy.thumbUrl) state.modelCopy.thumbUrl = 'https://assets.slotoprizes.tagadagames.com/img/missing.png'
+    }
+
+    onMounted(() => {
+      cloneModel()
     })
     watch(
       () => props.model,
       () => {
-        state.modelCopy = clone()(props.model)
+        cloneModel()
       },
       { inmediate: true }
     )
-    return { ...toRefs(state), edit, cancel, submit, saved, isEditingThis, imgTextureChange, imgThumbChange }
+    return { ...toRefs(state), edit, cancel, submit, saved, isEditingThis, imgTextureChange, imgThumbChange, deleteCard }
   }
 }
 </script>
@@ -146,6 +169,11 @@ export default {
   .card-card{
     width: 300px;
     margin-right: 15px;
+    .q-expansion-item__content{
+      background-color: white;
+      text-align: center;
+      display: flex;
+    }
     .texture-img{
       max-width: 300px;
     };
@@ -157,7 +185,9 @@ export default {
       background-color: $grey-3;
     }
     .thumb-img{
-      max-width: 100px;
+      padding: 10px;
+      max-width: 250px;
+      margin: auto;
     };
   }
 </style>

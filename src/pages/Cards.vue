@@ -86,9 +86,10 @@
                 :value="cardSetEditing && cardSetEditing === cardSet"
                 header-class="text-primary"
               >
-              <div class="row q-mb-xl">
-                <card :save="saveCard" v-for="card in cardSet.cards" :cardEditing.sync="cardEditing"
-                     :key="card.id" :model="card" :editing="cardEditing"/>
+              <div class="row q-mb-xl cards-row">
+                <q-btn round fab class="card-new" color="red-6" icon="add" @click="addCard(cardSet)" />
+                <card @delete-card="deleteCard" :save="saveCard" v-for="card in cardSet.cards" :cardEditing.sync="cardEditing"
+                     :key="card.id" :model="card" :editing="cardEditing" @cancel-card-add="cancelCardAdd"/>
               </div>
               </q-expansion-item>
             </q-item-section>
@@ -127,11 +128,12 @@ export default {
       cardSets: [],
       cardSetEditing: undefined,
       languages: [],
+      newCardSet: undefined,
+      emptyCardSet: undefined,
       newCard: undefined,
       emptyCard: undefined,
-      emptyCardSet: undefined,
-      newCardSet: undefined,
       cardSetBackup: undefined,
+      cardBackup: undefined,
       cardEditing: undefined
     })
     const addCardSet = () => {
@@ -140,7 +142,6 @@ export default {
       state.cardSets.unshift(state.newCardSet)
       // console.log(idx)
       state.cardSetEditing = state.newCardSet
-      console.log('addCardSet')
     }
     const editSet = (cardSet) => {
       state.cardSetBackup = clone()(cardSet)
@@ -167,10 +168,38 @@ export default {
       state.cardSets[idx] = clone()(state.cardSetBackup)
       state.cardSetEditing = undefined
     }
-    const submit = async (cardSet) => {
-      console.log('cardSet', cardSet)
+    const deleteCard = (card) => {
+      console.log('delete', card)
       showSpinner()
-
+      try {
+        const resp = axios.delete('/slot/card_for_crud?cardId=' + card.id)
+        console.log('resp', resp.data)
+        hideSpinner()
+        const cardSet = state.cardSets.find(_cardSet => _cardSet.id === card.cardSetId)
+        const cardIdx = cardSet.cards.findIndex(_card => _card.id === card.id)
+        cardSet.cards.splice(cardIdx, 1)
+      } catch (error) {
+        hideSpinner()
+        alerta('Error deleting card', error)
+      }
+    }
+    const addCard = (cardSet) => {
+      state.newCard = clone()(state.emptyCard)
+      state.newCard.cardSetId = cardSet.id
+      console.log(state.newCard)
+      cardSet.cards.unshift(state.newCard)
+      state.cardEditing = state.newCard
+      console.log('addCard')
+    }
+    const cancelCardAdd = (card) => {
+      if (card.id === -1) {
+        const cardSet = state.cardSets.find(_cardSet => _cardSet.id === card.cardSetId)
+        const cardIdx = cardSet.cards.findIndex(_card => _card.id === -1)
+        cardSet.cards.splice(cardIdx, 1)
+      }
+    }
+    const submit = async (cardSet) => {
+      showSpinner()
       try {
         const response = await axios.post('/slot/card_sets_for_crud', cardSet)
         hideSpinner()
@@ -182,30 +211,39 @@ export default {
         await alerta('Error saving data', err)
       }
     }
+    // watch and get data from backend
     watch(() => loggedIn, async () => {
       const response = await axios({
         url: '/slot/card_sets_for_crud',
         method: 'get',
         params: {}
       })
-      console.log('response', response)
       state.cardSets = response.data.cardSets
       for (const cardSet of state.cardSets) {
         cardSet.img = 'https://assets.slotoprizes.tagadagames.com/img/missing.png'
-        if (cardSet.cards?.length > 0) cardSet.img = cardSet.cards[0].thumbUrl
+        if (cardSet.cards?.length > 0) cardSet.img = cardSet.cards[0].textureUrl
       }
       state.languages = response.data.languages
-      state.emptyCard = response.data.emptySet
+      state.emptyCard = response.data.newCard
       state.emptyCardSet = response.data.newCardSet
     }, { immediate: true })
-    console.log('state', state)
-    return { ...toRefs(state), addCardSet, submit, editSet, cancelSetEdition, saveCard }
+    return { ...toRefs(state), addCardSet, submit, editSet, cancelSetEdition, saveCard, addCard, cancelCardAdd, deleteCard }
   }
 }
 </script>
 
 <style lang="scss">
 .card-set{
+  .cards-row{
+    align-items: end;
+    position: relative;
+    .card-new{
+      position: absolute;
+      top: -40px;
+      right: 10px;
+      z-index: 2;
+    }
+  }
   .q-list{
     padding-top: 0
   }
