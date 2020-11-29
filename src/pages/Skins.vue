@@ -128,7 +128,6 @@ export default {
           data: fd,
           headers: { 'Content-Type': 'multipart/form-data' }
         })
-        axios.defaults.headers.post['Content-Type'] = axiosAnt
         const skinFromDb = response.data
         state.selected = undefined
         if (skin.isNew) state.rows.push(skinFromDb)
@@ -141,6 +140,7 @@ export default {
         hideSpinner()
         await alerta('Error submiting skin', error)
       } finally {
+        axios.defaults.headers.post['Content-Type'] = axiosAnt
         hideSpinner()
       }
     }

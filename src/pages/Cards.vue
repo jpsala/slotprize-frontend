@@ -1,11 +1,16 @@
 <template>
-  <div class="q-pa-md q-gutter-md justify-center">
+  <div class="q-pa-md q-gutter-md justify-center card-set">
     <h3 class="q-ml-xl q-pl-xl">Card Collections</h3>
     <q-separator spaced="30px"/>
     <div class="text-subtitle1 text-weight-regular text-uppercase">Sets</div>
     <div class="q-pa-md">
       <q-list bordered padding style="position: relative">
         <template  v-for="cardSet of cardSets" >
+          <!-- <q-item :key="'item0_'+cardSet.id" class="card-item-img"> -->
+            <div class="card-set-header" :key="'item0_'+cardSet.id">
+              {{cardSet.localizations.length>0 ? cardSet.localizations[0].text : ''}}
+            </div>
+          <!-- </q-item> -->
           <q-item :key="'item1_'+cardSet.id" class="card-item-img">
             <!-- Edition buttons -->
             <div v-show="(!cardSetEditing || cardSetEditing === cardSet) && cardEditing === undefined" class="set-btns" :key="'btn_edit_'+cardSet.id" >
@@ -68,7 +73,7 @@
               </q-item-label>
             </q-item-section>
           </q-item>
-            <q-separator :key="'separator1_'+cardSet.id"/>
+          <q-separator :key="'separator1_'+cardSet.id"/>
           <q-item :key="'item2_'+cardSet.id">
             <q-item-section>
               <!-- Cards section -->
@@ -88,7 +93,8 @@
               </q-expansion-item>
             </q-item-section>
           </q-item>
-          <q-separator :key="'separator_1'.concat(cardSet.id)" v-if="cardSets.length > 0 && cardSet.id !== cardSets[cardSets.length-1].id"/>
+          <q-separator :key="'separator_1'.concat(cardSet.id)" color="primary" class="q-mb-sm"
+                        v-if="cardSets.length > 0 && cardSet.id !== cardSets[cardSets.length-1].id"/>
         </template>
       </q-list>
       <q-page-sticky position="top-left" :offset="[18, 18]" >
@@ -140,11 +146,21 @@ export default {
       state.cardSetBackup = clone()(cardSet)
       state.cardSetEditing = cardSet
     }
-    const saveCard = async (card) => {
-      const response = await axios.post('/slot/card_for_crud', card)
-      console.log('response', response)
-      card.id = response.data.id
+    const saveCard = async (fields, textureFile, thumbFile) => {
+      console.log(fields, textureFile)
+      var fd = new FormData()
+      fd.append('json', JSON.stringify(fields))
+      if (textureFile && textureFile.length > 0) { fd.append('textureFile', textureFile[0]) }
+      if (thumbFile && thumbFile.length > 0) { fd.append('thumbFile', thumbFile[0]) }
+
+      const response = await axios({
+        method: 'post',
+        url: 'slot/card_for_crud',
+        data: fd
+      })
+      console.log('response.data', response.data)
       state.cardEditing = undefined
+      return response
     }
     const cancelSetEdition = (cardSet) => {
       const idx = state.cardSets.findIndex(_cardSet => _cardSet.id === cardSet.id)
@@ -188,11 +204,26 @@ export default {
 }
 </script>
 
-<style lang="stylus">
-.set-btns
-  position: absolute;
-  top: 5px;
-  right: 0px
-  .edit-set-btn
-    margin-right: 10px
+<style lang="scss">
+.card-set{
+  .q-list{
+    padding-top: 0
+  }
+  .card-set-header{
+    width: 100%;
+    padding: 10px;
+    background-color:$grey-2;
+    color: black;
+    font-size: 1.2em;
+    border-radius: 5px;
+  }
+  .set-btns{
+    position: absolute;
+    top: 5px;
+    right: 0px;
+    .edit-set-btn{
+      margin-right: 10px
+    }
+  }
+}
 </style>
