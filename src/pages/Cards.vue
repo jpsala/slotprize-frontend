@@ -150,9 +150,7 @@ export default {
     })
     const addCardSet = () => {
       state.newCardSet = clone()(state.emptyCardSet)
-      // state.newCard = response.data.newCard
       state.cardSets.push(state.newCardSet)
-      // console.log(idx)
       state.cardSetEditing = state.newCardSet
       setTimeout(() => {
         const cardSetEl = document.querySelectorAll('[card-set-id="-1"]')
@@ -188,7 +186,8 @@ export default {
     }
     const cancelSetEdition = (cardSet) => {
       const idx = state.cardSets.findIndex(_cardSet => _cardSet.id === cardSet.id)
-      state.cardSets[idx] = clone()(state.cardSetBackup)
+      if (cardSet.id !== -1) state.cardSets[idx] = clone()(state.cardSetBackup)
+      else state.cardSets.splice(idx, 1)
       state.newCardSet = undefined
       state.cardSetEditing = undefined
     }
