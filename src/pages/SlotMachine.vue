@@ -124,7 +124,7 @@
                   @focus="changeFocus"
                   :value="item.points"
                   style="width: 75px"
-                  :suffix="item.paymentType+'s'"
+                  :suffix="Number(item.points) > 1 ? item.paymentType+'s' : item.paymentType"
                 />
                 <q-input
                   dense
@@ -434,11 +434,13 @@ export default {
           if (a.jackpot) aSortValue = 30000000
           else if (a.paymentType.toUpperCase() === 'SPIN') aSortValue = 20000000
           else if (a.paymentType.toUpperCase() === 'TICKET') aSortValue = 10000000
+          else if (a.paymentType.toUpperCase() === 'CARD') aSortValue = 9000000
 
           let bSortValue = b.points
           if (b.jackpot) bSortValue = 30000000
           else if (b.paymentType.toUpperCase() === 'SPIN') bSortValue = 20000000
           else if (b.paymentType.toUpperCase() === 'TICKET') bSortValue = 10000000
+          else if (b.paymentType.toUpperCase() === 'CARD') bSortValue = 9000000
 
           if (Number(aSortValue) > Number(bSortValue)) { return -1 }
           if (Number(aSortValue) < Number(bSortValue)) { return 1 }

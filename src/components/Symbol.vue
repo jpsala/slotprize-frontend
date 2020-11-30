@@ -79,7 +79,7 @@ export default {
       symbolCopy: Object.assign({}, props.symbol),
       imgInput: undefined,
       reader: new FileReader(),
-      paymentOptions: ['coin', 'spin', 'ticket', 'jackpot'],
+      paymentOptions: ['coin', 'spin', 'ticket', 'jackpot', 'card'],
       missingImage: 'https://assets.slotoprizes.tagadagames.com/img/missing.png'
     })
     const imgChange = (event) => {
