@@ -14,9 +14,9 @@
       @change="imgThumbChange($event)"
       class="hidden"
     >
-    <div v-if="editing" class="texture-label">Image</div>
-    <img :class="'texture-img ' + (editing ? 'cursor-pointer':'')" :src="modelCopy.textureUrl"
-          @click="editing?$refs.imgTextureInput.click():null" ref="imgTexture" style="border-radius: 20%">
+    <div v-if="editing" class="texture-label">Thumbnail</div>
+    <img :class="'thumb-img ' + (editing ? 'cursor-pointer':'')" :src="modelCopy.thumbUrl"
+          @click="editing?$refs.imgThumbInput.click():null" ref="imgThumb" style="border-radius: 20%">
     <q-separator  />
 
     <!-- <div  class="texture-label">Thumb image</div> -->
@@ -25,12 +25,12 @@
       dense
       dark
       switch-toggle-side
-      label="Thumb image"
+      label="Main Image"
       :value="false"
       header-class="text-primary"
     >
-    <img  :class="'texture-img ' + (editing ? 'cursor-pointer':'')" :src="modelCopy.thumbUrl"
-            @click="editing?$refs.imgThumbInput.click():null" ref="imgThumb" style="border-radius: 20%">
+    <img  :class="'texture-img ' + (editing ? 'cursor-pointer':'')" :src="modelCopy.textureUrl"
+            @click="editing?$refs.imgTextureInput.click():null" ref="imgTexture" style="border-radius: 20%">
     </q-expansion-item>
     <div class="texture-label">Localization</div>
     <q-card-section>
@@ -55,7 +55,7 @@
     <q-separator />
     <div class="texture-label">Stars</div>
     <q-card-section class="q-pt-none">
-    <q-rating v-model="modelCopy.stars" size="2em" color="green-5" icon="star" />
+    <q-rating :disable="!editing" v-model="modelCopy.stars" size="2em" color="green-5" icon="star" />
     </q-card-section>
     <q-card-actions align="right">
       <q-btn outline v-show="!isEditingThis" :disable="editing !== undefined" label="Delete" color="red-4" icon="cancel" @click="deleteCard(modelCopy)" />
