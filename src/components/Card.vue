@@ -58,7 +58,7 @@
     <q-rating :disable="!editing" v-model="modelCopy.stars" size="2em" color="yellow-7" icon="star" />
     </q-card-section>
     <q-card-actions align="right">
-      <q-btn outline v-show="!isEditingThis" :disable="editing !== undefined" label="Delete" color="red-4" icon="cancel" @click="deleteCard(modelCopy)" />
+      <q-btn outline v-show="!isEditingThis" :disable="editing !== undefined" label="Delete" color="red-4" icon="delete" @click="deleteCard(modelCopy)" />
       <q-btn outline v-show="!isEditingThis" :disable="editing !== undefined" label="Edit" color="primary" icon="edit" @click="edit(modelCopy)" />
       <q-btn outline v-show="isEditingThis" label="Cancel"  color="red-6" icon="cancel"  @click="cancel(modelCopy)"/>
       <q-btn outline v-show="isEditingThis" label="Submit" @click="submit(modelCopy)" color="primary" icon="check" />

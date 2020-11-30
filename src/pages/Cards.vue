@@ -18,7 +18,7 @@
             <div v-show="(!cardSetEditing || cardSetEditing === cardSet) && cardEditing === undefined" class="set-btns" :key="'btn_edit_'+cardSet.id" >
               <q-btn v-if="!cardSetEditing" @click="editSet(cardSet)" round icon="edit" color="primary"
                     class="edit-set-btn" style="z-index: 1" />
-              <q-btn v-if="!cardSetEditing" @click="deleteCardSet(cardSet)" round icon="cancel" color="red-6"
+              <q-btn v-if="!cardSetEditing" @click="deleteCardSet(cardSet)" round icon="delete" color="red-6"
                     class="edit-set-btn" style="z-index: 1" />
               <q-btn v-if="cardSetEditing" @click="cancelSetEdition(cardSet)" round icon="close" color="red-6"
                      class="edit-set-btn" style="z-index: 1" />
