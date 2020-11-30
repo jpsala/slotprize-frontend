@@ -66,8 +66,24 @@
                   </tbody>
                 </q-markup-table>
                 <q-separator spaced="10px"/>
-                <!-- <div class="text-overline">Theme Color</div> -->
-                  <q-input v-model="cardSet.themeColor" label="Theme Color" class="col"/>
+                <div class="text-overline">Theme Color</div>
+                  <!-- <q-input v-model="cardSet.themeColor" label="Theme Color" class="col"/> -->
+
+                  <div class="q-gutter-md row items-start">
+                    <q-input
+                      v-model="cardSet.themeColor"
+                      class="my-input"
+                    >
+                      <template v-slot:append>
+                        <q-icon name="colorize" class="cursor-pointer">
+                          <q-popup-proxy transition-show="scale" transition-hide="scale">
+                            <q-color v-model="cardSet.themeColor" format-model="hex"/>
+                          </q-popup-proxy>
+                        </q-icon>
+                      </template>
+                    </q-input>
+                   </div>
+
                 <div class="row">
                   <q-select class="col" label="Reward Type" v-model="cardSet.rewardType" :options="paymentOptions" stack-label/>
                   <q-input v-model="cardSet.rewardAmount" class="col" label="Reward Amount" stack-label/>
