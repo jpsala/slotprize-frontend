@@ -1,13 +1,15 @@
 <template>
   <div class="q-pa-md q-gutter-md justify-center card-set">
+    <q-btn :disable="cardSetEditing !== undefined || cardEditing !== undefined" @click="addCardSet"  fab  icon="add"
+              :color="cardSetEditing ? 'red-3':'red-6'" class="float-left"
+     />
     <h3 class="q-ml-xl q-pl-xl">Card Collections</h3>
     <q-separator spaced="30px"/>
-    <div class="text-subtitle1 text-weight-regular text-uppercase">Sets</div>
     <div class="q-pa-md">
       <q-list bordered padding style="position: relative">
         <template  v-for="cardSet of cardSets" >
           <!-- <q-item :key="'item0_'+cardSet.id" class="card-item-img"> -->
-            <div class="card-set-header" :key="'carSet_localization_'+cardSet.id">
+            <div :card-set-id="cardSet.id" class="card-set-header" :key="'carSet_localization_'+cardSet.id">
               {{cardSet.localizations.length>0 ? cardSet.localizations[0].text : ''}}
             </div>
           <!-- </q-item> -->
@@ -94,7 +96,6 @@
               <!-- Cards section -->
               <q-expansion-item
                 v-if="cardSet.id > -1"
-                :last="(cardSets.length === 0 || cardSet.id === cardSets[cardSets.length-1].id) ? 'true' : 'false'"
                 switch-toggle-side
                 :group="'group_' + cardSet.id"
                 label="Cards"
@@ -104,22 +105,17 @@
               <div class="row q-mb-xl cards-row">
                 <q-btn :disable="cardEditing !== undefined" round fab class="card-new" color="red-6" icon="add" @click="addCard(cardSet)" />
                 <template v-for="card in cardSet.cards">
-                  <card @delete-card="deleteCard" :save="saveCard" :cardEditing.sync="cardEditing"
+                  <card :card-id="card.id" @delete-card="deleteCard" :save="saveCard" :cardEditing.sync="cardEditing"
                       :key="cardSet.id + '_' + card.id" :model="card" :editing="cardEditing" @cancel-card-add="cancelCardAdd"/>
                 </template>
               </div>
               </q-expansion-item>
             </q-item-section>
           </q-item>
-          <q-separator :key="'separator_1'.concat(cardSet.id)" color="primary" class="q-mb-sm"
-                        v-if="cardSets.length > 0 && cardSet.id !== cardSets[cardSets.length-1].id"/>
+          <!-- <q-separator :key="'separator_1'.concat(cardSet.id)" color="primary" class="q-mb-sm"
+                        v-if="cardSets.length > 0 && cardSet.id !== cardSets[cardSets.length-1].id"/> -->
         </template>
       </q-list>
-      <q-page-sticky position="top-left" :offset="[18, 18]" >
-        <q-btn :disable="cardSetEditing !== undefined || cardEditing !== undefined" @click="addCardSet"  fab  icon="add"
-              :color="cardSetEditing ? 'red-3':'red-6'"
-        />
-      </q-page-sticky>
     </div>
   </div>
 
@@ -136,7 +132,7 @@ import { alerta, notify, confirma } from 'src/helpers'
 
 export default {
   components: { Card },
-  setup () {
+  setup (_, { emit }) {
     const { showSpinner, hideSpinner } = useGlobal()
     const { loggedIn } = useSession()
     const state = reactive({
@@ -155,9 +151,13 @@ export default {
     const addCardSet = () => {
       state.newCardSet = clone()(state.emptyCardSet)
       // state.newCard = response.data.newCard
-      state.cardSets.unshift(state.newCardSet)
+      state.cardSets.push(state.newCardSet)
       // console.log(idx)
       state.cardSetEditing = state.newCardSet
+      setTimeout(() => {
+        const cardSetEl = document.querySelectorAll('[card-set-id="-1"]')
+        cardSetEl[0].scrollIntoView()
+      }, 0)
     }
     const editSet = (cardSet) => {
       state.cardSetBackup = clone()(cardSet)
@@ -189,6 +189,7 @@ export default {
     const cancelSetEdition = (cardSet) => {
       const idx = state.cardSets.findIndex(_cardSet => _cardSet.id === cardSet.id)
       state.cardSets[idx] = clone()(state.cardSetBackup)
+      state.newCardSet = undefined
       state.cardSetEditing = undefined
     }
     const deleteCard = async (card) => {
@@ -226,9 +227,13 @@ export default {
       state.newCard = clone()(state.emptyCard)
       state.newCard.cardSetId = cardSet.id
       console.log('addCard state.newCard', state.newCard)
-      cardSet.cards.unshift(state.newCard)
+      cardSet.cards.push(state.newCard)
       state.cardEditing = state.newCard
       state.newCard = undefined
+      setTimeout(() => {
+        const cardEl = document.querySelectorAll('[card-id="-1"]')
+        cardEl[0].scrollIntoView()
+      }, 0)
     }
     const cancelCardAdd = (card) => {
       if (card.id === -1) {
