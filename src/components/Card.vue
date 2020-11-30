@@ -126,9 +126,9 @@ export default {
       try {
         const textureFiles = state.imgTextureInput?.files
         const thumbFiles = state.imgThumbInput?.files
-        console.log('textureFiles, thumbFiles', textureFiles, thumbFiles)
+        console.log('card submit textureFiles, thumbFiles', textureFiles, thumbFiles)
         const result = await props.save(card, textureFiles, thumbFiles)
-        console.log('result', result)
+        console.log('card submit result', result)
         state.modelCopy = clone()(result.data)
         emit('update:cardEditing', undefined)
       } catch (err) {
@@ -138,9 +138,6 @@ export default {
       } finally {
         hideSpinner()
       }
-    }
-    const saved = () => {
-      console.log('saved')
     }
     const isEditingThis = computed(() => {
       return props.editing?.id === props.model?.id
@@ -152,16 +149,18 @@ export default {
     }
 
     onMounted(() => {
+      console.log('onMounted props.model', props.model)
       cloneModel()
     })
     watch(
       () => props.model,
       () => {
+        console.log('props.model changed', props.model)
         cloneModel()
       },
       { inmediate: true }
     )
-    return { ...toRefs(state), edit, cancel, submit, saved, isEditingThis, imgTextureChange, imgThumbChange, deleteCard }
+    return { ...toRefs(state), edit, cancel, submit, isEditingThis, imgTextureChange, imgThumbChange, deleteCard }
   }
 }
 </script>
@@ -174,9 +173,7 @@ export default {
       text-align: center;
       display: flex;
     }
-    .texture-img{
-      max-width: 300px;
-    };
+
     .texture-label{
       border-radius: 5px;
       width: 100%;
@@ -187,6 +184,11 @@ export default {
     .texture-img{
       padding: 10px;
       max-width: 250px;
+      margin: auto;
+    };
+    .thumb-img{
+      padding: 10px;
+      max-width: 150px;
       margin: auto;
     };
   }
