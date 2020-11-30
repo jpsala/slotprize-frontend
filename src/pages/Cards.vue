@@ -44,7 +44,7 @@
                     <q-separator spaced="20px" />
                   <div class="">
                     <div><span class="text-caption" style="display: inline-block;width: 100px">Theme Color </span><span class="text-bold"> {{cardSet.themeColor}}</span></div>
-                    <div><span class="text-caption" style="display: inline-block;width: 100px">Payment Type </span><span class="text-bold"> {{cardSet.rewardType}}</span></div>
+                    <div><span class="text-caption" style="display: inline-block;width: 100px">Reward Type </span><span class="text-bold"> {{cardSet.rewardType}}</span></div>
                     <div><span class="text-caption" style="display: inline-block;width: 100px">Reward Amount </span><span class="text-bold"> {{cardSet.rewardAmount}}</span></div>
                   </div>
                 </div>
