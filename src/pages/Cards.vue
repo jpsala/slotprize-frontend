@@ -16,6 +16,8 @@
             <div v-show="(!cardSetEditing || cardSetEditing === cardSet) && cardEditing === undefined" class="set-btns" :key="'btn_edit_'+cardSet.id" >
               <q-btn v-if="!cardSetEditing" @click="editSet(cardSet)" round icon="edit" color="primary"
                     class="edit-set-btn" style="z-index: 1" />
+              <q-btn v-if="!cardSetEditing" @click="deleteCardSet(cardSet)" round icon="cancel" color="red-6"
+                    class="edit-set-btn" style="z-index: 1" />
               <q-btn v-if="cardSetEditing" @click="cancelSetEdition(cardSet)" round icon="close" color="red-6"
                      class="edit-set-btn" style="z-index: 1" />
               <q-btn v-if="cardSetEditing" @click="submit(cardSet)" round icon="check" color="primary"
@@ -115,7 +117,7 @@ import axios from '../services/axios'
 import clone from 'rfdc'
 import Card from '../components/Card'
 import useGlobal from '../services/useGlobal'
-import { alerta } from 'src/helpers'
+import { alerta, notify, confirma } from 'src/helpers'
 
 export default {
   components: { Card },
@@ -162,6 +164,7 @@ export default {
       const cardSet = state.cardSets.find(_cardSet => _cardSet.id === fields.cardSetId)
       console.log('cardSet', cardSet)
       cardSet.img = response.data.thumbUrl
+      if (!cardSet.cards) cardSet.cards = []
       console.log('response.data', response.data)
       state.cardEditing = undefined
       return response
@@ -171,25 +174,42 @@ export default {
       state.cardSets[idx] = clone()(state.cardSetBackup)
       state.cardSetEditing = undefined
     }
-    const deleteCard = (card) => {
+    const deleteCard = async (card) => {
       console.log('delete', card)
       showSpinner()
       try {
-        const resp = axios.delete('/slot/card_for_crud?cardId=' + card.id)
+        const resp = await axios.delete('/slot/card_for_crud?cardId=' + card.id)
         console.log('resp', resp.data)
         hideSpinner()
         const cardSet = state.cardSets.find(_cardSet => _cardSet.id === card.cardSetId)
         const cardIdx = cardSet.cards.findIndex(_card => _card.id === card.id)
         cardSet.cards.splice(cardIdx, 1)
+        notify({ message: 'Card was deleted' })
       } catch (error) {
         hideSpinner()
-        alerta('Error deleting card', error)
+        await alerta('Error deleting card', error)
+      }
+    }
+    const deleteCardSet = async (cardSet) => {
+      if (!await confirma('Are you sure you want to delete this card set with all of it\'s cards')) { return }
+      showSpinner()
+      try {
+        const resp = await axios.delete('/slot/card_set_for_crud?cardSetId=' + cardSet.id)
+        console.log('resp', resp.data)
+        notify({ message: 'Card Set was deleted' })
+        hideSpinner()
+        const cardIdx = state.cardSets.findIndex(_cardSet => _cardSet.id === cardSet.id)
+        state.cardSets.splice(cardIdx, 1)
+      } catch (error) {
+        hideSpinner()
+        await alerta('Error deleting card set', error)
       }
     }
     const addCard = (cardSet) => {
       state.newCard = clone()(state.emptyCard)
       state.newCard.cardSetId = cardSet.id
       console.log(state.newCard)
+      console.log('cardSet', cardSet)
       cardSet.cards.unshift(state.newCard)
       state.cardEditing = state.newCard
       console.log('addCard')
@@ -230,7 +250,7 @@ export default {
       state.emptyCard = response.data.newCard
       state.emptyCardSet = response.data.newCardSet
     }, { immediate: true })
-    return { ...toRefs(state), addCardSet, submit, editSet, cancelSetEdition, saveCard, addCard, cancelCardAdd, deleteCard }
+    return { ...toRefs(state), addCardSet, submit, editSet, cancelSetEdition, saveCard, addCard, cancelCardAdd, deleteCard, deleteCardSet }
   }
 }
 </script>

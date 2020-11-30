@@ -15,8 +15,8 @@
       class="hidden"
     >
     <div v-if="editing" class="texture-label">Thumbnail</div>
-    <img :class="'thumb-img ' + (editing ? 'cursor-pointer':'')" :src="modelCopy.thumbUrl"
-          @click="editing?$refs.imgThumbInput.click():null" ref="imgThumb" style="border-radius: 20%">
+    <img :class="'thumb-img ' + (isEditingThis ? 'cursor-pointer':'')" :src="modelCopy.thumbUrl"
+          @click="isEditingThis?$refs.imgThumbInput.click():null" ref="imgThumb" style="border-radius: 20%">
     <q-separator  />
 
     <!-- <div  class="texture-label">Thumb image</div> -->
@@ -29,8 +29,8 @@
       :value="false"
       header-class="text-primary"
     >
-    <img  :class="'texture-img ' + (editing ? 'cursor-pointer':'')" :src="modelCopy.textureUrl"
-            @click="editing?$refs.imgTextureInput.click():null" ref="imgTexture" style="border-radius: 20%">
+    <img  :class="'texture-img ' + (isEditingThis ? 'cursor-pointer':'')" :src="modelCopy.textureUrl"
+            @click="isEditingThis?$refs.imgTextureInput.click():null" ref="imgTexture" style="border-radius: 20%">
     </q-expansion-item>
     <div class="texture-label">Localization</div>
     <q-card-section>
