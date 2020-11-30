@@ -55,7 +55,7 @@
     <q-separator />
     <div class="texture-label">Stars</div>
     <q-card-section class="q-pt-none">
-    <q-rating :disable="!editing" v-model="modelCopy.stars" size="2em" color="green-5" icon="star" />
+    <q-rating :disable="!editing" v-model="modelCopy.stars" size="2em" color="yellow-7" icon="star" />
     </q-card-section>
     <q-card-actions align="right">
       <q-btn outline v-show="!isEditingThis" :disable="editing !== undefined" label="Delete" color="red-4" icon="cancel" @click="deleteCard(modelCopy)" />
