@@ -14,12 +14,12 @@
       @change="imgThumbChange($event)"
       class="hidden"
     >
-    <div v-if="editing" class="thumb-label">Image</div>
-    <img class="texture-img cursor-pointer" :src="modelCopy.textureUrl"
-            @click="$refs.imgTextureInput.click()" ref="imgTexture" style="border-radius: 20%">
+    <div v-if="editing" class="texture-label">Image</div>
+    <img :class="'texture-img ' + (editing ? 'cursor-pointer':'')" :src="modelCopy.textureUrl"
+          @click="editing?$refs.imgTextureInput.click():null" ref="imgTexture" style="border-radius: 20%">
     <q-separator  />
 
-    <!-- <div  class="thumb-label">Thumb image</div> -->
+    <!-- <div  class="texture-label">Thumb image</div> -->
     <q-expansion-item
       class="bg-grey-3"
       dense
@@ -29,10 +29,10 @@
       :value="false"
       header-class="text-primary"
     >
-    <img  class="thumb-img cursor-pointer" :src="modelCopy.thumbUrl"
-            @click="$refs.imgThumbInput.click()" ref="imgThumb" style="border-radius: 20%">
+    <img  :class="'texture-img ' + (editing ? 'cursor-pointer':'')" :src="modelCopy.thumbUrl"
+            @click="editing?$refs.imgThumbInput.click():null" ref="imgThumb" style="border-radius: 20%">
     </q-expansion-item>
-    <div class="thumb-label">Localization</div>
+    <div class="texture-label">Localization</div>
     <q-card-section>
       <q-markup-table v-if="isEditingThis" flat dense>
         <tbody>
@@ -53,7 +53,7 @@
 
     </q-card-section>
     <q-separator />
-    <div class="thumb-label">Stars</div>
+    <div class="texture-label">Stars</div>
     <q-card-section class="q-pt-none">
     <q-rating v-model="modelCopy.stars" size="2em" color="green-5" icon="star" />
     </q-card-section>
@@ -177,14 +177,14 @@ export default {
     .texture-img{
       max-width: 300px;
     };
-    .thumb-label{
+    .texture-label{
       border-radius: 5px;
       width: 100%;
       margin-top: 10px;
       padding: 5px;
       background-color: $grey-3;
     }
-    .thumb-img{
+    .texture-img{
       padding: 10px;
       max-width: 250px;
       margin: auto;

@@ -159,6 +159,9 @@ export default {
         url: 'slot/card_for_crud',
         data: fd
       })
+      const cardSet = state.cardSets.find(_cardSet => _cardSet.id === fields.cardSetId)
+      console.log('cardSet', cardSet)
+      cardSet.img = response.data.thumbUrl
       console.log('response.data', response.data)
       state.cardEditing = undefined
       return response
@@ -221,7 +224,7 @@ export default {
       state.cardSets = response.data.cardSets
       for (const cardSet of state.cardSets) {
         cardSet.img = 'https://assets.slotoprizes.tagadagames.com/img/missing.png'
-        if (cardSet.cards?.length > 0) cardSet.img = cardSet.cards[0].textureUrl
+        if (cardSet.cards?.length > 0) cardSet.img = cardSet.cards[0].thumbUrl
       }
       state.languages = response.data.languages
       state.emptyCard = response.data.newCard
