@@ -1,11 +1,17 @@
 <template>
-  <div class="q-pa-md q-gutter-md justify-center card-set">
-    <q-btn :disable="cardSetEditing !== undefined || cardEditing !== undefined" @click="addCardSet"  fab  icon="add"
-              :color="cardSetEditing ? 'red-3':'red-6'" class="float-left"
-     />
-    <h3 class="q-ml-xl q-pl-xl">Card Collections</h3>
+  <div class="q-pa-md q-gutter-md justify-center">
+    <div class="text-h3 q-ml-xl">Cards</div>
+    <q-separator/>
+    <div class="text-h5 q-ml-md">Drop Rate Table</div>
+    <card-drop-rate-table />
     <q-separator spaced="30px"/>
-    <div class="q-pa-md">
+    <div class="row justify-between">
+      <div class="text-h5">Card Sets</div>
+      <q-btn :disable="cardSetEditing !== undefined || cardEditing !== undefined" @click="addCardSet"  fab  icon="add"
+                :color="cardSetEditing ? 'red-3':'red-6'"/>
+    </div>
+    <q-separator spaced="30px"/>
+    <div class="q-pa-md  card-set">
       <q-list bordered padding style="position: relative">
         <template  v-for="cardSet of cardSets" >
           <!-- <q-item :key="'item0_'+cardSet.id" class="card-item-img"> -->
@@ -127,11 +133,12 @@ import useSession from 'src/services/useSession'
 import axios from '../services/axios'
 import clone from 'rfdc'
 import Card from '../components/Card'
+import CardDropRateTable from '../components/CardDropRateTable'
 import useGlobal from '../services/useGlobal'
 import { alerta, notify, confirma } from 'src/helpers'
 
 export default {
-  components: { Card },
+  components: { Card, CardDropRateTable },
   setup (_, { emit }) {
     const { showSpinner, hideSpinner } = useGlobal()
     const { loggedIn } = useSession()
