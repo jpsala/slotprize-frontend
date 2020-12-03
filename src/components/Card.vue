@@ -149,7 +149,6 @@ export default {
     }
 
     onMounted(() => {
-      console.log('onMounted props.model', props.model)
       cloneModel()
     })
     watch(
