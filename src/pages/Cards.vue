@@ -108,6 +108,7 @@
                     <div><span class="text-caption" style="display: inline-block;width: 100px">Theme Color </span><span class="text-bold"> {{cardSet.themeColor}}</span></div>
                     <div><span class="text-caption" style="display: inline-block;width: 100px">Reward Type </span><span class="text-bold"> {{cardSet.rewardType}}</span></div>
                     <div><span class="text-caption" style="display: inline-block;width: 100px">Reward Amount </span><span class="text-bold"> {{cardSet.rewardAmount}}</span></div>
+                    <div><span class="text-caption" style="display: inline-block;width: 100px">Front card ID </span><span class="text-bold"> {{cardSet.frontCardId}}</span></div>
                   </div>
                 </div>
               </div>
@@ -146,6 +147,10 @@
                 <div class="row">
                   <q-select class="col" label="Reward Type" v-model="cardSet.rewardType" :options="paymentOptions" stack-label/>
                   <q-input v-model="cardSet.rewardAmount" class="col" label="Reward Amount" stack-label/>
+                </div>
+                <div class="row">
+                  <q-select class="col" label="Reward Type" v-model="cardSet.rewardType" :options="paymentOptions" stack-label/>
+                  <q-input v-model="cardSet.frontCardId" class="col" label="Front card id" stack-label/>
                 </div>
               </q-item-label>
             </q-item-section>

@@ -15,6 +15,7 @@
       class="hidden"
     >
     <div v-if="editing" class="texture-label">Thumbnail</div>
+    <div class="id q-pa-sm">#{{modelCopy.id}}</div>
     <img :class="'thumb-img ' + (isEditingThis ? 'cursor-pointer':'')" :src="modelCopy.thumbUrl"
           @click="isEditingThis?$refs.imgThumbInput.click():null" ref="imgThumb" style="border-radius: 20%">
     <q-separator  />
