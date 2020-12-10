@@ -111,7 +111,7 @@ export default {
     }
     const skinCloseDlg/* Submit */ = async (data) => {
       const { skin, files } = data
-      var fd = new FormData()
+      const fd = new FormData()
       fd.append('id', skin.id)
       if (skin.name) fd.append('name', skin.name)
       if (skin.machineBgColor) fd.append('machineBgColor', skin.machineBgColor)

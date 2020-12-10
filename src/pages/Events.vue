@@ -64,7 +64,7 @@ export default {
 
     const submit = async (event) => {
       const formData = new FormData()
-      for (var key in event) {
+      for (const key in event) {
         const value = key === 'duration' ? event[key] * 60 : event[key]
         if (value && value !== 'undefined') formData.append(key, key === 'rule' ? JSON.stringify(value) : value)
       }

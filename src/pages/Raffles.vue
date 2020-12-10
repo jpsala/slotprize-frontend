@@ -58,7 +58,7 @@ export default {
       try {
         if (data) {
           const formData = new FormData()
-          for (var key in data.raffle) { createFormData(formData, key, data.raffle[key]) }
+          for (const key in data.raffle) { createFormData(formData, key, data.raffle[key]) }
           formData.append('image', data.files[0])
           axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
           const response = await axios({
@@ -121,6 +121,7 @@ export default {
     }))
     const pastRaffles = computed(() => state.raffles.filter((raffle) => {
       if (!newRaffles.value.includes(raffle) && !liveRaffles.value.includes(raffle) && !wonRaffles.value.includes(raffle)) { return raffle }
+      return false
     }))
 
     watch(() => loggedIn, async () => {

@@ -112,7 +112,7 @@ export default {
     }
     const symbolClose = async (data) => {
       const { symbol, files } = data
-      var fd = new FormData()
+      const fd = new FormData()
       fd.append('id', symbol.id)
       fd.append('payment_type', symbol.paymentType)
       fd.append('symbol_name', symbol.symbolName)

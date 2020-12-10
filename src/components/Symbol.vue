@@ -89,7 +89,7 @@ export default {
       state.reader.readAsDataURL(event.target.files[0])
     }
     const submit = () => {
-      var files = state.imgInput.files
+      const files = state.imgInput.files
       emit('close', { symbol: state.symbolCopy, files })
     }
     watch(() => props.symbol, () => {

@@ -134,14 +134,14 @@ export default {
     .Closed
       background-color: $grey-2
     .q-markup-table
-      overflow-y: auto;
-      height: 73vh;
+      overflow-y: auto
+      height: 73vh
     .q-markup-table thead th
-      position: sticky !important;
-      top: 0;
+      position: sticky !important
+      top: 0
     table
-      border-collapse: collapse;
-      overflow: display;
+      border-collapse: collapse
+      overflow: display
     th
-      background: white;
+      background-color: white
 </style>

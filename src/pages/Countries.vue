@@ -120,7 +120,7 @@ export default {
     }
     const countryClose = async (data) => {
       const { country, files } = data
-      var fd = new FormData()
+      const fd = new FormData()
       fd.append('id', country.id)
       if (country.name) fd.append('name', country.name)
       if (country.languageId) fd.append('language_id', country.languageId)

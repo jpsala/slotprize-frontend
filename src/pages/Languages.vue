@@ -178,7 +178,7 @@ export default {
       showSpinner()
       console.log('data', data)
       const { language, files } = data
-      var fd = new FormData()
+      const fd = new FormData()
       fd.append('id', language.id)
       if (language.languageCode) fd.append('language_code', language.languageCode)
       if (language.localizationUrl) fd.append('localization_url', language.localizationUrl)
