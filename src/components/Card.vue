@@ -127,7 +127,6 @@ export default {
       try {
         const textureFiles = state.imgTextureInput?.files
         const thumbFiles = state.imgThumbInput?.files
-        console.log('card submit textureFiles, thumbFiles', textureFiles, thumbFiles)
         const result = await props.save(card, textureFiles, thumbFiles)
         console.log('card submit result', result)
         state.modelCopy = clone()(result.data)
