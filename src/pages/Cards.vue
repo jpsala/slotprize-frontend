@@ -4,49 +4,65 @@
     <q-separator/>
     <div  v-if="chestPremium">
       <div class="text-h5 q-ml-md">Chest configuration</div>
-      <div class="text-h7 q-ml-md">Premium <q-btn fab-mini color="primary" icon="save" @click="saveChest('chestPremiumRewards')" class="q-ml-sm" /></div>
-
-      <div class="row" style="width: 400px">
-        <q-input :disable="newReward !== undefined" class="col" v-model="chestPremium.priceAmount" type="text" label="Price Amount" />
-        <q-select :disable="newReward !== undefined" class="col" label="Reward Type" v-model="chestPremium.priceCurrency" :options="paymentOptions" stack-label/>
-      </div>
-      <div class="row">
-        <div class="text-h8 q-ml-lg" style="width: 60px; align-self: center">Rewards</div>
-        <q-btn :disable="newReward !== undefined" fab-mini color="primary" icon="add" @click="addPremiumReward(chestPremium)" class="q-ml-sm" />
-      </div>
-      <div v-for="(reward, index) of chestPremium.rewards" :key="index" >
-        <q-separator class="q-ml-lg" style="width:375px"/>
-        <div class="row" style="width: 400px">
-            <q-input :disable="newReward !== undefined && !reward.isNew" class="col q-ml-lg" v-model="reward.amount" type="text" label="Price Amount" />
-            <q-select :disable="newReward !== undefined && !reward.isNew" class="col" label="Reward Type" v-model="reward.type" :options="paymentOptions" stack-label/>
-            <q-btn v-show="reward.isNew" fab-mini color="red-6" icon="close" @click="cancelPremiumReward(chestPremium)" class="q-ml-sm" />
-            <q-btn v-show="reward.isNew" fab-mini color="primary" icon="check" @click="savePremiumReward(index)" class="q-ml-sm" />
+      <q-separator inset spaced="10px" />
+      <div class="q-pa-lg q-mt-lg shadow-1">
+        <div class="text-h6 q-ml-md">Premium&nbsp;
         </div>
-      </div>
-    </div>
-    <div  v-if="chestRegular" class="q-mt-lg">
-      <q-separator spaced="15px" />
-      <div class="text-h7 q-ml-md">Regular<q-btn fab-mini color="primary" icon="save" @click="saveChest('chestRegularRewards')" class="q-ml-sm" /></div>
-      <div class="row" style="width: 400px">
-        <q-input :disable="newReward !== undefined" class="col" v-model="chestRegular.priceAmount" type="text" label="Price Amount" />
-        <q-select :disable="newReward !== undefined" class="col" label="Reward Type" v-model="chestRegular.priceCurrency" :options="paymentOptions" stack-label/>
-      </div>
-      <div class="row">
-        <div class="text-h8 q-ml-lg" style="width: 60px; align-self: center">Rewards</div>
-        <q-btn :disable="newReward !== undefined" fab-mini color="primary" icon="add" @click="addRegularReward(chestRegular)" class="q-ml-sm" />
-
-      </div>
-      <div v-for="(reward, index) of chestRegular.rewards" :key="index" >
-        <q-separator class="q-ml-lg" style="width:375px"/>
         <div class="row" style="width: 400px">
-            <q-input :disable="newReward !== undefined && !reward.isNew" class="col q-ml-lg" v-model="reward.amount" type="text" label="Price Amount" />
-            <q-select :disable="newReward !== undefined && !reward.isNew" class="col" label="Reward Type" v-model="reward.type" :options="paymentOptions" stack-label/>
-            <q-btn v-show="reward.isNew" fab-mini color="red-6" icon="close" @click="cancelRegularReward(chestRegular)" class="q-ml-sm" />
-            <q-btn v-show="reward.isNew" fab-mini color="primary" icon="check" @click="saveRegularReward(index)" class="q-ml-sm" />
+          <q-input :disable="newReward !== undefined" class="col" v-model="chestPremium.priceAmount" type="text" label="Price Amount" />
+          <q-select :disable="newReward !== undefined" class="col" label="Reward Type" v-model="chestPremium.priceCurrency" :options="paymentOptions" stack-label/>
         </div>
-      </div>
-      <q-separator spaced="50px" />
+        <div class="row">
+          <div class="text-h8 q-ml-lg" style="width: 60px; align-self: center">Rewards</div>
+          <q-btn :disable="newReward !== undefined" round size='sm' color="secondary" icon="add" @click="addPremiumReward(chestPremium)" class="q-ml-sm" />
+        </div>
+        <div v-for="(reward, index) of chestPremium.rewards" :key="index" >
+          <q-separator class="q-ml-lg" style="width:375px"/>
+          <div class="row" :style="reward.isNew ? 'width: 506px' : 'width: 400px'">
+              <q-input :disable="newReward !== undefined && !reward.isNew" class="col q-ml-lg" v-model="reward.amount" type="text" label="Price Amount" />
+              <q-select :disable="newReward !== undefined && !reward.isNew" class="col" label="Reward Type" v-model="reward.type" :options="paymentOptions" stack-label/>
+              <q-btn :disable="newReward !== undefined" icon="close" round size="sm" style="height: 30px"
+                      class="self-center q-ml-sm q-mr-sm" color="red-5" @click="deletePremiumReward(index)"/>
+            <submit-cancel v-show="reward.isNew" @submit="savePremiumReward(index)" @cancel="cancelPremiumReward(chestRegular)" :show-labels='false'
+                          :submit-disable=!reward.isNew :cancel-disable="!reward.isNew"/>
+          </div>
+        </div>
+        <submit-cancel :disable="newReward !== undefined" @submit="saveChest('chestPremiumRewards')" label-save="Submit"
+                        @cancel="cancelChestPremium" :submit-disable="!chestPremiumIsDirty"
+                        :cancel-disable="!chestPremiumIsDirty"  class="q-mt-lg" :right="true"/>
+      </div> color="red-5"
     </div>
+    <div  v-if="chestRegular">
+      <div class="text-h5 q-ml-md">Chest configuration</div>
+      <q-separator inset spaced="10px" />
+      <div class="q-pa-lg q-mt-lg shadow-1">
+        <div class="text-h6 q-ml-md">Regular&nbsp;
+        </div>
+        <div class="row" style="width: 400px">
+          <q-input :disable="newReward !== undefined" class="col" v-model="chestRegular.priceAmount" type="text" label="Price Amount" />
+          <q-select :disable="newReward !== undefined" class="col" label="Reward Type" v-model="chestRegular.priceCurrency" :options="paymentOptions" stack-label/>
+        </div>
+        <div class="row">
+          <div class="text-h8 q-ml-lg" style="width: 60px; align-self: center">Rewards</div>
+          <q-btn :disable="newReward !== undefined" round size='sm' color="secondary" icon="add" @click="addRegularReward(chestRegular)" class="q-ml-sm" />
+        </div>
+        <div v-for="(reward, index) of chestRegular.rewards" :key="index" >
+          <q-separator class="q-ml-lg" style="width:375px"/>
+          <div class="row" :style="reward.isNew ? 'width: 506px' : 'width: 400px'">
+              <q-input :disable="newReward !== undefined && !reward.isNew" class="col q-ml-lg" v-model="reward.amount" type="text" label="Price Amount" />
+              <q-select :disable="newReward !== undefined && !reward.isNew" class="col" label="Reward Type" v-model="reward.type" :options="paymentOptions" stack-label/>
+              <q-btn :disable="newReward !== undefined" icon="close" round size="sm" style="height: 30px"
+                      class="self-center q-ml-sm q-mr-sm" color="red-5" @click="deleteRegularReward(index)" />
+            <submit-cancel v-show="reward.isNew" @submit="saveRegularReward(index)" @cancel="cancelRegularReward(chestRegular)" :show-labels='false'
+                          :submit-disable=!reward.isNew :cancel-disable="!reward.isNew"/>
+          </div>
+        </div>
+        <submit-cancel :disable="newReward !== undefined" @submit="saveChest('chestRegularRewards')"  label-save="Submit"
+                        @cancel="cancelChestRegular" :submit-disable="!chestRegularIsDirty"
+                        :cancel-disable="!chestRegularIsDirty"  class="q-mt-lg" :right="true"/>
+      </div> color="red-5"
+    </div>
+
 <!--
   chestPremium:
   priceAmount: 1
@@ -193,11 +209,13 @@ import axios from '../services/axios'
 import clone from 'rfdc'
 import Card from '../components/Card'
 import CardDropRateTable from '../components/CardDropRateTable'
+import SubmitCancel from '../components/SubmitCancel'
 import useGlobal from '../services/useGlobal'
 import { alerta, notify, confirma } from 'src/helpers'
+import equal from 'fast-deep-equal'
 
 export default {
-  components: { Card, CardDropRateTable },
+  components: { Card, CardDropRateTable, SubmitCancel },
   setup (_, { emit }) {
     const { showSpinner, hideSpinner } = useGlobal()
     const { loggedIn } = useSession()
@@ -214,14 +232,22 @@ export default {
       cardBackup: undefined,
       cardEditing: undefined,
       chestRegular: undefined,
+      chestRegularIsDirty: false,
       chestPremium: undefined,
+      chestPremiumIsDirty: false,
       newReward: undefined,
       chestPremiumBackup: undefined,
       chestRegularBackup: undefined,
-      newRewardBackup: undefined,
-      chestPremiumDirty: false,
-      chestRegularDirty: false
+      newRewardBackup: undefined
     })
+    watch(() => state.chestRegular, () => {
+      state.chestRegularIsDirty = !equal(state.chestRegular, state.chestRegularBackup)
+      console.log('watch')
+    }, { deep: true, inmediate: true })
+    watch(() => state.chestPremium, () => {
+      state.chestPremiumIsDirty = !equal(state.chestPremium, state.chestPremiumBackup)
+      console.log('watch')
+    }, { deep: true, inmediate: true })
     const addCardSet = () => {
       state.newCardSet = clone()(state.emptyCardSet)
       state.cardSets.push(state.newCardSet)
@@ -237,16 +263,17 @@ export default {
     }
     const saveCard = async (fields, textureFile, thumbFile) => {
       console.log(fields, textureFile)
-      var fd = new FormData()
+      const fd = new FormData()
       fd.append('json', JSON.stringify(fields))
       if (textureFile && textureFile.length > 0) { fd.append('textureFile', textureFile[0]) }
       if (thumbFile && thumbFile.length > 0) { fd.append('thumbFile', thumbFile[0]) }
-
+      showSpinner()
       const response = await axios({
         method: 'post',
         url: 'slot/card_for_crud',
         data: fd
       })
+      hideSpinner()
       const cardSet = state.cardSets.find(_cardSet => _cardSet.id === fields.cardSetId)
       console.log('cardSet', cardSet)
       cardSet.img = response.data.thumbUrl
@@ -258,17 +285,7 @@ export default {
       state.newCard = undefined
       return response
     }
-    const saveChest = async (chestName) => {
-      const chest = chestName === 'chestPremiumRewards' ? state.chestPremium : state.chestRegular
-      console.log(chestName, chest)
-      const response = await axios({
-        method: 'post',
-        url: 'slot/cards_for_crud_chest',
-        data: { name: chestName, chest }
-      })
-      state.chestPremiumDirty = false
-      return response
-    }
+
     const cancelSetEdition = (cardSet) => {
       const idx = state.cardSets.findIndex(_cardSet => _cardSet.id === cardSet.id)
       if (cardSet.id !== -1) state.cardSets[idx] = clone()(state.cardSetBackup)
@@ -333,12 +350,32 @@ export default {
         hideSpinner()
         console.log('response', response)
         cardSet.id = response.data.id
+        cardSet.img = response.data.img
         state.cardSetEditing = undefined
         state.newCardSet = undefined
       } catch (err) {
         hideSpinner()
         await alerta('Error saving data', err)
       }
+    }
+    const saveChest = async (chestName) => {
+      const chest = chestName === 'chestPremiumRewards' ? state.chestPremium : state.chestRegular
+      console.log(chestName, chest)
+      showSpinner()
+      const response = await axios({
+        method: 'post',
+        url: 'slot/cards_for_crud_chest',
+        data: { name: chestName, chest }
+      })
+      hideSpinner()
+      if (chestName === 'chestPremiumRewards') {
+        state.chestPremiumBackup = clone()(state.chestPremium)
+        state.chestPremiumIsDirty = false
+      } else {
+        state.chestRegularBackup = clone()(state.chestRegular)
+        state.chestRegularIsDirty = false
+      }
+      return response
     }
     const addPremiumReward = async () => {
       state.newReward = { amount: 1, type: 'coin', isNew: true }
@@ -348,6 +385,22 @@ export default {
       const idx = state.chestPremium.rewards.findIndex(reward => reward.isNew)
       state.chestPremium.rewards.splice(idx, 1)
       state.newReward = undefined
+    }
+    const deletePremiumReward = async (index) => {
+      if (state.chestPremium.rewards[index].isNew) {
+        state.chestPremium.rewards.splice(index, 1)
+        state.newReward = undefined
+      } else {
+        if (await confirma('Delete this reward?')) { state.chestPremium.rewards.splice(index, 1) }
+      }
+    }
+    const deleteRegularReward = async (index) => {
+      if (state.chestRegular.rewards[index].isNew) {
+        state.chestRegular.rewards.splice(index, 1)
+        state.newReward = undefined
+      } else {
+        if (await confirma('Delete this reward?')) { state.chestRegular.rewards.splice(index, 1) }
+      }
     }
     const savePremiumReward = async (rewardIdx) => {
       state.chestPremium.rewards[rewardIdx].isNew = false
@@ -360,6 +413,14 @@ export default {
     const cancelRegularReward = (rewardIdx) => {
       const idx = state.chestRegular.rewards.findIndex(reward => reward.isNew)
       state.chestRegular.rewards.splice(idx, 1)
+      state.newReward = undefined
+    }
+    const cancelChestPremium = async () => {
+      state.chestPremium = clone()(state.chestPremiumBackup)
+      state.newReward = undefined
+    }
+    const cancelChestRegular = async () => {
+      state.chestRegular = clone()(state.chestRegularBackup)
       state.newReward = undefined
     }
     const saveRegularReward = async (rewardIdx) => {
@@ -375,11 +436,13 @@ export default {
     }, { deep: true })
     // watch and get data from backend
     watch(() => loggedIn, async () => {
+      showSpinner()
       const response = await axios({
         url: '/slot/card_sets_for_crud',
         method: 'get',
         params: {}
       })
+      hideSpinner()
       state.cardSets = response.data.cardSets
       for (const cardSet of state.cardSets) {
         cardSet.img = 'https://assets.slotoprizes.tagadagames.com/img/missing.png'
@@ -389,6 +452,7 @@ export default {
       state.emptyCard = clone()(response.data.newCard)
       state.emptyCardSet = clone()(response.data.newCardSet)
       state.chestRegular = response.data.chestRegular
+      state.chestRegular.dirty = false
       state.chestRegularBackup = clone()(response.data.chestRegular)
       state.chestPremium = response.data.chestPremium
       state.chestPremiumBackup = clone()(response.data.chestPremium)
@@ -410,7 +474,11 @@ export default {
       addRegularReward,
       saveRegularReward,
       cancelRegularReward,
-      saveChest
+      saveChest,
+      cancelChestPremium,
+      cancelChestRegular,
+      deletePremiumReward,
+      deleteRegularReward
     }
   }
 }
@@ -418,6 +486,12 @@ export default {
 
 <style lang="scss">
 .card-set{
+    .card{
+      box-shadow: 0 1px 5px rgba(0,0,0,0.2), 0 2px 2px rgb(219 8 8 / 30%), 0 3px 1px -2px rgb(194 35 35 / 34%);
+      border-radius: 4px;
+      vertical-align: top;
+      background: #e20f0f05;
+    }
   .cards-row{
     align-items: end;
     position: relative;
