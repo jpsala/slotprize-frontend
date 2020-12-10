@@ -176,7 +176,7 @@ export default {
     }
 
     const submit = () => {
-      var files = state.inputImgRef.files
+      const files = state.inputImgRef.files
       emit('close', { raffle: state.raffleCopy, files })
       // state.raffleCopy = undefined
     }
