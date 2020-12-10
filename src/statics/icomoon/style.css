@@ -1,15 +1,16 @@
 @font-face {
-  font-family: "icomoon";
-  src: url("fonts/icomoon.woff?1sn6h6") format("woff");
+  font-family: 'icomoon';
+  src:
+    url('fonts/icomoon.woff?qyegzs') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
-[class^="icon-"],
-[class*=" icon-"] {
+
+[class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: "icomoon" !important;
-  speak: none;
+  font-family: 'icomoon' !important;
+  speak: never;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
@@ -21,15 +22,45 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-dots-horizontal-triple:before {
+.icon-earth:before {
+  content: "\e90b";
+}
+.icon-plus:before {
+  content: "\e90a";
+}
+.icon-exit1:before {
+  content: "\ea14";
+}
+.icon-trash:before {
+  content: "\e909";
+}
+.icon-save:before {
   content: "\e900";
+}
+.icon-print:before {
+  content: "\f02f";
+}
+.icon-clipboard:before {
+  content: "\e907";
+}
+.icon-keyboard_backspace:before {
+  content: "\e906";
+}
+.icon-pin-outline:before {
+  content: "\e904";
+}
+.icon-pin:before {
+  content: "\e905";
+}
+.icon-menu:before {
+  content: "\e903";
+}
+.icon-documents:before {
+  content: "\e902";
 }
 .icon-user:before {
   content: "\e901";
 }
-.icon-print1:before {
-  content: "\f02f";
-}
-.icon-exit1:before {
-  content: "\ea14";
+.icon-dots-horizontal-triple:before {
+  content: "\e908";
 }
