@@ -12,19 +12,19 @@
           <q-input :disable="newReward !== undefined" class="col" v-model="chestPremium.priceAmount" type="text" label="Price Amount" />
           <q-select :disable="newReward !== undefined" class="col" label="Reward Type" v-model="chestPremium.priceCurrency" :options="paymentOptions" stack-label/>
         </div>
-        <div class="row">
+        <div class="row q-mt-md q-mb-md">
           <div class="text-h8 q-ml-lg" style="width: 60px; align-self: center">Rewards</div>
           <q-btn :disable="newReward !== undefined" round size='sm' color="secondary" icon="add" @click="addPremiumReward(chestPremium)" class="q-ml-sm" />
         </div>
         <div v-for="(reward, index) of chestPremium.rewards" :key="index" >
           <q-separator class="q-ml-lg" style="width:375px"/>
-          <div class="row" :style="reward.isNew ? 'width: 506px' : 'width: 400px'">
+          <div class="row reward-row" :style="reward.isNew ? 'width: 506px' : 'width: 400px'">
               <q-input :disable="newReward !== undefined && !reward.isNew" class="col q-ml-lg" v-model="reward.amount" type="text" label="Price Amount" />
               <q-select :disable="newReward !== undefined && !reward.isNew" class="col" label="Reward Type" v-model="reward.type" :options="paymentOptions" stack-label/>
-              <q-btn :disable="newReward !== undefined" icon="close" round size="sm" style="height: 30px"
-                      class="self-center q-ml-sm q-mr-sm" color="red-5" @click="deletePremiumReward(index)"/>
+              <q-btn :disable="newReward !== undefined" icon="delete_outline" round size="12px"
+                      class="self-center q-ml-sm q-mr-sm delete-reward" color="red-5" @click="deletePremiumReward(index)"/>
             <submit-cancel v-show="reward.isNew" @submit="savePremiumReward(index)" @cancel="cancelPremiumReward(chestRegular)" :show-labels='false'
-                          :submit-disable=!reward.isNew :cancel-disable="!reward.isNew"/>
+                          :submit-disable=!reward.isNew :cancel-disable="!reward.isNew" size="sm"/>
           </div>
         </div>
         <submit-cancel :disable="newReward !== undefined" @submit="saveChest('chestPremiumRewards')" label-save="Submit"
@@ -42,19 +42,19 @@
           <q-input :disable="newReward !== undefined" class="col" v-model="chestRegular.priceAmount" type="text" label="Price Amount" />
           <q-select :disable="newReward !== undefined" class="col" label="Reward Type" v-model="chestRegular.priceCurrency" :options="paymentOptions" stack-label/>
         </div>
-        <div class="row">
+        <div class="row q-mt-md q-mb-md">
           <div class="text-h8 q-ml-lg" style="width: 60px; align-self: center">Rewards</div>
           <q-btn :disable="newReward !== undefined" round size='sm' color="secondary" icon="add" @click="addRegularReward(chestRegular)" class="q-ml-sm" />
         </div>
         <div v-for="(reward, index) of chestRegular.rewards" :key="index" >
           <q-separator class="q-ml-lg" style="width:375px"/>
-          <div class="row" :style="reward.isNew ? 'width: 506px' : 'width: 400px'">
+          <div class="row reward-row" :style="reward.isNew ? 'width: 506px' : 'width: 400px'">
               <q-input :disable="newReward !== undefined && !reward.isNew" class="col q-ml-lg" v-model="reward.amount" type="text" label="Price Amount" />
               <q-select :disable="newReward !== undefined && !reward.isNew" class="col" label="Reward Type" v-model="reward.type" :options="paymentOptions" stack-label/>
-              <q-btn :disable="newReward !== undefined" icon="close" round size="sm" style="height: 30px"
-                      class="self-center q-ml-sm q-mr-sm" color="red-5" @click="deleteRegularReward(index)" />
+              <q-btn :disable="newReward !== undefined" icon="delete_outline" round size="12px"
+                      class="self-center q-ml-sm q-mr-sm delete-reward" color="red-5" @click="deleteRegularReward(index)" />
             <submit-cancel v-show="reward.isNew" @submit="saveRegularReward(index)" @cancel="cancelRegularReward(chestRegular)" :show-labels='false'
-                          :submit-disable=!reward.isNew :cancel-disable="!reward.isNew"/>
+                          :submit-disable=!reward.isNew :cancel-disable="!reward.isNew" size:sm/>
           </div>
         </div>
         <submit-cancel :disable="newReward !== undefined" @submit="saveChest('chestRegularRewards')"  label-save="Submit"
@@ -485,6 +485,17 @@ export default {
 </script>
 
 <style lang="scss">
+.reward-row{
+  position: relative;
+  .delete-reward{
+    display: none;
+    position: absolute;
+    right: -42px;
+  }
+  &:hover .delete-reward{
+    display: unset;
+  }
+}
 .card-set{
     .card{
       box-shadow: 0 1px 5px rgba(0,0,0,0.2), 0 2px 2px rgb(219 8 8 / 30%), 0 3px 1px -2px rgb(194 35 35 / 34%);
