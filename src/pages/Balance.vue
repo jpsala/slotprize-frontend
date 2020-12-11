@@ -25,6 +25,12 @@
       <q-input class="col" v-model="ticketPrice" label="Value in coins"/>
     </div>
 
+    <div class="text-subtitle1 text-weight-regular text-uppercase">Raffles</div>
+    <div class="row">
+      <q-input class="col" v-model="nextRaffleSessionSpins" label="nextRaffleSessionSpins"/>
+      <q-input class="col" v-model="incomingRaffleThresholdInDays" label="incomingRaffleThresholdInDays"/>
+    </div>
+
     <q-btn color="primary" @click="submit"> Submit </q-btn>
 
   </div>
@@ -46,7 +52,9 @@ export default {
       },
       interstitialsRatio: undefined,
       lapseForSpinRegeneration: 0,
-      maxSpinsForSpinRegeneration: 0
+      maxSpinsForSpinRegeneration: 0,
+      nextRaffleSessionSpins: 0,
+      incomingRaffleThresholdInDays: 0
     })
     const submit = async () => {
       await axios.post(
@@ -56,7 +64,9 @@ export default {
           interstitialsRatio: state.interstitialsRatio,
           lapseForSpinRegeneration: state.lapseForSpinRegeneration * 60,
           maxSpinsForSpinRegeneration: state.maxSpinsForSpinRegeneration,
-          ticketPrice: state.ticketPrice
+          ticketPrice: state.ticketPrice,
+          incomingRaffleThresholdInDays: state.incomingRaffleThresholdInDays,
+          nextRaffleSessionSpins: state.nextRaffleSessionSpins
         }
       )
     }
@@ -71,6 +81,8 @@ export default {
       state.interstitialsRatio = response.data.interstitialsRatio
       state.lapseForSpinRegeneration = response.data.lapseForSpinRegeneration / 60
       state.maxSpinsForSpinRegeneration = response.data.maxSpinsForSpinRegeneration
+      state.incomingRaffleThresholdInDays = response.data.incomingRaffleThresholdInDays
+      state.nextRaffleSessionSpins = response.data.nextRaffleSessionSpins
     }, { immediate: true })
     return { ...toRefs(state), submit }
   }
