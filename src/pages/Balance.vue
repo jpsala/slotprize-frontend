@@ -27,8 +27,8 @@
 
     <div class="text-subtitle1 text-weight-regular text-uppercase">Raffles</div>
     <div class="row">
-      <q-input class="col" v-model="nextRaffleSessionSpins" label="nextRaffleSessionSpins"/>
-      <q-input class="col" v-model="incomingRaffleThresholdInDays" label="incomingRaffleThresholdInDays"/>
+      <q-input class="col" v-model="nextRaffleSessionSpins" label="Next raffle session spins"/>
+      <q-input class="col" v-model="incomingRaffleThresholdInDays" label="Incoming raffle threshold in days"/>
     </div>
 
     <q-btn color="primary" @click="submit"> Submit </q-btn>
