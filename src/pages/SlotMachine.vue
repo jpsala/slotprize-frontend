@@ -1,23 +1,9 @@
 <template>
   <q-page class="flex paytable">
     <div class="symbols">
-      <Symbols
-        @remove="removeSymbol"
-        :pay-table="paytable"
-        @save-symbol="saveSymbol"
-        :items="symbols"
-        :wrap="true"
-        :show-menu="false"
-        direction="column"
-        :show-url="false"
-        :show-paymant-type="false"
-        symbol-size="50px"
-      />
+      <Symbols @remove="removeSymbol" :pay-table="paytable" @save-symbol="saveSymbol" :items="symbols" :wrap="true" :show-menu="false" direction="column" :show-url="false" :show-paymant-type="false" symbol-size="50px" />
     </div>
-    <q-card
-      v-show="paytable.length"
-      class="table"
-    >
+    <q-card v-show="paytable.length" class="table">
       <q-card-section>
         <div class="text-h6 text-center">
           Pay Table
@@ -28,124 +14,37 @@
         <q-list separator>
           <q-item style="width: 100%;">
             <div class="row">
-              <q-input
-                class="col"
-                outlined
-                @input="winInputChange"
-                dense
-                label="Win"
-                v-model="win"
-              />
-              <q-input
-                class="col"
-                readonly
-                outlined
-                label="Lose"
-                dense
-                :value="lose"
-              />
-              <q-btn
-                color="primary"
-                icon="check"
-                label="OK"
-                @click="saveWinLose"
-                :disable="(Number(win) < 1 || Number(win) > 100 ||
-                  Number(lose) < 1 || Number(lose) > 100) || !winLoseDirty"
-              />
+              <q-input class="col" outlined @input="winInputChange" dense label="Win" v-model="win" />
+              <q-input class="col" readonly outlined label="Lose" dense :value="lose" />
+              <q-btn color="primary" icon="check" label="OK" @click="saveWinLose" :disable="(Number(win) < 1 || Number(win) > 100 ||
+                  Number(lose) < 1 || Number(lose) > 100) || !winLoseDirty" />
             </div>
           </q-item>
-          <q-item
-            v-for="item of paytable"
-            :key="item.id"
-            clickable
-            :class="{error: item.withError}"
-            @click="paytableRowClick(item, $event)"
-            @mouseenter="hovered = item"
-            @mouseleave="hovered = undefined"
-          >
+          <q-item v-for="item of paytable" :key="item.id" clickable :class="{error: item.withError}" @click="paytableRowClick(item, $event)" @mouseenter="hovered = item" @mouseleave="hovered = undefined">
             <q-item-section avatar>
-              <q-icon
-                v-if="!item.jackpot"
-                @click="removePaymentTypeFromRow(item)"
-                :name="item.symbolId > -1 && hovered && hovered.id === item.id && !item.reel1 ? 'add_circle_outline':''"
-                size="38px"
-              />
+              <q-icon v-if="!item.jackpot" @click="removePaymentTypeFromRow(item)" :name="item.symbolId > -1 && hovered && hovered.id === item.id && !item.reel1 ? 'add_circle_outline':''" size="38px" />
             </q-item-section>
             <q-item-section avatar>
-              <q-img
-                v-show="item.reel1"
-                :src="item.url"
-              />
+              <q-img v-show="item.reel1" :src="item.url" />
             </q-item-section>
             <q-item-section avatar>
-              <q-img
-                v-show="item.reel2"
-                :src="item.url"
-              />
+              <q-img v-show="item.reel2" :src="item.url" />
             </q-item-section>
             <q-item-section avatar>
-              <q-img
-                v-show="item.reel3"
-                :src="item.url"
-              />
+              <q-img v-show="item.reel3" :src="item.url" />
             </q-item-section>
-            <q-icon
-              v-if="!item.jackpot"
-              @click="addPaymentTypeToRow(item)"
-              size="38px"
-              :name="item.symbolId >= 0 && hovered && hovered.id === item.id && item.reel2 ? 'remove_circle_outline':''"
-            />
-            <q-item-section
-              v-if="item.jackpot"
-              style="font-weight: bolder"
-              side
-            >
-              <q-input
-                readonly
-                dense
-                flat
-                borderless
-                @change="paytableInputChange(item, 'p', $event)"
-                :value="item.points"
-                style="margin-left: 35px;width: 45px"
-              />
+            <q-icon v-if="!item.jackpot" @click="addPaymentTypeToRow(item)" size="38px" :name="item.symbolId >= 0 && hovered && hovered.id === item.id && item.reel2 ? 'remove_circle_outline':''" />
+            <q-item-section v-if="item.jackpot" style="font-weight: bolder" side>
+              <q-input readonly dense flat borderless @change="paytableInputChange(item, 'p', $event)" :value="item.points" style="margin-left: 35px;width: 45px" />
             </q-item-section>
-            <q-item-section
-              side
-              v-else
-            >
+            <q-item-section side v-else>
               <div class="row on-right">
-                <q-input
-                  dense
-                  flat
-                  :borderless="false"
-                  class="col self-end"
-                  @change="paytableInputChange(item, 'p', $event)"
-                  @focus="changeFocus"
-                  :value="item.points"
-                  style="width: 75px"
-                  :suffix="Number(item.points) > 1 ? item.paymentType+'s' : item.paymentType"
-                />
-                <q-input
-                  dense
-                  flat
-                  :borderless="false"
-                  class="col q-ml-sm self-end"
-                  suffix="%"
-                  @change="paytableInputChange(item, 'r', $event)"
-                  :value="item.probability"
-                  style="width:75px"
-                />
+                <q-input dense flat :borderless="false" class="col self-end" @change="paytableInputChange(item, 'p', $event)" @focus="changeFocus" :value="item.points" style="width: 75px" :suffix="Number(item.points) > 1 ? item.paymentType+'s' : item.paymentType" />
+                <q-input dense flat :borderless="false" class="col q-ml-sm self-end" suffix="%" @change="paytableInputChange(item, 'r', $event)" :value="item.probability" style="width:75px" />
               </div>
             </q-item-section>
             <q-item-section avatar>
-              <q-icon
-                @click="removeItemFromPaytable(item)"
-                name="highlight_off"
-                size="40px"
-                color="red-6"
-                v-if="!item.jackpot &&hovered && item.id === hovered.id"
-              />
+              <q-icon @click="removeItemFromPaytable(item)" name="highlight_off" size="40px" color="red-6" v-if="!item.jackpot &&hovered && item.id === hovered.id" />
             </q-item-section>
           </q-item>
           <q-item>
@@ -153,16 +52,7 @@
               <span style="font-size: 1.3rem">Total probabilities</span>
             </q-item-section>
             <q-item-section :class="{error: totalProbability !== 100}">
-              <q-input
-                dense
-                flat
-                borderless
-                readonly
-                class="self-end"
-                :value="totalProbability"
-                suffix="%"
-                style="width:80px; margin-right: 15px;text-align: right"
-              />
+              <q-input dense flat borderless readonly class="self-end" :value="totalProbability" suffix="%" style="width:80px; margin-right: 15px;text-align: right" />
             </q-item-section>
             <q-item-section avatar />
           </q-item>
@@ -171,57 +61,21 @@
               <span style="font-size: 1.3rem">Diff</span>
             </q-item-section>
             <q-item-section :class="{error: totalProbability !== 100}">
-              <q-input
-                dense
-                flat
-                borderless
-                readonly
-                class="self-end"
-                :value="totalProbability - 100"
-                suffix="%"
-                style="width:80px; margin-right: 15px;text-align: right"
-              />
+              <q-input dense flat borderless readonly class="self-end" :value="totalProbability - 100" suffix="%" style="width:80px; margin-right: 15px;text-align: right" />
             </q-item-section>
             <q-item-section avatar />
           </q-item>
         </q-list>
       </q-card-section>
     </q-card>
-    <q-page-sticky
-      v-show="paytable.length"
-      position="top-left"
-      :offset="[308, 18]"
-    >
-      <q-btn
-        :disable="thereIsANewItem"
-        fab
-        icon="add"
-        color="red"
-        @click="addRow"
-      />
+    <q-page-sticky v-show="paytable.length" position="top-left" :offset="[308, 18]">
+      <q-btn :disable="thereIsANewItem" fab icon="add" color="red" @click="addRow" />
     </q-page-sticky>
-    <q-page-sticky
-      v-show="paytable.length"
-      position="top-left"
-      :offset="[248, 18]"
-    >
-      <q-btn
-        :disable="!tableIsValid"
-        fab
-        icon="save"
-        color="green-8"
-        @click="save"
-      />
+    <q-page-sticky v-show="paytable.length" position="top-left" :offset="[248, 18]">
+      <q-btn :disable="!tableIsValid" fab icon="save" color="green-8" @click="save" />
     </q-page-sticky>
-    <SymbolSelect
-      @close="symbolSelect"
-      :symbols="symbols"
-      :active="symbolSelectActive"
-    />
-    <h4
-      v-show="!paytable.length"
-      class="q-ma-xl"
-    >
+    <SymbolSelect @close="symbolSelect" :symbols="symbols" :active="symbolSelectActive" />
+    <h4 v-show="!paytable.length" class="q-ma-xl">
       Loading...
     </h4>
   </q-page>
@@ -519,9 +373,9 @@ export default {
               0 8px 8px rgba(0,0,0,0.12),
               0 16px 16px rgba(0,0,0,0.12);
     }
-    .q-item{
-      cursor: pointer;
-    }
+    // .q-item{
+    //   cursor: pointer;
+    // }
     .error {
       background-color: rgba(252, 22, 22, 0.68) !important;
       color: white;
