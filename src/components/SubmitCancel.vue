@@ -2,9 +2,9 @@
 <div class="self-center">
   <q-btn-group push outline :class="right ? 'float-right' : '' ">
     <q-btn push :disable="cancelDisable || disable" :size="size"  :color="cancelColor" :label="showLabels ? labelCancel : ''" icon="close" @click="$emit('cancel')"  />
-    <q-btn push :disable="submitDisable || disable" :size="size"  :color="saveColor" :label="showLabels ? labelSave : ''" icon="save" @click="$emit('submit')" class="" />
+    <q-btn push :disable="submitDisable || disable" :size="size"  :color="saveColor" :label="showLabels ? labelSubmit : ''" icon="save" @click="$emit('submit')" class="" />
   </q-btn-group>
-  <span  style="clear: both">&nbsp;</span>
+  <div style="clear: both"></div>
 </div>
 </template>
 <script>
@@ -16,7 +16,7 @@ export default {
     disable: { default: false },
     right: { default: false },
     showLabels: { default: true },
-    labelSave: { default: 'Save' },
+    labelSubmit: { default: 'Save' },
     labelCancel: { default: 'Cancel' },
     saveColor: { default: 'green-7' },
     cancelColor: { default: 'red-7' },

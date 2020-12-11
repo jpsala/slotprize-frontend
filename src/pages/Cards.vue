@@ -29,7 +29,7 @@
                           :submit-disable=!reward.isNew :cancel-disable="!reward.isNew" size="sm"/>
           </div>
         </div>
-        <submit-cancel :disable="newReward !== undefined" @submit="saveChest('chestPremiumRewards')" label-save="Submit"
+        <submit-cancel :disable="newReward !== undefined" @submit="saveChest('chestPremiumRewards')" label-submit="Submit"
                         @cancel="cancelChestPremium" :submit-disable="!chestPremiumIsDirty"
                         :cancel-disable="!chestPremiumIsDirty"  class="q-mt-lg" :right="true"/>
       </div>
@@ -57,7 +57,7 @@
                           :submit-disable=!reward.isNew :cancel-disable="!reward.isNew" size:sm/>
           </div>
         </div>
-        <submit-cancel :disable="newReward !== undefined" @submit="saveChest('chestRegularRewards')"  label-save="Submit"
+        <submit-cancel :disable="newReward !== undefined" @submit="saveChest('chestRegularRewards')"  label-submit="Submit"
                         @cancel="cancelChestRegular" :submit-disable="!chestRegularIsDirty"
                         :cancel-disable="!chestRegularIsDirty"  class="q-mt-lg" :right="true"/>
       </div>

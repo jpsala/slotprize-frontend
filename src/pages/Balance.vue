@@ -31,6 +31,36 @@
       <q-input class="col" v-model="incomingRaffleThresholdInDays" label="Incoming raffle threshold in days"/>
     </div>
 
+    <div class="shadow-1 q-pa-md">
+      <div class="text-h5 q-ml-md">Ticket Packs Data</div>
+      <q-separator inset spaced="10px" />
+      <!-- <div v-for="ticketPrice of ticketPacksData" :key="ticketPrice.id" class="q-pa-lg q-mt-lg shadow-1 col" style="width: 900px">
+        <div class="text-h6 q-ml-md col">Ticket Price Data #{{ticketPrice.id}}&nbsp;
+        <q-input  class="col" v-model="ticketPrice.tickets" type="text" label="Tickets" />
+        <q-input  class="col" v-model="ticketPrice.discount" type="text" label="Discount" />
+      </div>
+      </div> -->
+      <q-markup-table flat class="">
+        <thead>
+          <tr>
+            <th class="text-left">#ID</th>
+            <th class="text-left">Tickets</th>
+            <th class="text-left">Discount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="ticketPrice of ticketPacksData" :key="ticketPrice.id">
+            <td class="text-left"><span class="text-h6">{{ticketPrice.id}}</span></td>
+            <td class="text-left"><q-input flat borderless dense class="col" v-model="ticketPrice.tickets" type="text"/></td>
+            <td class="text-left"><q-input flat borderless denst class="col" v-model="ticketPrice.discount" type="text"/></td>
+          </tr>
+        </tbody>
+      </q-markup-table>
+      <!-- <submit-cancel v-show="ticketPriceDataDirty" @submit="submitTicketPriceData"  label-submit="Submit"  :submit-disable="false"
+                     @cancel="cancelTicketPriceData" :cancel-disable="false" class="q-mt-lg" :right="true"
+      /> -->
+    </div>
+
     <q-btn color="primary" @click="submit"> Submit </q-btn>
 
   </div>
@@ -40,6 +70,9 @@
 import { reactive, toRefs, watch } from '@vue/composition-api'
 import useSession from 'src/services/useSession'
 import axios from '../services/axios'
+import equal from 'fast-deep-equal'
+import { clone } from 'src/helpers'
+
 export default {
   setup () {
     const { loggedIn } = useSession()
@@ -54,8 +87,17 @@ export default {
       lapseForSpinRegeneration: 0,
       maxSpinsForSpinRegeneration: 0,
       nextRaffleSessionSpins: 0,
-      incomingRaffleThresholdInDays: 0
+      incomingRaffleThresholdInDays: 0,
+      ticketPacksData: [],
+      ticketPacksDataBackup: undefined,
+      ticketPriceDataDirty: false
     })
+    const submitTicketPriceData = async () => {
+      state.ticketPacksData = clone(state.ticketPacksDataBackup)
+    }
+    const cancelTicketPriceData = async () => {
+      state.ticketPacksData = clone(state.ticketPacksDataBackup)
+    }
     const submit = async () => {
       await axios.post(
         '/slot/tickets_settings_for_crud',
@@ -66,10 +108,15 @@ export default {
           maxSpinsForSpinRegeneration: state.maxSpinsForSpinRegeneration,
           ticketPrice: state.ticketPrice,
           incomingRaffleThresholdInDays: state.incomingRaffleThresholdInDays,
-          nextRaffleSessionSpins: state.nextRaffleSessionSpins
+          nextRaffleSessionSpins: state.nextRaffleSessionSpins,
+          ticketPacksData: state.ticketPacksData
         }
       )
     }
+    watch(() => state.ticketPacksData, () => {
+      state.ticketPriceDataDirty = !equal(state.ticketPacksData, state.ticketPacksDataBackup)
+      console.log('watch')
+    }, { deep: true, inmediate: true })
     watch(() => loggedIn, async () => {
       const response = await axios({
         url: '/slot/tickets_settings_for_crud',
@@ -83,8 +130,10 @@ export default {
       state.maxSpinsForSpinRegeneration = response.data.maxSpinsForSpinRegeneration
       state.incomingRaffleThresholdInDays = response.data.incomingRaffleThresholdInDays
       state.nextRaffleSessionSpins = response.data.nextRaffleSessionSpins
+      state.ticketPacksData = response.data.ticketPacksData
+      state.ticketPacksDataBackup = clone(response.data.ticketPacksData)
     }, { immediate: true })
-    return { ...toRefs(state), submit }
+    return { ...toRefs(state), submit, submitTicketPriceData, cancelTicketPriceData }
   }
 }
 </script>

@@ -1,6 +1,7 @@
 import { Dialog, Notify } from 'quasar'
 import axios from './services/axios'
 import useGlobal from './services/useGlobal'
+import rfdc from 'rfdc'
 
 function whichBox () {
   const isLocal = document.location.hostname === 'localhost'
@@ -161,4 +162,7 @@ export const generateAtlas = async (atlasName) => {
   notify({ message: 'Atlas successfully generated' })
   hideSpinner()
   return response
+}
+export const clone = (data) => {
+  return rfdc()(data)
 }
