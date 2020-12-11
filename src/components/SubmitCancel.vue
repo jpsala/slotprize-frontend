@@ -20,7 +20,7 @@ export default {
     labelCancel: { default: 'Cancel' },
     saveColor: { default: 'green-7' },
     cancelColor: { default: 'red-7' },
-    size: { default: 'md' }
+    size: { default: '' }
   },
   setup (props) {
     const state = reactive({
