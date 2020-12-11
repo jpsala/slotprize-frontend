@@ -1,4 +1,6 @@
 import { Dialog, Notify } from 'quasar'
+import axios from './services/axios'
+import useGlobal from './services/useGlobal'
 
 function whichBox () {
   const isLocal = document.location.hostname === 'localhost'
@@ -151,4 +153,12 @@ export {
 }
 export const isNotebook = () => {
   return location.hostname === 'localhost'
+}
+export const generateAtlas = async (atlasName) => {
+  const { showSpinner, hideSpinner } = useGlobal()
+  showSpinner()
+  const response = await axios.get(`slot/generate_atlas_front?name=${atlasName}`)
+  notify({ message: 'Atlas successfully generated' })
+  hideSpinner()
+  return response
 }
