@@ -2,6 +2,8 @@
   <div class="q-pa-md q-gutter-md justify-center">
     <div class="text-h3 q-ml-xl">Cards</div>
     <q-separator/>
+
+    <!-- CHEST -->
     <div  v-if="chestPremium">
       <div class="text-h5 q-ml-md">Chest configuration</div>
       <q-separator inset spaced="10px" />
@@ -30,7 +32,7 @@
         <submit-cancel :disable="newReward !== undefined" @submit="saveChest('chestPremiumRewards')" label-save="Submit"
                         @cancel="cancelChestPremium" :submit-disable="!chestPremiumIsDirty"
                         :cancel-disable="!chestPremiumIsDirty"  class="q-mt-lg" :right="true"/>
-      </div> color="red-5"
+      </div>
     </div>
     <div  v-if="chestRegular">
       <div class="text-h5 q-ml-md">Chest configuration</div>
@@ -60,25 +62,25 @@
         <submit-cancel :disable="newReward !== undefined" @submit="saveChest('chestRegularRewards')"  label-save="Submit"
                         @cancel="cancelChestRegular" :submit-disable="!chestRegularIsDirty"
                         :cancel-disable="!chestRegularIsDirty"  class="q-mt-lg" :right="true"/>
-      </div> color="red-5"
+      </div>
     </div>
 
-<!--
-  chestPremium:
-  priceAmount: 1
-  priceCurrency: "spin"
-  rewards: Array(1)
-  0:
-  amount: 1
-  type: "spin"
--->
+    <!-- DROP RATE TABLE -->
     <div class="text-h5 q-ml-md">Drop Rate Table</div>
     <card-drop-rate-table />
     <q-separator spaced="30px"/>
+
+    <!-- CARD SETS -->
     <div class="row justify-between">
       <div class="text-h5">Card Sets</div>
+      <div class="row">
+        <i class="earch-ico" />
+      <q-btn @click="generateAtlas('card_sets')"  fab icon="icon-earth" color="blue-6" round class="q-mr-md btn-earth">
+        <q-tooltip :content-style="{ fontSize: '14px' }">Generate Atlas for card set thumbnails</q-tooltip>
+      </q-btn>
       <q-btn :disable="cardSetEditing !== undefined || cardEditing !== undefined" @click="addCardSet"  fab  icon="add"
                 :color="cardSetEditing ? 'red-3':'red-6'"/>
+      </div>
     </div>
     <q-separator spaced="30px"/>
     <div class="q-pa-md  card-set">
@@ -98,6 +100,10 @@
                     class="edit-set-btn" style="z-index: 1" />
               <q-btn v-if="cardSetEditing" @click="cancelSetEdition(cardSet)" round icon="close" color="red-6"
                      class="edit-set-btn" style="z-index: 1" />
+              <q-btn @click="generateAtlas(`card_set_${cardSet.id}`)" round icon="icon-earth" color="blue-6"
+                     class="edit-set-btn btn-earth" style="z-index: 1">
+                <q-tooltip :content-style="{ fontSize: '14px' }">Generate Atlas</q-tooltip>
+              </q-btn>
               <q-btn v-if="cardSetEditing" @click="submit(cardSet)" round icon="check" color="primary"
                      class="edit-set-btn" style="z-index: 1"
               />
@@ -211,7 +217,7 @@ import Card from '../components/Card'
 import CardDropRateTable from '../components/CardDropRateTable'
 import SubmitCancel from '../components/SubmitCancel'
 import useGlobal from '../services/useGlobal'
-import { alerta, notify, confirma } from 'src/helpers'
+import { alerta, notify, confirma, generateAtlas } from 'src/helpers'
 import equal from 'fast-deep-equal'
 
 export default {
@@ -478,13 +484,25 @@ export default {
       cancelChestPremium,
       cancelChestRegular,
       deletePremiumReward,
-      deleteRegularReward
+      deleteRegularReward,
+      generateAtlas
     }
   }
 }
 </script>
 
 <style lang="scss">
+.btn-earth{
+  .q-btn__wrapper {
+    padding: 0 !important;
+  background-color: rgb(71, 143, 167);
+  }
+.q-icon {
+    color: rgb(123, 226, 114);
+    font-size: 42px !important;
+    padding: 0;
+}
+}
 .reward-row{
   position: relative;
   .delete-reward{
@@ -497,12 +515,12 @@ export default {
   }
 }
 .card-set{
-    .card{
-      box-shadow: 0 1px 5px rgba(0,0,0,0.2), 0 2px 2px rgb(219 8 8 / 30%), 0 3px 1px -2px rgb(194 35 35 / 34%);
-      border-radius: 4px;
-      vertical-align: top;
-      background: #e20f0f05;
-    }
+  .card{
+    box-shadow: 0 1px 5px rgba(0,0,0,0.2), 0 2px 2px rgb(219 8 8 / 30%), 0 3px 1px -2px rgb(194 35 35 / 34%);
+    border-radius: 4px;
+    vertical-align: top;
+    background: #e20f0f05;
+  }
   .cards-row{
     align-items: end;
     position: relative;

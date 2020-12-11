@@ -1,52 +1,29 @@
 <template>
   <div class="items small-scrollbar relative-position small-scrollbars">
-    <SymbolDialog
-      :symbol="selected"
-      @close="symbolClose"
-      @cancel="symbolCancel"
-    />
+    <SymbolDialog :symbol="selected" @close="symbolClose" @cancel="symbolCancel" />
     <q-list bordered>
-      <q-item
-        @click="selected = symbolNew"
-        clickable
-        v-ripple
-      >
-        <q-item-section avatar>
-          <q-icon
-            color="primary"
-            size="40px"
-            name="add"
-          />
+      <q-item :clickable="false">
+        <q-item-section avatar  @click="selected = symbolNew" class="cursor-pointer">
+          <q-icon color="primary" size="40px" name="add" />
         </q-item-section>
-        <q-item-section avatar>
-          <span
-            class="bg-primary text-white"
-            style="padding: 4px 20px; border-radius: 5px"
-          >
+        <q-item-section avatar  @click="selected = symbolNew" class="cursor-pointer">
+          <span class="bg-primary text-white" style="padding: 4px 20px; border-radius: 5px">
             New
           </span>
         </q-item-section>
-      </q-item>
-      <q-item
-        @click="setSelected(item, $event)"
-        v-for="item in sortedItems"
-        :key="item.id"
-        clickable
-        v-ripple
-      >
-        <q-icon
-          v-show="showRemove(item)"
-          @click="$emit('remove', item)"
-          class="remove"
-          name="remove_circle_outline"
-          size="30px"
-          color="red-5"
-        />
         <q-item-section avatar>
-          <q-img
-            color="teal"
-            :src="item.textureUrl"
-          />
+          <span class="bg-secondary q-ml-md text-white cursor-pointer"
+                @click="generateAtlas('symbols')" style="padding: 4px 20px; border-radius: 5px"
+          >
+            <q-tooltip  :content-style="{ fontSize: '14px' }">Generate atlas for the pay table symbols</q-tooltip>
+            Atlas
+          </span>
+        </q-item-section>
+      </q-item>
+      <q-item @click="setSelected(item, $event)" v-for="item in sortedItems" :key="item.id" clickable v-ripple>
+        <q-icon v-show="showRemove(item)" @click="$emit('remove', item)" class="remove" name="remove_circle_outline" size="30px" color="red-5" />
+        <q-item-section avatar>
+          <q-img color="teal" :src="item.textureUrl" />
         </q-item-section>
         <q-item-section>{{ item.symbolName }} ({{ item.paymentType }})</q-item-section>
       </q-item>
@@ -61,6 +38,7 @@ import {
 } from '@vue/composition-api'
 import SymbolDialog from '../components/SymbolDialog'
 import axios from '../services/axios'
+import { generateAtlas } from '../helpers'
 
 export default {
   components: { SymbolDialog },
@@ -154,7 +132,7 @@ export default {
     })
     // watch(() => props.items, setItemsStyle)
     return {
-      ...toRefs(state), hover, symbolClose, sortedItems, symbolCancel, setSelected, showRemove
+      ...toRefs(state), hover, symbolClose, sortedItems, symbolCancel, setSelected, showRemove, generateAtlas
     }
   }
 }
