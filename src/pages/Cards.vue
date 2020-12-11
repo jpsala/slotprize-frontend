@@ -35,8 +35,6 @@
       </div>
     </div>
     <div  v-if="chestRegular">
-      <div class="text-h5 q-ml-md">Chest configuration</div>
-      <q-separator inset spaced="10px" />
       <div class="q-pa-lg q-mt-lg shadow-1">
         <div class="text-h6 q-ml-md">Regular&nbsp;
         </div>
