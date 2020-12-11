@@ -280,7 +280,7 @@ export default {
       hideSpinner()
       const cardSet = state.cardSets.find(_cardSet => _cardSet.id === fields.cardSetId)
       console.log('cardSet', cardSet)
-      cardSet.img = response.data.thumbUrl
+      cardSet.img = response.data.textureUrl
       const cardIndex = cardSet.cards.findIndex(_card => _card.id === -1)
       console.log('cardINdex', cardIndex)
       cardSet.cards[cardIndex] = response.data
@@ -449,8 +449,8 @@ export default {
       hideSpinner()
       state.cardSets = response.data.cardSets
       for (const cardSet of state.cardSets) {
-        cardSet.img = 'https://assets.slotoprizes.tagadagames.com/img/missing.png'
-        if (cardSet.cards?.length > 0) cardSet.img = cardSet.cards[0].thumbUrl
+        if (!cardSet.img) cardSet.img = 'https://assets.slotoprizes.tagadagames.com/img/missing.png'
+        // if (cardSet.cards?.length > 0) cardSet.img = cardSet.cards[0].thumbUrl
       }
       state.languages = response.data.languages
       state.emptyCard = clone()(response.data.newCard)
