@@ -71,10 +71,13 @@ import { reactive, toRefs, watch } from '@vue/composition-api'
 import useSession from 'src/services/useSession'
 import axios from '../services/axios'
 import equal from 'fast-deep-equal'
-import { clone } from 'src/helpers'
+import { clone, notify, alerta } from 'src/helpers'
+import useGlobal from '../services/useGlobal'
 
 export default {
   setup () {
+    const { showSpinner, hideSpinner } = useGlobal()
+
     const { loggedIn } = useSession()
     const state = reactive({
       ticketPrice: undefined,
@@ -99,29 +102,39 @@ export default {
       state.ticketPacksData = clone(state.ticketPacksDataBackup)
     }
     const submit = async () => {
-      await axios.post(
-        '/slot/tickets_settings_for_crud',
-        {
-          wallet: state.wallet,
-          interstitialsRatio: state.interstitialsRatio,
-          lapseForSpinRegeneration: state.lapseForSpinRegeneration * 60,
-          maxSpinsForSpinRegeneration: state.maxSpinsForSpinRegeneration,
-          ticketPrice: state.ticketPrice,
-          incomingRaffleThresholdInDays: state.incomingRaffleThresholdInDays,
-          nextRaffleSessionSpins: state.nextRaffleSessionSpins,
-          ticketPacksData: state.ticketPacksData
-        }
-      )
+      showSpinner()
+      try {
+        await axios.post(
+          '/slot/tickets_settings_for_crud',
+          {
+            wallet: state.wallet,
+            interstitialsRatio: state.interstitialsRatio,
+            lapseForSpinRegeneration: state.lapseForSpinRegeneration * 60,
+            maxSpinsForSpinRegeneration: state.maxSpinsForSpinRegeneration,
+            ticketPrice: state.ticketPrice,
+            incomingRaffleThresholdInDays: state.incomingRaffleThresholdInDays,
+            nextRaffleSessionSpins: state.nextRaffleSessionSpins,
+            ticketPacksData: state.ticketPacksData
+          }
+        )
+      } catch (err) {
+        hideSpinner()
+        await alerta('Error saving settings', err)
+      }
+      hideSpinner()
+      notify({ message: 'Settings where saved' })
     }
     watch(() => state.ticketPacksData, () => {
       state.ticketPriceDataDirty = !equal(state.ticketPacksData, state.ticketPacksDataBackup)
       console.log('watch')
     }, { deep: true, inmediate: true })
     watch(() => loggedIn, async () => {
+      showSpinner()
       const response = await axios({
         url: '/slot/tickets_settings_for_crud',
         method: 'get'
       })
+      hideSpinner()
       console.log('response', response.data)
       state.ticketPrice = response.data.ticketPrice
       state.wallet = response.data.wallet
