@@ -31,7 +31,7 @@
       <q-input class="col" v-model="incomingRaffleThresholdInDays" label="Incoming raffle threshold in days"/>
     </div>
 
-    <div class="shadow-1 q-pa-md">
+    <div class="shadow-1 q-pa-md row`">
       <div class="text-h5 q-ml-md">Ticket Packs Data</div>
       <q-separator inset spaced="10px" />
       <!-- <div v-for="ticketPrice of ticketPacksData" :key="ticketPrice.id" class="q-pa-lg q-mt-lg shadow-1 col" style="width: 900px">
@@ -40,11 +40,11 @@
         <q-input  class="col" v-model="ticketPrice.discount" type="text" label="Discount" />
       </div>
       </div> -->
-      <q-markup-table flat class="">
+      <q-markup-table flat class="col" style="width: auto">
         <thead>
           <tr>
             <th class="text-left">#ID</th>
-            <th class="text-left">Tickets</th>
+            <th class="text-left" style="width: 176px;">Tickets</th>
             <th class="text-left">Discount</th>
           </tr>
         </thead>
@@ -56,6 +56,7 @@
           </tr>
         </tbody>
       </q-markup-table>
+      <q-space class="col"/>
       <!-- <submit-cancel v-show="ticketPriceDataDirty" @submit="submitTicketPriceData"  label-submit="Submit"  :submit-disable="false"
                      @cancel="cancelTicketPriceData" :cancel-disable="false" class="q-mt-lg" :right="true"
       /> -->
