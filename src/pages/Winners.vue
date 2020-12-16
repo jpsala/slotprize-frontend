@@ -121,11 +121,13 @@ import axios from '../services/axios'
 // eslint-disable-next-line no-unused-vars
 import { format, parseISO, parse } from 'date-fns'
 import DatePicker from '../components/DatePicker.vue'
+import useGlobal from '../services/useGlobal'
 import { confirma } from 'src/helpers'
 export default {
   components: { DatePicker },
   setup () {
     const { loggedIn } = useSession()
+    const { showSpinner, hideSpinner } = useGlobal()
     const state = reactive({
       items: [],
       dateFrom: '',
@@ -164,6 +166,7 @@ export default {
       },
       async submitChangeStatus (items, newState) {
         console.log('submitStatus', items)
+        showSpinner()
         await axios.post('/slot/change_winners_status_for_crud', {
           items, state: newState
         })
@@ -172,6 +175,7 @@ export default {
           arrayItem.state = newState
           arrayItem.checked = false
         }
+        hideSpinner()
       },
       async changeSelectedStatus () {
         const selectedCount = state.filteredItems.reduce((count, _item) => {
@@ -183,12 +187,14 @@ export default {
       }
     })
     watch(() => loggedIn, async () => {
+      showSpinner()
       const response = await axios.get('/slot/winners_for_crud')
       response.data.forEach((i, idx) => {
         if (idx === response.data.length - 1) state.dateFrom = format(parse(i.date, 'yyyy-MM-dd', new Date()), 'yyyy-MM-dd')
         if (idx === 0) state.dateTo = format(parse(i.date, 'yyyy-MM-dd', new Date()), 'yyyy-MM-dd')
         i.checked = false
       })
+      hideSpinner()
       state.items = response.data
     }, { immediate: true })
     return { ...toRefs(state) }
