@@ -11,8 +11,9 @@
         <div class="text-h6 q-ml-md">Premium&nbsp;
         </div>
         <div class="row" style="width: 400px">
-          <q-input :disable="newReward !== undefined" class="col" v-model="chestPremium.priceAmount" type="text" label="Price Amount" />
-          <q-select :disable="newReward !== undefined" class="col" label="Reward Type" v-model="chestPremium.priceCurrency" :options="paymentOptions" stack-label/>
+          <q-input :disable="newReward !== undefined" class="col" v-model.number="chestPremium.amount" type="text" label="Stars Amount" />
+          <!-- <q-select :disable="newReward !== undefined" class="col" label="Reward Type" v-model="chestPremium.currency" :options="paymentOptions" stack-label/> -->
+          <q-select :disable="newReward !== undefined" class="col" label="Chest Type" v-model="chestPremium.chestTypeId" map-options emit-value :options="chestTypes"  option-value="id" option-label="name" stack-label/>
         </div>
         <div class="row q-mt-md q-mb-md">
           <div class="text-h8 q-ml-lg" style="width: 60px; align-self: center">Rewards</div>
@@ -21,7 +22,7 @@
         <div v-for="(reward, index) of chestPremium.rewards" :key="index" >
           <q-separator class="q-ml-lg" style="width:375px"/>
           <div class="row reward-row" :style="reward.isNew ? 'width: 506px' : 'width: 400px'">
-              <q-input :disable="newReward !== undefined && !reward.isNew" class="col q-ml-lg" v-model="reward.amount" type="text" label="Price Amount" />
+              <q-input :disable="newReward !== undefined && !reward.isNew" class="col q-ml-lg" v-model.number="reward.amount" type="text" label="Price Amount" />
               <q-select :disable="newReward !== undefined && !reward.isNew" class="col" label="Reward Type" v-model="reward.type" :options="paymentOptions" stack-label/>
               <q-btn :disable="newReward !== undefined" icon="delete_outline" round size="12px"
                       class="self-center q-ml-sm q-mr-sm delete-reward" color="red-5" @click="deletePremiumReward(index)"/>
@@ -29,7 +30,7 @@
                           :submit-disable=!reward.isNew :cancel-disable="!reward.isNew" size="sm"/>
           </div>
         </div>
-        <submit-cancel :disable="newReward !== undefined" @submit="saveChest('chestPremiumRewards')" label-submit="Submit"
+        <submit-cancel v-if="chestPremiumIsDirty || newReward !== undefined" @submit="saveChest('chestPremiumRewards')" label-submit="Submit"
                         @cancel="cancelChestPremium" :submit-disable="!chestPremiumIsDirty"
                         :cancel-disable="!chestPremiumIsDirty"  class="q-mt-lg" :right="true"/>
       </div>
@@ -39,8 +40,10 @@
         <div class="text-h6 q-ml-md">Regular&nbsp;
         </div>
         <div class="row" style="width: 400px">
-          <q-input :disable="newReward !== undefined" class="col" v-model="chestRegular.priceAmount" type="text" label="Price Amount" />
-          <q-select :disable="newReward !== undefined" class="col" label="Reward Type" v-model="chestRegular.priceCurrency" :options="paymentOptions" stack-label/>
+          <q-input :disable="newReward !== undefined" class="col" v-model.number="chestRegular.amount" type="text" label="Stars Amount" />
+          <!-- <q-select :disable="newReward !== undefined" class="col" label="Reward Type" v-model="chestRegular.currency" :options="paymentOptions" stack-label/> -->
+          <q-select :disable="newReward !== undefined" class="col" label="Chest Type" v-model="chestRegular.chestTypeId" map-options emit-value :options="chestTypes"  option-value="id" option-label="name" stack-label/>
+
         </div>
         <div class="row q-mt-md q-mb-md">
           <div class="text-h8 q-ml-lg" style="width: 60px; align-self: center">Rewards</div>
@@ -49,7 +52,7 @@
         <div v-for="(reward, index) of chestRegular.rewards" :key="index" >
           <q-separator class="q-ml-lg" style="width:375px"/>
           <div class="row reward-row" :style="reward.isNew ? 'width: 506px' : 'width: 400px'">
-              <q-input :disable="newReward !== undefined && !reward.isNew" class="col q-ml-lg" v-model="reward.amount" type="text" label="Price Amount" />
+              <q-input :disable="newReward !== undefined && !reward.isNew" class="col q-ml-lg" v-model.number="reward.amount" type="text" label="Price Amount" />
               <q-select :disable="newReward !== undefined && !reward.isNew" class="col" label="Reward Type" v-model="reward.type" :options="paymentOptions" stack-label/>
               <q-btn :disable="newReward !== undefined" icon="delete_outline" round size="12px"
                       class="self-center q-ml-sm q-mr-sm delete-reward" color="red-5" @click="deleteRegularReward(index)" />
@@ -57,7 +60,7 @@
                           :submit-disable=!reward.isNew :cancel-disable="!reward.isNew" size:sm/>
           </div>
         </div>
-        <submit-cancel :disable="newReward !== undefined" @submit="saveChest('chestRegularRewards')"  label-submit="Submit"
+        <submit-cancel v-show="chestRegularIsDirty || newReward !== undefined" @submit="saveChest('chestRegularRewards')"  label-submit="Submit"
                         @cancel="cancelChestRegular" :submit-disable="!chestRegularIsDirty"
                         :cancel-disable="!chestRegularIsDirty"  class="q-mt-lg" :right="true"/>
       </div>
@@ -242,7 +245,8 @@ export default {
       newReward: undefined,
       chestPremiumBackup: undefined,
       chestRegularBackup: undefined,
-      newRewardBackup: undefined
+      newRewardBackup: undefined,
+      chestTypes: []
     })
     watch(() => state.chestRegular, () => {
       state.chestRegularIsDirty = !equal(state.chestRegular, state.chestRegularBackup)
@@ -364,7 +368,6 @@ export default {
     }
     const saveChest = async (chestName) => {
       const chest = chestName === 'chestPremiumRewards' ? state.chestPremium : state.chestRegular
-      console.log(chestName, chest)
       showSpinner()
       const response = await axios({
         method: 'post',
@@ -460,6 +463,7 @@ export default {
       state.chestRegularBackup = clone()(response.data.chestRegular)
       state.chestPremium = response.data.chestPremium
       state.chestPremiumBackup = clone()(response.data.chestPremium)
+      state.chestTypes = clone()(response.data.chestTypes)
     }, { immediate: true })
     return {
       ...toRefs(state),
