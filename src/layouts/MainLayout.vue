@@ -152,7 +152,7 @@ export default {
             { label: 'Localization', to: '/languages' },
             { label: 'Skins', to: '/skins' },
             { label: 'Winners', to: '/winners' },
-            { label: 'Daily Rewards', to: '/dailyreward' },
+            { label: 'Reward Calendar', to: '/dailyreward' },
             { label: 'Balance', to: '/balance' },
             { label: 'Support Admin', to: '/supportAdmin' },
             { label: 'Legals', to: '/legals' },
